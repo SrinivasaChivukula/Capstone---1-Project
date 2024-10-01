@@ -1,2 +1,2 @@
-# GaitVision Innovators
+# GaitVision Team
 TODO README
