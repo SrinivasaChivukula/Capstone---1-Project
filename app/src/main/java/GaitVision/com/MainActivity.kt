@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-/*@Composable
+@Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     Text(
         text = "Hello $name!",
@@ -44,4 +44,4 @@ fun GreetingPreview() {
     GaitVisionTheme {
         Greeting("Android")
     }
-}*/
+}
