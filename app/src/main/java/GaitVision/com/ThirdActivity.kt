@@ -5,14 +5,14 @@ import android.widget.Button
 import android.content.Intent
 import androidx.activity.ComponentActivity
 
-class MainActivity : ComponentActivity() {
+class ThirdActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_third)
 
-        val confirmVidBtn = findViewById<Button>(R.id.confirm_vid_btn)
-        confirmVidBtn.setOnClickListener{
-            val intent = Intent(this, SecondActivity::class.java)
+        val mainMenuBtn = findViewById<Button>(R.id.main_mnu_btn)
+        mainMenuBtn.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
             startActivity(intent)
         }
     }
