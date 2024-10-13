@@ -2,10 +2,66 @@ package GaitVision.com
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.media.MediaMetadataRetriever
+import android.net.Uri
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.PoseDetection
 import com.google.mlkit.vision.pose.PoseLandmark
 import com.google.mlkit.vision.pose.accurate.AccuratePoseDetectorOptions
+
+/*
+Name             : getFrameBitmaps
+Parameters       :
+    context      : This parameter is the interface that contains global information about
+                   the application environment.
+    fileUri      : This parameter is the uri to the video that will be used in the function.
+Description      : This function takes a uri of a video and sends it through a process to get a
+                   bitmap of every frame in the video so pose tracking can be done on it.
+Return           :
+    List<Bitmap> : List of bitmaps for images picked up from frames
+ */
+fun getFrameBitmaps(context: Context,fileUri: Uri): List<Bitmap>
+{
+    //Declare and initialize constants that can be used for frame syncing
+    val OPTION_PREVIOUS_SYNC = MediaMetadataRetriever.OPTION_PREVIOUS_SYNC
+    val OPTION_NEXT_SYNC = MediaMetadataRetriever.OPTION_NEXT_SYNC
+    val OPTION_CLOSEST_SYNC = MediaMetadataRetriever.OPTION_CLOSEST_SYNC
+    val OPTION_CLOSEST = MediaMetadataRetriever.OPTION_CLOSEST
+
+    //Declare and initialize variables to be used in function
+    val retriever = MediaMetadataRetriever()
+    val framesList = mutableListOf<Bitmap>()
+
+    //Set data input
+    retriever.setDataSource(context, fileUri)
+
+    //Video length in microseconds
+    val videoLength = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0L
+
+    //Change this for more or less bitmaps
+    //1000000L = 1 second
+    val frameInterval = 1000000L
+
+    //Start time of video
+    var currTime = 0L
+
+    //Loop through all video and get frame bitmap at current position
+    while(currTime <= videoLength)
+    {
+        val frame = retriever.getFrameAtTime(currTime, OPTION_CLOSEST)
+        if(frame != null)
+        {
+            framesList.add(frame)
+        }
+        currTime += frameInterval
+    }
+
+    //Release resources
+    retriever.release()
+
+    //Return bitmap list
+    return framesList
+}
 
 /*
 Name        : processImageBitmap
@@ -19,7 +75,8 @@ Description : This function will take the context of the application and bitmap 
               calculation in another function
 Return: None
  */
-fun processImageBitmap(context: Context, bitmap: Bitmap){
+fun processImageBitmap(context: Context, bitmap: Bitmap)
+{
     //Setup pose detector options using accuracy mode on a still image
     val options = AccuratePoseDetectorOptions.Builder()
         .setDetectorMode(AccuratePoseDetectorOptions.SINGLE_IMAGE_MODE)
@@ -54,6 +111,28 @@ fun processImageBitmap(context: Context, bitmap: Bitmap){
         .addOnFailureListener { e ->
             println("Error detecting pose: ${e.message}")
         }
+
+}
+
+/*
+Name        : processFrames
+Parameters  :
+    context : This parameter is the interface that contains global information about
+              the application environment.
+    uri     : This parameter is the uri to the video that will be used to pass to the function to
+              get bitmaps of every frame.
+Description : This function is will take a file uri from the gallery and send it to a function to
+              get a bitmap list of every frame that can be used for pose tracking in a
+              separate function.
+Return      : None
+ */
+fun processFrames(context: Context, uri: Uri)
+{
+    val framesList = getFrameBitmaps(context, uri)
+    for(frame in framesList)
+    {
+        processImageBitmap(context, frame)
+    }
 
 }
 
