@@ -1,34 +1,35 @@
 package GaitVision.com
 
 import android.content.Context
-import android.net.Uri
+import android.graphics.Bitmap
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.PoseDetection
 import com.google.mlkit.vision.pose.PoseLandmark
 import com.google.mlkit.vision.pose.accurate.AccuratePoseDetectorOptions
 
 /*
-
+Name        : processImageBitmap
+Parameters  :
+    context : This parameter is the interface that contains global information about
+              the application environment.
+    bitmap  : This is the image bitmap we will use for processing.
+Description : This function will take the context of the application and bitmap of the image/frame
+              we will be processing. It then uses the ML Kit image processor to do pose detection on
+              the image and get the pixel positions of specific points to be used for angle
+              calculation in another function
+Return: None
  */
-fun processImageStatic(context: Context,uri: Uri){
+fun processImageBitmap(context: Context, bitmap: Bitmap){
     //Setup pose detector options using accuracy mode on a still image
     val options = AccuratePoseDetectorOptions.Builder()
         .setDetectorMode(AccuratePoseDetectorOptions.SINGLE_IMAGE_MODE)
         .build()
     //Create instance of pose detector
     val poseDetector = PoseDetection.getClient(options)
-
-    /*//Get file path (This is wrong, but gets the idea across 10/8/24 Trevor Spencer)
-    val file = File("C:\\Users\\tspen\\OneDrive\\Pictures\\LinkedIn Profile picture.jpg")
-    //Content file path to URI
-    val imageUri = Uri.fromFile(file)
-    */
-    //Current purpose This will be a test static image. Should be changed to user input later on 10/10/24 Trevor Spencer
-    //val uri = Uri.parse("file:///storage/emulated/0/Download/testImage1.jpg")
-    val image = InputImage.fromFilePath(context, uri)
+    val image = InputImage.fromBitmap(bitmap, 0)
     if(image == null)
     {
-        //display error with file URI and context.
+        //display error with image bitmap.
     }
 
     poseDetector.process(image)
