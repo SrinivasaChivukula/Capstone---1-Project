@@ -42,6 +42,14 @@ fun getFrameBitmaps(context: Context,fileUri: Uri): List<Bitmap>
     //1000000L = 1 second
     val frameInterval = 1000000L
 
+    //Gets capture frame rate for possible use of retrieving frames
+    //Floating point number (possibly Int if whole number)
+    //val frameRate = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_CAPTURE_FRAMERATE)
+
+    //Int. total number of frames in the video sequence
+    //Might need to update API level to 28 (current 24) for this to work.
+    //val frameCount = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT)
+
     //Start time of video
     var currTime = 0L
 
