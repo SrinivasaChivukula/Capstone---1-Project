@@ -2,6 +2,7 @@ package GaitVision.com
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.util.Log
@@ -37,32 +38,41 @@ fun getFrameBitmaps(context: Context,fileUri: Uri): List<Bitmap>
     retriever.setDataSource(context, fileUri)
 
     //Video length in microseconds
-    val videoLength = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0L
-
-    //Change this for more or less bitmaps
-    //1000000L = 1 second
-    val frameInterval = 1000000L
-
-    //Gets capture frame rate for possible use of retrieving frames
-    //Floating point number (possibly Int if whole number)
-    //val frameRate = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_CAPTURE_FRAMERATE)
-
-    //Int. total number of frames in the video sequence
-    //Might need to update API level to 28 (current 24) for this to work.
-    //val frameCount = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT)
-
-    //Start time of video
-    var currTime = 0L
-
-    //Loop through all video and get frame bitmap at current position
-    while(currTime <= videoLength)
+    if(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE) == "video/mp4")
     {
-        val frame = retriever.getFrameAtTime(currTime, OPTION_CLOSEST)
-        if(frame != null)
+        val videoLength = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0L
+
+        //Change this for more or less bitmaps
+        //1000000L = 1 second
+        val frameInterval = 1000000L
+
+        //Gets capture frame rate for possible use of retrieving frames
+        //Floating point number (possibly Int if whole number)
+        //val frameRate = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_CAPTURE_FRAMERATE)
+
+        //Int. total number of frames in the video sequence
+        //Might need to update API level to 28 (current 24) for this to work.
+        //val frameCount = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_FRAME_COUNT)
+
+        //Start time of video
+        var currTime = 0L
+
+        //Loop through all video and get frame bitmap at current position
+        while(currTime <= videoLength)
         {
-            framesList.add(frame)
+            val frame = retriever.getFrameAtTime(currTime, OPTION_CLOSEST)
+            if(frame != null)
+            {
+                framesList.add(frame)
+            }
+            currTime += frameInterval
         }
-        currTime += frameInterval
+    }
+    else if(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE) == "image/png" || retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE) == "image/png")
+    {
+        val stream = context.contentResolver.openInputStream(fileUri)
+        val frame = BitmapFactory.decodeStream(stream)
+        framesList.add(frame)
     }
 
     //Release resources
