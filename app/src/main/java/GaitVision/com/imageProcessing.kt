@@ -22,8 +22,12 @@ Description      : This function takes a uri of a video and sends it through a p
 Return           :
     List<Bitmap> : List of bitmaps for images picked up from frames
  */
-fun getFrameBitmaps(context: Context,fileUri: Uri): List<Bitmap>
+fun getFrameBitmaps(context: Context,fileUri: Uri?): List<Bitmap>
 {
+    if(fileUri == null)
+    {
+        return emptyList()
+    }
     //Declare and initialize constants that can be used for frame syncing
     val OPTION_PREVIOUS_SYNC = MediaMetadataRetriever.OPTION_PREVIOUS_SYNC
     val OPTION_NEXT_SYNC = MediaMetadataRetriever.OPTION_NEXT_SYNC
@@ -36,15 +40,16 @@ fun getFrameBitmaps(context: Context,fileUri: Uri): List<Bitmap>
 
     //Set data input
     retriever.setDataSource(context, fileUri)
+    Log.d("ErrorChecking", "MIME type: ${retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE)}")
 
     //Video length in microseconds
     if(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE) == "video/mp4")
     {
         val videoLength = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0L
-
+        Log.d("ErrorChecking","Video Length: ${videoLength}")
         //Change this for more or less bitmaps
-        //1000000L = 1 second
-        val frameInterval = 1000000L
+        //1000L = 1 second
+        val frameInterval = 1000L
 
         //Gets capture frame rate for possible use of retrieving frames
         //Floating point number (possibly Int if whole number)
@@ -60,15 +65,17 @@ fun getFrameBitmaps(context: Context,fileUri: Uri): List<Bitmap>
         //Loop through all video and get frame bitmap at current position
         while(currTime <= videoLength)
         {
+            Log.d("ErrorChecking","Current Time(S): ${currTime}")
             val frame = retriever.getFrameAtTime(currTime, OPTION_CLOSEST)
             if(frame != null)
             {
+                Log.d("ErrorChecking","Adding frame to list")
                 framesList.add(frame)
             }
             currTime += frameInterval
         }
     }
-    else if(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE) == "image/png" || retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE) == "image/png")
+    else if(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE) == "image/jpeg" || retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE) == "image/png")
     {
         val stream = context.contentResolver.openInputStream(fileUri)
         val frame = BitmapFactory.decodeStream(stream)
@@ -156,8 +163,9 @@ Description : This function is will take a file uri from the gallery and send it
               separate function.
 Return      : None
  */
-fun processFrames(context: Context, uri: Uri)
+fun processFrames(context: Context, uri: Uri?)
 {
+    Log.d("ErrorChecking","${uri}")
     val framesList = getFrameBitmaps(context, uri)
     for(frame in framesList)
     {

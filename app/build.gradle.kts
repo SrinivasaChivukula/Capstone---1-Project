@@ -37,6 +37,12 @@ android {
     buildFeatures {
         compose = true
     }
+    viewBinding {
+        enable = true
+    }
+    dataBinding{
+        enable = true
+    }
 }
 
 dependencies {
@@ -81,4 +87,6 @@ dependencies {
             - More power and battery required
      */
     implementation("com.google.mlkit:pose-detection-accurate:18.0.0-beta5")
+
+    implementation("androidx.core:core-ktx:1.7.0")
 }
