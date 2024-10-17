@@ -63,4 +63,22 @@ dependencies {
     // constraintLayout dependency
     implementation(libs.androidx.constraintlayout)
 
+    /*
+        Type: Base SDK
+        Usage: Used for applications that are more time sensitive. Excels in speed over accuracy.
+            - Processing live stream.
+        Cons:
+            - Lower accuracy
+     */
+    implementation("com.google.mlkit:pose-detection:18.0.0-beta5")
+    /*
+        Type: Accurate SDK
+        Usage: Used for applications that need accuracy. Excels in accuracy over speed.
+            - Processing stored video.
+        Cons:
+            - Slower processing speed
+            - More CPU usage
+            - More power and battery required
+     */
+    implementation("com.google.mlkit:pose-detection-accurate:18.0.0-beta5")
 }
