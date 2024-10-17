@@ -126,6 +126,10 @@ fun processImageBitmap(context: Context, bitmap: Bitmap)
                 val leftFootIndex = pose.getPoseLandmark(PoseLandmark.LEFT_FOOT_INDEX)
                 val rightFootIndex = pose.getPoseLandmark(PoseLandmark.RIGHT_FOOT_INDEX)
 
+                //Get the position of a landmark on the bitmap
+                val leftShoulderx = leftShoulder.position.x
+                val leftShouldery = leftShoulder.position.x
+                
                 Log.d("ErrorChecking","Landmarks detected")
             }
             .addOnFailureListener { e ->
