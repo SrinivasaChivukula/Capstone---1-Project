@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.widget.Button
 import android.content.Intent
 import android.net.Uri
+import android.widget.MediaController
+import android.widget.VideoView
 import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -35,7 +37,13 @@ class SecondActivity : ComponentActivity() {
 
         videoUri = Uri.parse(uriString)
 
-        mBinding.preview.setImageURI(videoUri)
+        val videoView = findViewById<VideoView>(R.id.video_viewer)
+        videoView.setVideoURI(videoUri)
+
+        val mediaController = MediaController(this)
+        videoView.setMediaController(mediaController)
+
+//        mBinding.preview.setImageURI(videoUri)
         processFrames(this, videoUri)
     }
 
