@@ -37,6 +37,12 @@ android {
     buildFeatures {
         compose = true
     }
+    viewBinding {
+        enable = true
+    }
+    dataBinding{
+        enable = true
+    }
 }
 
 dependencies {
@@ -49,6 +55,9 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    implementation(libs.androidx.activity)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -56,4 +65,28 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
+
+    // constraintLayout dependency
+    implementation(libs.androidx.constraintlayout)
+
+    /*
+        Type: Base SDK
+        Usage: Used for applications that are more time sensitive. Excels in speed over accuracy.
+            - Processing live stream.
+        Cons:
+            - Lower accuracy
+     */
+    implementation("com.google.mlkit:pose-detection:18.0.0-beta5")
+    /*
+        Type: Accurate SDK
+        Usage: Used for applications that need accuracy. Excels in accuracy over speed.
+            - Processing stored video.
+        Cons:
+            - Slower processing speed
+            - More CPU usage
+            - More power and battery required
+     */
+    implementation("com.google.mlkit:pose-detection-accurate:18.0.0-beta5")
+
+    implementation("androidx.core:core-ktx:1.7.0")
 }

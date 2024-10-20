@@ -1,47 +1,78 @@
 package GaitVision.com
 
+import GaitVision.com.databinding.ActivityMainBinding
+import android.app.Activity
 import android.os.Bundle
+import android.widget.Button
+import android.content.Intent
+import android.net.Uri
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import GaitVision.com.ui.theme.GaitVisionTheme
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.result.registerForActivityResult
+import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import androidx.activity.result.ActivityResultLauncher
 
 class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            GaitVisionTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+
+    private lateinit var mBinding: ActivityMainBinding
+    private var videoUri: Uri?=null
+    private val REQUESTCODE_CAMERA=1
+    private val REQUESTCODE_GALLERY=2
+
+    private val getResult: ActivityResultLauncher<String> =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+            uri?.let {
+                videoUri = it
+
+                val intent= Intent(this, SecondActivity::class.java).apply {
+                    putExtra("VIDEO_URI", videoUri.toString())
                 }
+                startActivity(intent)
             }
         }
-    }
-}
 
-/*@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    GaitVisionTheme {
-        Greeting("Android")
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+//        setContentView(R.layout.activity_main)
+//
+//        val confirmVidBtn = findViewById<Button>(R.id.confirm_vid_btn)
+//        confirmVidBtn.setOnClickListener{
+//            val intent = Intent(this, SecondActivity::class.java)
+//            startActivity(intent)
+//        }
+        mBinding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(mBinding.root)
+        //mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        mBinding.confirmVidBtn.setOnClickListener{startActivity(Intent(this,SecondActivity::class.java))}
+        mBinding.openGalBtn.setOnClickListener{startIntentFromGallary()}
     }
-}*/
+
+    private fun initClicks()
+    {
+        mBinding.openGalBtn.setOnClickListener{
+            startIntentFromGallary()
+        }
+    }
+
+    private fun startIntentFromGallary() {
+       getResult.launch("video/*")
+    }
+
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
+//    {
+//        super.onActivityResult(requestCode, resultCode, data)
+//
+//            if(requestCode == REQUESTCODE_GALLERY && resultCode == Activity.RESULT_OK)
+//            {
+//                videoUri = data?.data
+//
+//                val intent= Intent(this, SecondActivity::class.java).apply{
+//                    putExtra("VIDEO_URI", videoUri.toString())
+//                }
+//                startActivity(intent)
+//            }
+//
+//
+//    }
+}

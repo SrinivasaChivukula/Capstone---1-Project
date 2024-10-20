@@ -7,56 +7,42 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <TextView
-        android:id="@+id/textView1"
+    <EditText
+        android:id="@+id/participant_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/montserrat_variablefont_wght"
-        android:text="@string/app_name"
-        android:textColor="@color/black"
-        android:textSize="50sp"
+        android:autofillHints="ParticipantID"
+        android:hint="Enter ParticipantID Here"
+        android:inputType="text"
+        android:textSize="22sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.15"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.25" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Upload Video:"
-        android:textColor="@color/black"
-        android:textSize="25sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.17"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.40"
+        app:layout_constraintVertical_bias="0.25"
         tools:ignore="HardcodedText" />
 
     <Button
-        android:id="@+id/open_gal_btn"
+        android:id="@+id/submit_id_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Open Gallery"
+        android:text="Submit"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.83"
+        app:layout_constraintHorizontal_bias="0.85"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.40"
+        app:layout_constraintVertical_bias="0.25"
         tools:ignore="HardcodedText" />
 
     <Button
-        android:id="@+id/confirm_vid_btn"
+        android:id="@+id/main_mnu_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Confirm Video"
+        android:text="Main Menu"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
