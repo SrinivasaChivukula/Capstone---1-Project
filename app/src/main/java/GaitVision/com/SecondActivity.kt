@@ -7,11 +7,17 @@ import android.os.Bundle
 import android.widget.Button
 import android.content.Intent
 import android.net.Uri
+import android.os.Environment
+import android.util.Log
 import android.widget.MediaController
 import android.widget.VideoView
 import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import java.io.File
+
 
 class SecondActivity : ComponentActivity() {
 
@@ -34,17 +40,36 @@ class SecondActivity : ComponentActivity() {
         mBinding.uploadCsvBtn.setOnClickListener{startActivity(Intent(this,SecondActivity::class.java))}
 
         val uriString = intent.getStringExtra("VIDEO_URI")
-
-        videoUri = Uri.parse(uriString)
-
         val videoView = findViewById<VideoView>(R.id.video_viewer)
-        videoView.setVideoURI(videoUri)
-
+        videoUri = Uri.parse(uriString)
         val mediaController = MediaController(this)
         videoView.setMediaController(mediaController)
 
-//        mBinding.preview.setImageURI(videoUri)
-        processFrames(this, videoUri)
+        videoUri?.let{
+            lifecycleScope.launch{
+                try{
+                    Log.d("ErrorChecking", "Gallery URI: ${videoUri}")
+                    val outputPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).absolutePath + "/processed_video.mp4"
+                    val outputFilePath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)}/processed_video.mp4"
+                    val outputFile = File(outputFilePath)
+                    if(outputFile.exists())
+                    {
+                        Log.d("ErrorChecking", "Video Exists")
+                        outputFile.delete()
+                    }
+                    Log.d("ErrorChecking", "Before function")
+                    var newVideoUri = processVideo(this@SecondActivity, it)
+                    Log.d("ErrorChecking", "Function URI: ${newVideoUri}")
+                    videoView.setVideoURI(newVideoUri)
+                } catch(e:Exception){
+                    Log.e("ErrorChecking","Error processing video: ${e.message}")
+                }
+            }
+        } ?:run{
+            Log.e("ErrorChecking", "Video URI is NULL")
+        }
+
+
     }
 
 }
