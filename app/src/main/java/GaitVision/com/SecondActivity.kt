@@ -49,8 +49,8 @@ class SecondActivity : ComponentActivity() {
             lifecycleScope.launch{
                 try{
                     Log.d("ErrorChecking", "Gallery URI: ${videoUri}")
-                    val outputPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).absolutePath + "/processed_video.mp4"
-                    val outputFilePath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)}/processed_video.mp4"
+                    val outputPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).absolutePath + "/edited_video.mp4"
+                    val outputFilePath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)}/edited_video.mp4"
                     val outputFile = File(outputFilePath)
                     if(outputFile.exists())
                     {
@@ -58,7 +58,7 @@ class SecondActivity : ComponentActivity() {
                         outputFile.delete()
                     }
                     Log.d("ErrorChecking", "Before function")
-                    var newVideoUri = processVideo(this@SecondActivity, it)
+                    var newVideoUri = ProcVid(this@SecondActivity, it, outputFilePath)
                     Log.d("ErrorChecking", "Function URI: ${newVideoUri}")
                     videoView.setVideoURI(newVideoUri)
                 } catch(e:Exception){

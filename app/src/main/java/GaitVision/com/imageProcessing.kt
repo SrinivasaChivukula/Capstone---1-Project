@@ -67,7 +67,7 @@ fun getFrameBitmaps(context: Context,fileUri: Uri?): List<Bitmap>
         Log.d("ErrorChecking","Video Length: ${videoLengthMs}")
         //Change this for more or less bitmaps
         //1000L = 1 second (1fps)
-        val frameInterval = (1000L * 1000L) / 4 //Change back to /30
+        val frameInterval = (1000L * 1000L) / 30//Change back to /30
 
         //Gets capture frame rate for possible use of retrieving frames
         //Floating point number (possibly Int if whole number)
@@ -146,8 +146,9 @@ suspend fun processImageBitmap(context: Context, bitmap: Bitmap): Pose?
 }
 
 /*
-Name:
+Name: drawOnBitmap
 Parameters:
+        Bitmap:
 Description:
 Return:
  */
@@ -166,114 +167,90 @@ fun drawOnBitmap(bitmap: Bitmap, pose: Pose?): Bitmap
 /*
 Name:
 Parameters:
-Description:
+Description
 Return:
  */
-suspend fun processVideo(context: Context, uri: Uri?): Uri?
+suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String): Uri?
 {
     val framesList = getFrameBitmaps(context, uri) // Get frames from the original video
+    if(framesList.isEmpty()) return uri
 
-    // Ensure there are frames to process
-    if (framesList.isEmpty()) {
-        Log.e("ProcessVideo", "No frames available to process.")
-        return null
-    }
-
-    // Get width and height from the first frame
     val firstFrame = framesList[0]
     val width = firstFrame.width
     val height = firstFrame.height
 
-    val newVideoFile = createNewVideoFile(context) // Create a new video file
+    val mediaMuxer = MediaMuxer(outputPath, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
+    var format = MediaFormat.createVideoFormat("video/avc",width, height)
+        format.setInteger(MediaFormat.KEY_BIT_RATE, 1000000)
+        format.setInteger(MediaFormat.KEY_FRAME_RATE, 30)
+        format.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface)
+        format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 1)
 
-    val mediaMuxer = MediaMuxer(newVideoFile.absolutePath, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
-    val videoFormat = MediaFormat.createVideoFormat(MediaFormat.MIMETYPE_VIDEO_AVC, width, height)
+    var encoder = MediaCodec.createEncoderByType("video/avc")
+    encoder.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
+    var inputSurface = encoder.createInputSurface()
+    encoder.start()
 
-    // Set up the video format (bitrate, frame rate, etc.)
-    videoFormat.setInteger(MediaFormat.KEY_BIT_RATE, 1000000)
-    videoFormat.setInteger(MediaFormat.KEY_FRAME_RATE, 30)
-    videoFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface)
-    videoFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 5)
+    val frameDurationUs = 1000000L / 30  // microseconds per frame for 30 fps
 
-    val videoEncoder = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_VIDEO_AVC)
-    videoEncoder.configure(videoFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
-    val inputSurface = videoEncoder.createInputSurface()
-    videoEncoder.start()
-
-    // Prepare for encoding
+    var trackIndex = -1
+    var muxerStarted = false
     val bufferInfo = MediaCodec.BufferInfo()
-    val trackIndex = mediaMuxer.addTrack(videoFormat) // Add the video track to the muxer
-    mediaMuxer.start() // Start the muxer
 
-    for (i in framesList.indices) {
-        val frame = framesList[i]
+    for ((frameIndex, frame) in framesList.withIndex())
+    {
         val pose = processImageBitmap(context, frame)
         val modifiedBitmap = drawOnBitmap(frame, pose)
-        val presentationTimeUs = i * (1000000L/4)
-        // Feed the bitmap into the encoder
-        encodeBitmapToVideo(videoEncoder, inputSurface, modifiedBitmap, bufferInfo, mediaMuxer, trackIndex, presentationTimeUs)
-    }
-    videoEncoder.signalEndOfInputStream()
+        // Draw the frame onto the encoder input surface
+        val canvas = inputSurface.lockCanvas(null)
+        canvas.drawBitmap(modifiedBitmap, 0f, 0f, null)
+        inputSurface.unlockCanvasAndPost(canvas)
 
-    drainEncoder(videoEncoder, bufferInfo, mediaMuxer, trackIndex)
-    // Stop and release the encoder and muxer
-    videoEncoder.stop()
-    videoEncoder.release()
+        // Drain encoder output buffers
+        while (true) {
+            val outputBufferId = encoder.dequeueOutputBuffer(bufferInfo, 10000)
+            when {
+                outputBufferId == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> {
+                    // Add track and start the muxer once
+                    if (!muxerStarted) {
+                        trackIndex = mediaMuxer.addTrack(encoder.outputFormat)
+                        mediaMuxer.start()
+                        muxerStarted = true
+                    }
+                }
+                outputBufferId >= 0 -> {
+                    val outputBuffer = encoder.getOutputBuffer(outputBufferId) ?: continue
+                    if (muxerStarted) {
+                        bufferInfo.presentationTimeUs = frameIndex * frameDurationUs
+                        mediaMuxer.writeSampleData(trackIndex, outputBuffer, bufferInfo)
+                    }
+                    encoder.releaseOutputBuffer(outputBufferId, false)
+                }
+                outputBufferId == MediaCodec.INFO_TRY_AGAIN_LATER -> break
+            }
+        }
+    }
+
+    // Signal end of input stream and finalize remaining buffers
+    encoder.signalEndOfInputStream()
+    while (true) {
+        val outputBufferId = encoder.dequeueOutputBuffer(bufferInfo, 10000)
+        if (outputBufferId >= 0) {
+            val outputBuffer = encoder.getOutputBuffer(outputBufferId) ?: break
+            if (muxerStarted) {
+                mediaMuxer.writeSampleData(trackIndex, outputBuffer, bufferInfo)
+            }
+            encoder.releaseOutputBuffer(outputBufferId, false)
+        } else {
+            break
+        }
+    }
+
+    // Stop and release encoder and muxer
+    encoder.stop()
+    encoder.release()
     mediaMuxer.stop()
     mediaMuxer.release()
 
-    return Uri.fromFile(newVideoFile) // Return the URI of the new video file
-}
-
-private fun encodeBitmapToVideo(encoder: MediaCodec, inputSurface: Surface, bitmap: Bitmap, bufferInfo: MediaCodec.BufferInfo, muxer: MediaMuxer, trackIndex: Int, presentationTimeUs: Long) {
-    // Draw the bitmap to the input surface
-    val canvas = inputSurface.lockCanvas(null)
-    canvas.drawBitmap(bitmap, 0f, 0f, null)
-    inputSurface.unlockCanvasAndPost(canvas)
-
-    bufferInfo.presentationTimeUs = presentationTimeUs
-
-    // Get the encoded output
-    var outputBufferIndex = encoder.dequeueOutputBuffer(bufferInfo, 10000)
-    while (outputBufferIndex >= 0) {
-        // Write the encoded data to the muxer
-        val outputBuffer: ByteBuffer = encoder.getOutputBuffer(outputBufferIndex) ?:return
-        if (bufferInfo.size != 0) {
-            bufferInfo.presentationTimeUs = presentationTimeUs
-            muxer.writeSampleData(trackIndex, outputBuffer, bufferInfo)
-        }
-        encoder.releaseOutputBuffer(outputBufferIndex, false)
-        outputBufferIndex = encoder.dequeueOutputBuffer(bufferInfo, 10000)
-    }
-}
-
-private fun createNewVideoFile(context: Context): File {
-    val outputDir = context.getExternalFilesDir(Environment.DIRECTORY_MOVIES)
-    val newVideoFile = File(outputDir, "edited_video.mp4")
-    if (newVideoFile.exists()) {
-        newVideoFile.delete() // Delete the existing file if it exists
-    }
-    return newVideoFile
-}
-
-private fun drainEncoder(encoder: MediaCodec, bufferInfo: MediaCodec.BufferInfo, muxer: MediaMuxer, trackIndex: Int) {
-    var outputBufferIndex: Int
-    while (true) {
-        outputBufferIndex = encoder.dequeueOutputBuffer(bufferInfo, 10000)
-        if (outputBufferIndex == MediaCodec.INFO_TRY_AGAIN_LATER) {
-            // No output available yet
-            break
-        } else if (outputBufferIndex == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
-            // Output format has changed
-            val newFormat = encoder.outputFormat
-            muxer.addTrack(newFormat) // Update the muxer with the new format
-        } else if (outputBufferIndex >= 0) {
-            // Write the encoded data to the muxer
-            val outputBuffer: ByteBuffer = encoder.getOutputBuffer(outputBufferIndex) ?: return
-            if (bufferInfo.size != 0) {
-                muxer.writeSampleData(trackIndex, outputBuffer, bufferInfo)
-            }
-            encoder.releaseOutputBuffer(outputBufferIndex, false)
-        }
-    }
+    return Uri.fromFile(File(outputPath))
 }
