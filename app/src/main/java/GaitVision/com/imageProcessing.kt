@@ -242,6 +242,47 @@ fun drawOnBitmap(bitmap: Bitmap,
     paint.textSize = 20.0F
     canvas.drawText(text, 25F, 25F, paint)
 
+    var paintCircleRight = Paint()
+    var paintCircleLeft = Paint()
+    var paintLine = Paint()
+
+    paintCircleRight.setARGB(255,255,0,0)
+    paintCircleLeft.setARGB(255, 0, 0, 255)
+    paintLine.setARGB(255, 255,255,255)
+
+    paintLine.strokeWidth = 4f
+    //Draw Hip Points
+    canvas.drawCircle(rightHipX,rightHipY,4f, paintCircleRight)
+    canvas.drawCircle(leftHipX,leftHipY,4f, paintCircleLeft)
+    //Draw Knee Points
+    canvas.drawCircle(rightKneeX,rightKneeY,4f, paintCircleRight)
+    canvas.drawCircle(leftKneeX,leftKneeY,4f, paintCircleLeft)
+    //Draw Ankle Points
+    canvas.drawCircle(rightAnkleX,rightAnkleY,4f, paintCircleRight)
+    canvas.drawCircle(leftAnkleX,leftAnkleY,4f, paintCircleLeft)
+    //Draw Heel Points
+    canvas.drawCircle(rightHeelX,rightHeelY,4f, paintCircleRight)
+    canvas.drawCircle(leftHeelX,leftHeelY,4f, paintCircleLeft)
+    //Draw Toe Points
+    canvas.drawCircle(rightFootIndexX,rightFootIndexY,4f, paintCircleRight)
+    canvas.drawCircle(leftFootIndexX,leftFootIndexY,4f, paintCircleLeft)
+
+    //Draw Connection between hip and knee
+    canvas.drawLine(rightHipX, rightHipY, rightKneeX,rightKneeY, paintLine)
+    canvas.drawLine(leftHipX, leftHipY, leftKneeX,leftKneeY, paintLine)
+    //Draw connection between knee an ankle
+    canvas.drawLine(rightKneeX, rightKneeY, rightAnkleX,rightAnkleY, paintLine)
+    canvas.drawLine(leftKneeX, leftKneeY, leftAnkleX,leftAnkleY, paintLine)
+    //Draw connection between ankle and toe
+    canvas.drawLine(rightAnkleX, rightAnkleY, rightFootIndexX,rightFootIndexY, paintLine)
+    canvas.drawLine(leftAnkleX, leftAnkleY, leftFootIndexX,leftFootIndexY, paintLine)
+    //Draw connection between ankle and heel
+    canvas.drawLine(rightAnkleX, rightAnkleY, rightHeelX,rightHeelY, paintLine)
+    canvas.drawLine(leftAnkleX, leftAnkleY, leftHeelX,leftHeelY, paintLine)
+    //Draw connection between heel and toe
+    canvas.drawLine(rightHeelX, rightHeelY, rightFootIndexX,rightFootIndexY, paintLine)
+    canvas.drawLine(leftHeelX, leftHeelY, leftFootIndexX,leftFootIndexY, paintLine)
+
     return bitmap
 }
 
