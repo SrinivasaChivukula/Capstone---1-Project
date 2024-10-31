@@ -152,14 +152,92 @@ Parameters:
 Description:
 Return:
  */
-fun drawOnBitmap(bitmap: Bitmap, pose: Pose?): Bitmap
+fun drawOnBitmap(bitmap: Bitmap,
+                 pose: Pose?,
+                 leftAnkleAngles: MutableList<Float>,
+                 rightAnkleAngles: MutableList<Float>,
+                 leftKneeAngles: MutableList<Float>,
+                 rightKneeAngles: MutableList<Float>,
+                 leftHipAngles: MutableList<Float>,
+                 rightHipAngles: MutableList<Float>): Bitmap
 {
-    var text = "${pose?.getPoseLandmark(26)?.position?.x}"
+    //Get all landmarks in image
+    //val allPoseLandMarks = pose.getAllPoseLandmarks() //Test case for all landmarks on image
+    //Get values for specific locations for calculations
+    val leftShoulder = pose?.getPoseLandmark(PoseLandmark.LEFT_SHOULDER)
+    val rightShoulder = pose?.getPoseLandmark(PoseLandmark.RIGHT_SHOULDER)
+    val leftHip = pose?.getPoseLandmark(PoseLandmark.LEFT_HIP)
+    val rightHip = pose?.getPoseLandmark(PoseLandmark.RIGHT_HIP)
+    val leftKnee = pose?.getPoseLandmark(PoseLandmark.LEFT_KNEE)
+    val rightKnee = pose?.getPoseLandmark(PoseLandmark.RIGHT_KNEE)
+    val leftAnkle = pose?.getPoseLandmark(PoseLandmark.LEFT_ANKLE)
+    val rightAnkle = pose?.getPoseLandmark(PoseLandmark.RIGHT_ANKLE)
+    val leftHeel = pose?.getPoseLandmark(PoseLandmark.LEFT_HEEL)
+    val rightHeel = pose?.getPoseLandmark(PoseLandmark.RIGHT_HEEL)
+    val leftFootIndex = pose?.getPoseLandmark(PoseLandmark.LEFT_FOOT_INDEX)
+    val rightFootIndex = pose?.getPoseLandmark(PoseLandmark.RIGHT_FOOT_INDEX)
+
+    // Shoulder coordinates
+    val leftShoulderX = leftShoulder?.position?.x ?: 0f
+    val leftShoulderY = leftShoulder?.position?.y ?: 0f
+    val rightShoulderX = rightShoulder?.position?.x ?: 0f
+    val rightShoulderY = rightShoulder?.position?.y ?: 0f
+
+    // Hip coordinates
+    val leftHipX = leftHip?.position?.x ?: 0f
+    val leftHipY = leftHip?.position?.y ?: 0f
+    val rightHipX = rightHip?.position?.x ?: 0f
+    val rightHipY = rightHip?.position?.y ?: 0f
+
+    // Knee coordinates
+    val leftKneeX = leftKnee?.position?.x ?: 0f
+    val leftKneeY = leftKnee?.position?.y ?: 0f
+    val rightKneeX = rightKnee?.position?.x ?: 0f
+    val rightKneeY = rightKnee?.position?.y ?: 0f
+
+    // Ankle coordinates
+    val leftAnkleX = leftAnkle?.position?.x ?: 0f
+    val leftAnkleY = leftAnkle?.position?.y ?: 0f
+    val rightAnkleX = rightAnkle?.position?.x ?: 0f
+    val rightAnkleY = rightAnkle?.position?.y ?: 0f
+
+    // Heel coordinates
+    val leftHeelX = leftHeel?.position?.x ?: 0f
+    val leftHeelY = leftHeel?.position?.y ?: 0f
+    val rightHeelX = rightHeel?.position?.x ?: 0f
+    val rightHeelY = rightHeel?.position?.y ?: 0f
+
+    // Foot Index coordinates
+    val leftFootIndexX = leftFootIndex?.position?.x ?: 0f
+    val leftFootIndexY = leftFootIndex?.position?.y ?: 0f
+    val rightFootIndexX = rightFootIndex?.position?.x ?: 0f
+    val rightFootIndexY = rightFootIndex?.position?.y ?: 0f
+
+    // Angle Calculations
+    // Ankle Angles
+    val leftAnkleAngle = GetAngles(leftFootIndexX, leftFootIndexY, leftAnkleX, leftAnkleY, leftKneeX, leftKneeY)
+    leftAnkleAngles.add(leftAnkleAngle)
+    val rightAnkleAngle = GetAngles(rightFootIndexX, rightFootIndexY, rightAnkleX, rightAnkleY, rightKneeX, rightKneeY)
+    rightAnkleAngles.add(rightAnkleAngle)
+
+    // Knee Angles
+    val leftKneeAngle = GetAngles(leftAnkleX, leftAnkleY, leftKneeX, leftKneeY, leftHipX, leftHipY)
+    leftKneeAngles.add(leftKneeAngle)
+    val rightKneeAngle = GetAngles(rightAnkleX, rightAnkleY, rightKneeX, rightKneeY, rightHipX, rightHipY)
+    rightKneeAngles.add(rightKneeAngle)
+
+    // Hip Angles
+    val leftHipAngle = GetAngles(leftKneeX, leftKneeY, leftHipX, leftHipY, leftShoulderX, leftShoulderY)
+    leftHipAngles.add(leftHipAngle)
+    val rightHipAngle = GetAngles(rightKneeX, rightKneeY, rightHipX, rightHipY, rightShoulderX, rightShoulderY)
+    rightHipAngles.add(rightHipAngle)
+
+    var text = "Right Hip: ${rightHipAngle}"
     var canvas = Canvas(bitmap)
     var paint = Paint()
     paint.setARGB(255,0,0,0)
     paint.textSize = 20.0F
-    canvas.drawText(text, 10F, 10F, paint)
+    canvas.drawText(text, 25F, 25F, paint)
 
     return bitmap
 }
@@ -172,6 +250,14 @@ Return:
  */
 suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String): Uri?
 {
+    //Angle vectors for average calculations and csv output
+    val leftAnkleAngles: MutableList<Float> = mutableListOf()
+    val rightAnkleAngles: MutableList<Float> = mutableListOf()
+    val leftKneeAngles: MutableList<Float> = mutableListOf()
+    val rightKneeAngles: MutableList<Float> = mutableListOf()
+    val leftHipAngles: MutableList<Float> = mutableListOf()
+    val rightHipAngles: MutableList<Float> = mutableListOf()
+
     val framesList = getFrameBitmaps(context, uri) // Get frames from the original video
     if(framesList.isEmpty()) return uri
 
@@ -181,10 +267,10 @@ suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String): Uri?
 
     val mediaMuxer = MediaMuxer(outputPath, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
     var format = MediaFormat.createVideoFormat("video/avc",width, height)
-        format.setInteger(MediaFormat.KEY_BIT_RATE, 1000000)
-        format.setInteger(MediaFormat.KEY_FRAME_RATE, 30)
-        format.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface)
-        format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 1)
+    format.setInteger(MediaFormat.KEY_BIT_RATE, 1000000)
+    format.setInteger(MediaFormat.KEY_FRAME_RATE, 30)
+    format.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface)
+    format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 1)
 
     var encoder = MediaCodec.createEncoderByType("video/avc")
     encoder.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
@@ -200,7 +286,7 @@ suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String): Uri?
     for ((frameIndex, frame) in framesList.withIndex())
     {
         val pose = processImageBitmap(context, frame)
-        val modifiedBitmap = drawOnBitmap(frame, pose)
+        val modifiedBitmap = drawOnBitmap(frame, pose, leftAnkleAngles, rightAnkleAngles, leftKneeAngles, rightKneeAngles, leftHipAngles, rightHipAngles)
         // Draw the frame onto the encoder input surface
         val canvas = inputSurface.lockCanvas(null)
         canvas.drawBitmap(modifiedBitmap, 0f, 0f, null)
