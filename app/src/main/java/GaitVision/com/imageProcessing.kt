@@ -251,6 +251,21 @@ fun drawOnBitmap(bitmap: Bitmap,
     paintLine.setARGB(255, 255,255,255)
 
     paintLine.strokeWidth = 4f
+    //Draw Connection between hip and knee
+    canvas.drawLine(rightHipX, rightHipY, rightKneeX,rightKneeY, paintLine)
+    canvas.drawLine(leftHipX, leftHipY, leftKneeX,leftKneeY, paintLine)
+    //Draw connection between knee an ankle
+    canvas.drawLine(rightKneeX, rightKneeY, rightAnkleX,rightAnkleY, paintLine)
+    canvas.drawLine(leftKneeX, leftKneeY, leftAnkleX,leftAnkleY, paintLine)
+    //Draw connection between ankle and toe
+    canvas.drawLine(rightAnkleX, rightAnkleY, rightFootIndexX,rightFootIndexY, paintLine)
+    canvas.drawLine(leftAnkleX, leftAnkleY, leftFootIndexX,leftFootIndexY, paintLine)
+    //Draw connection between ankle and heel
+    canvas.drawLine(rightAnkleX, rightAnkleY, rightHeelX,rightHeelY, paintLine)
+    canvas.drawLine(leftAnkleX, leftAnkleY, leftHeelX,leftHeelY, paintLine)
+    //Draw connection between heel and toe
+    canvas.drawLine(rightHeelX, rightHeelY, rightFootIndexX,rightFootIndexY, paintLine)
+    canvas.drawLine(leftHeelX, leftHeelY, leftFootIndexX,leftFootIndexY, paintLine)
     //Draw Hip Points
     canvas.drawCircle(rightHipX,rightHipY,4f, paintCircleRight)
     canvas.drawCircle(leftHipX,leftHipY,4f, paintCircleLeft)
@@ -267,21 +282,7 @@ fun drawOnBitmap(bitmap: Bitmap,
     canvas.drawCircle(rightFootIndexX,rightFootIndexY,4f, paintCircleRight)
     canvas.drawCircle(leftFootIndexX,leftFootIndexY,4f, paintCircleLeft)
 
-    //Draw Connection between hip and knee
-    canvas.drawLine(rightHipX, rightHipY, rightKneeX,rightKneeY, paintLine)
-    canvas.drawLine(leftHipX, leftHipY, leftKneeX,leftKneeY, paintLine)
-    //Draw connection between knee an ankle
-    canvas.drawLine(rightKneeX, rightKneeY, rightAnkleX,rightAnkleY, paintLine)
-    canvas.drawLine(leftKneeX, leftKneeY, leftAnkleX,leftAnkleY, paintLine)
-    //Draw connection between ankle and toe
-    canvas.drawLine(rightAnkleX, rightAnkleY, rightFootIndexX,rightFootIndexY, paintLine)
-    canvas.drawLine(leftAnkleX, leftAnkleY, leftFootIndexX,leftFootIndexY, paintLine)
-    //Draw connection between ankle and heel
-    canvas.drawLine(rightAnkleX, rightAnkleY, rightHeelX,rightHeelY, paintLine)
-    canvas.drawLine(leftAnkleX, leftAnkleY, leftHeelX,leftHeelY, paintLine)
-    //Draw connection between heel and toe
-    canvas.drawLine(rightHeelX, rightHeelY, rightFootIndexX,rightFootIndexY, paintLine)
-    canvas.drawLine(leftHeelX, leftHeelY, leftFootIndexX,leftFootIndexY, paintLine)
+
 
     return bitmap
 }
@@ -302,6 +303,7 @@ suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String): Uri?
     val leftHipAngles: MutableList<Float> = mutableListOf()
     val rightHipAngles: MutableList<Float> = mutableListOf()
 
+    //val testList: MutableList<Pair<Float, Long>> = mutableListOf()
     val framesList = getFrameBitmaps(context, uri) // Get frames from the original video
     if(framesList.isEmpty()) return uri
 
@@ -327,8 +329,10 @@ suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String): Uri?
     var muxerStarted = false
     val bufferInfo = MediaCodec.BufferInfo()
 
+    var frameI = 0
     for ((frameIndex, frame) in framesList.withIndex())
     {
+        frameI = frameIndex
         val pose = processImageBitmap(context, frame)
         val modifiedBitmap = drawOnBitmap(frame, pose, leftAnkleAngles, rightAnkleAngles, leftKneeAngles, rightKneeAngles, leftHipAngles, rightHipAngles)
         // Draw the frame onto the encoder input surface
@@ -368,6 +372,7 @@ suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String): Uri?
         if (outputBufferId >= 0) {
             val outputBuffer = encoder.getOutputBuffer(outputBufferId) ?: break
             if (muxerStarted) {
+                bufferInfo.presentationTimeUs = frameI * frameDurationUs
                 mediaMuxer.writeSampleData(trackIndex, outputBuffer, bufferInfo)
             }
             encoder.releaseOutputBuffer(outputBufferId, false)
@@ -381,6 +386,11 @@ suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String): Uri?
     encoder.release()
     mediaMuxer.stop()
     mediaMuxer.release()
+
+    val retriever = MediaMetadataRetriever()
+    retriever.setDataSource(context, Uri.fromFile(File(outputPath)))
+    val videoLengthMs = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0L
+    Log.d("ErrorChecking","Video Length: ${videoLengthMs}")
 
     return Uri.fromFile(File(outputPath))
 }
