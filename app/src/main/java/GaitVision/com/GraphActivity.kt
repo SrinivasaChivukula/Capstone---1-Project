@@ -12,7 +12,7 @@ class GraphActivity : ComponentActivity() {
 
         val uploadCSVBtn = findViewById<Button>(R.id.upload_csv_btn)
         uploadCSVBtn.setOnClickListener {
-            val intent = Intent(this, UploadActivity::class.java)
+            val intent = Intent(this, ThirdActivity::class.java)
             startActivity(intent)
         }
     }
