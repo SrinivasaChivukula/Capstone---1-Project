@@ -8,7 +8,7 @@ import androidx.activity.ComponentActivity
 class GraphActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.graph_activity)
+        setContentView(R.layout.activity_graph)
 
         val uploadCSVBtn = findViewById<Button>(R.id.upload_csv_btn)
         uploadCSVBtn.setOnClickListener {

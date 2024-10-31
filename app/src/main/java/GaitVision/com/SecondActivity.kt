@@ -30,7 +30,7 @@ class SecondActivity : ComponentActivity() {
 
         val chooseAngleBtn = findViewById<Button>(R.id.choose_agl_btn)
         val popupMenu = PopupMenu(this, chooseAngleBtn)
-        popupMenu.menuInflater.inflate(R.menu.menu_popup, popupMenu.menu)
+        popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
 
         popupMenu.setOnMenuItemClickListener { menuItem -> val id = menuItem.itemId
 
