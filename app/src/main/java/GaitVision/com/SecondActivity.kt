@@ -65,7 +65,7 @@ class SecondActivity : ComponentActivity() {
         mBinding = ActivitySecondBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
 //        mBinding= DataBindingUtil.setContentView(this, R.layout.activity_second)
-        mBinding.uploadCsvBtn.setOnClickListener{startActivity(Intent(this, GraphActivity::class.java))}
+        mBinding.calAngleBtn.setOnClickListener{startActivity(Intent(this, GraphActivity::class.java))}
 
         val uriString = intent.getStringExtra("VIDEO_URI")
         val videoView = findViewById<VideoView>(R.id.video_viewer)
