@@ -26,6 +26,33 @@ class SecondActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val chooseAngleBtn = findViewById<Button>(R.id.choose_agl_btn)
+        val popupMenu = PopupMenu(this, chooseAngleBtn)
+        popupMenu.menuInflater.inflate(R.menu.menu_popup, popupMenu.menu)
+
+        popupMenu.setOnMenuItemClickListener { menuItem -> val id = menuItem.itemId
+
+            if (id == R.id.menu_hip){
+                // toggle here
+            }
+            else if (id == R.id.menu_knee){
+                // toggle here
+            }
+            else if (id == R.id.menu_ankle){
+                // toggle here
+            }
+            else if (id == R.id.menu_torso){
+                // toggle here
+            }
+
+            false
+        }
+
+        chooseAngleBtn.setOnClickListener {
+            popupMenu.show()
+        }
+        
 //        setContentView(R.layout.activity_second)
 //
 //        val uploadCSVBtn = findViewById<Button>(R.id.upload_csv_btn)

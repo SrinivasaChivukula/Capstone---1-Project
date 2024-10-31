@@ -29,6 +29,9 @@ import kotlinx.coroutines.tasks.await
 import java.io.File
 import java.nio.ByteBuffer
 
+private var frameCounter = 0
+private val frameSkip = 5  // Only update every 5 frames
+
 /*
 Name             : getFrameBitmaps
 Parameters       :
@@ -232,7 +235,7 @@ fun drawOnBitmap(bitmap: Bitmap,
     val rightHipAngle = GetAngles(rightKneeX, rightKneeY, rightHipX, rightHipY, rightShoulderX, rightShoulderY)
     rightHipAngles.add(rightHipAngle)
 
-    var text = "Right Hip: ${rightHipAngle}"
+    var text = "Right Hip: ${rightHipAngle}\u00B0"
     var canvas = Canvas(bitmap)
     var paint = Paint()
     paint.setARGB(255,0,0,0)
