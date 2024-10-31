@@ -28,6 +28,11 @@ class SecondActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        mBinding = ActivitySecondBinding.inflate(layoutInflater)
+        setContentView(mBinding.root)
+//        mBinding= DataBindingUtil.setContentView(this, R.layout.activity_second)
+        mBinding.calAngleBtn.setOnClickListener{startActivity(Intent(this, GraphActivity::class.java))}
+
         val chooseAngleBtn = findViewById<Button>(R.id.choose_agl_btn)
         val popupMenu = PopupMenu(this, chooseAngleBtn)
         popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
@@ -62,10 +67,7 @@ class SecondActivity : ComponentActivity() {
 //            startActivity(intent)
 //        }
 
-        mBinding = ActivitySecondBinding.inflate(layoutInflater)
-        setContentView(mBinding.root)
-//        mBinding= DataBindingUtil.setContentView(this, R.layout.activity_second)
-        mBinding.calAngleBtn.setOnClickListener{startActivity(Intent(this, GraphActivity::class.java))}
+
 
         val uriString = intent.getStringExtra("VIDEO_URI")
         val videoView = findViewById<VideoView>(R.id.video_viewer)
