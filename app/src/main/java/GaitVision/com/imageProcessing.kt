@@ -121,8 +121,9 @@ Parameters  :
 Description : This function will take the context of the application and bitmap of the image/frame
               we will be processing. It then uses the ML Kit image processor to do pose detection on
               the image and get the pixel positions of specific points to be used for angle
-              calculation in another function
-Return: None
+              calculation in another function.
+Return      :
+    Pose    : Returns all of the pose landmarks and their information to calling function for use.
  */
 suspend fun processImageBitmap(context: Context, bitmap: Bitmap): Pose?
 {
@@ -149,11 +150,31 @@ suspend fun processImageBitmap(context: Context, bitmap: Bitmap): Pose?
 }
 
 /*
-Name: drawOnBitmap
-Parameters:
-        Bitmap:
-Description:
-Return:
+Name                   : drawOnBitmap
+Parameters             :
+    Bitmap             : The bitmap we are drawing the angle text onto.
+    Pose               : The pose object holding all the landmarks and their positions of the
+                         current bitmap.
+    leftAnkleAngles    : The list of angles for left ankle in the video to store into for graphing
+                         and CSV output.
+    rightAnkleAngles   : The list of angles for right ankle in the video to store into for graphing
+                         and CSV output.
+    leftKneeAngles     : The list of angles for left knee in the video to store into for graphing
+                         and CSV output.
+    rightKneeAngles    : The list of angles for right knee in the video to store into for graphing
+                         and CSV output.
+    leftHipAngles      : The list of angles for left hip in the video to store into for graphing
+                         and CSV output.
+    rightHipAngles     : The list of angles for right hip in the video to store into for graphing
+                         and CSV output.
+Description            : This function with take the current bitmap, pose object of the current
+                         bitmap and the list used to store Each angle for the entire video and will
+                         calculate the angle for each keypoint and store their values. It will then
+                         display those values to the screen on the bitmap. We will finally draw the
+                         skeleton frame for the lower half of the body onto the bitmap over the
+                         positions of the landmarks for visual representation and checking.
+Return                 :
+    Bitmap             : Returns the edited bitmap with the skeleton frame and angle text on it.
  */
 fun drawOnBitmap(bitmap: Bitmap,
                  pose: Pose?,
@@ -288,10 +309,19 @@ fun drawOnBitmap(bitmap: Bitmap,
 }
 
 /*
-Name:
-Parameters:
-Description
-Return:
+Name           : ProcVid
+Parameters     :
+    context    : This parameter is the interface that contains global information about
+                 the application environment.
+    uri        : This is the video Uri that we will be working on.
+    outputPath : This is the output path the new video with all the processing on should be
+                 saved to.
+Description    : This is the master function of the entire video processing sequence.
+                 It will call all the helper functions that are needed to run the processing
+                 and video encoding.
+Return         :
+    Uri        : This is the new video's uri that has all the drawing and pose detection
+                 displayed on it.
  */
 suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String): Uri?
 {
