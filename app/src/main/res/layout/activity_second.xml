@@ -8,10 +8,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <Button
-        android:id="@+id/toggle_agl_btn"
+        android:id="@+id/choose_agl_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Toggle Angle"
+        android:text="Choose Angle"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -19,16 +19,16 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.15"
+        app:layout_constraintVertical_bias="0.10"
         tools:ignore="HardcodedText" />
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toTopOf="@+id/upload_csv_btn"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toggle_agl_btn">
+        app:layout_constraintTop_toTopOf="parent">
 
         <VideoView
             android:id="@+id/video_viewer"
@@ -38,10 +38,10 @@
     </FrameLayout>
 
     <Button
-        android:id="@+id/upload_csv_btn"
+        android:id="@+id/cal_angle_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Upload CSV"
+        android:text="Calculate Angles"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -49,7 +49,7 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.85"
+        app:layout_constraintVertical_bias="0.90"
         tools:ignore="HardcodedText" />
-
+    
 </androidx.constraintlayout.widget.ConstraintLayout>
