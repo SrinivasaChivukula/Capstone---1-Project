@@ -9,6 +9,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Environment
 import android.util.Log
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import android.widget.PopupMenu
 import android.widget.MediaController
 import android.widget.VideoView
@@ -16,7 +18,10 @@ import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.Dispatcher
 import java.io.File
 
 
@@ -88,7 +93,22 @@ class SecondActivity : ComponentActivity() {
                         outputFile.delete()
                     }
                     Log.d("ErrorChecking", "Before function")
-                    var newVideoUri = ProcVid(this@SecondActivity, it, outputFilePath)
+                    mBinding.videoViewer.visibility = GONE
+                    mBinding.SplittingText.visibility = GONE
+                    mBinding.CreationText.visibility = GONE
+                    mBinding.splittingBar.visibility = GONE
+                    mBinding.VideoCreation.visibility = GONE
+                    mBinding.splittingProgressValue.visibility = GONE
+                    mBinding.CreatingProgressValue.visibility = GONE
+                    var newVideoUri = withContext(Dispatchers.IO){ProcVid(this@SecondActivity, it, outputFilePath,mBinding)}
+                    mBinding.SplittingText.visibility = GONE
+                    mBinding.CreationText.visibility = GONE
+                    mBinding.splittingBar.visibility = GONE
+                    mBinding.VideoCreation.visibility = GONE
+                    mBinding.splittingProgressValue.visibility = GONE
+                    mBinding.CreatingProgressValue.visibility = GONE
+                    mBinding.videoViewer.visibility = VISIBLE
+
                     Log.d("ErrorChecking", "Function URI: ${newVideoUri}")
                     videoView.setVideoURI(newVideoUri)
                 } catch(e:Exception){

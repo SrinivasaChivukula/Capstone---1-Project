@@ -1,5 +1,6 @@
 package GaitVision.com
 
+import GaitVision.com.databinding.ActivitySecondBinding
 import android.content.ContentValues
 import android.content.Context
 import android.graphics.Bitmap
@@ -18,6 +19,8 @@ import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.Surface
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import androidx.core.content.FileProvider
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.PoseDetection
@@ -25,7 +28,9 @@ import com.google.mlkit.vision.pose.PoseLandmark
 import com.google.mlkit.vision.pose.accurate.AccuratePoseDetectorOptions
 import com.google.android.gms.tasks.Tasks
 import com.google.mlkit.vision.pose.Pose
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.nio.ByteBuffer
 
@@ -38,12 +43,13 @@ Parameters       :
     context      : This parameter is the interface that contains global information about
                    the application environment.
     fileUri      : This parameter is the uri to the video that will be used in the function.
+    mBinding     : This is the view of the activity page. Use this for messing with XML features.
 Description      : This function takes a uri of a video and sends it through a process to get a
                    bitmap of every frame in the video so pose tracking can be done on it.
 Return           :
     List<Bitmap> : List of bitmaps for images picked up from frames
  */
-fun getFrameBitmaps(context: Context,fileUri: Uri?): List<Bitmap>
+suspend fun getFrameBitmaps(context: Context,fileUri: Uri?, mBinding: ActivitySecondBinding): List<Bitmap>
 {
     if(fileUri == null)
     {
@@ -85,6 +91,10 @@ fun getFrameBitmaps(context: Context,fileUri: Uri?): List<Bitmap>
 
         val videoLengthUs = videoLengthMs * 1000L
 
+        withContext(Dispatchers.Main){mBinding.splittingBar.visibility = VISIBLE}
+        withContext(Dispatchers.Main){mBinding.splittingProgressValue.visibility = VISIBLE}
+        withContext(Dispatchers.Main){mBinding.splittingProgressValue.text = " 0%"}
+        var progress : Int
         //Loop through all video and get frame bitmap at current position
         while(currTime <= videoLengthUs)
         {
@@ -95,6 +105,9 @@ fun getFrameBitmaps(context: Context,fileUri: Uri?): List<Bitmap>
                 Log.d("ErrorChecking","Adding frame to list")
                 framesList.add(frame)
             }
+            progress = ((currTime.toDouble() / videoLengthUs)*100).toInt()
+            withContext(Dispatchers.Main){mBinding.splittingBar.setProgress(progress)}
+            withContext(Dispatchers.Main){mBinding.splittingProgressValue.text = (" " + progress.toString() + "%")}
             currTime += frameInterval
         }
     }
@@ -316,6 +329,7 @@ Parameters     :
     uri        : This is the video Uri that we will be working on.
     outputPath : This is the output path the new video with all the processing on should be
                  saved to.
+    mBinding   : This is the view of the activity page. Use this for messing with XML features.
 Description    : This is the master function of the entire video processing sequence.
                  It will call all the helper functions that are needed to run the processing
                  and video encoding.
@@ -323,7 +337,7 @@ Return         :
     Uri        : This is the new video's uri that has all the drawing and pose detection
                  displayed on it.
  */
-suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String): Uri?
+suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String, mBinding: ActivitySecondBinding): Uri?
 {
     //Angle vectors for average calculations and csv output
     val leftAnkleAngles: MutableList<Float> = mutableListOf()
@@ -333,8 +347,12 @@ suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String): Uri?
     val leftHipAngles: MutableList<Float> = mutableListOf()
     val rightHipAngles: MutableList<Float> = mutableListOf()
 
+    withContext(Dispatchers.Main){mBinding.SplittingText.visibility = VISIBLE}
+    withContext(Dispatchers.Main){mBinding.CreationText.visibility = VISIBLE}
+    withContext(Dispatchers.Main){mBinding.splittingProgressValue.visibility = GONE}
+    withContext(Dispatchers.Main){mBinding.CreatingProgressValue.visibility = GONE}
     //val testList: MutableList<Pair<Float, Long>> = mutableListOf()
-    val framesList = getFrameBitmaps(context, uri) // Get frames from the original video
+    val framesList = getFrameBitmaps(context, uri, mBinding) // Get frames from the original video
     if(framesList.isEmpty()) return uri
 
     val firstFrame = framesList[0]
@@ -359,7 +377,13 @@ suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String): Uri?
     var muxerStarted = false
     val bufferInfo = MediaCodec.BufferInfo()
 
+    val listSize = framesList.size
+    var progress : Int
+
     var frameI = 0
+    withContext(Dispatchers.Main){mBinding.VideoCreation.visibility = VISIBLE}
+    withContext(Dispatchers.Main){mBinding.CreatingProgressValue.visibility = VISIBLE}
+    withContext(Dispatchers.Main){mBinding.CreatingProgressValue.text = " 0%"}
     for ((frameIndex, frame) in framesList.withIndex())
     {
         frameI = frameIndex
@@ -393,6 +417,9 @@ suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String): Uri?
                 outputBufferId == MediaCodec.INFO_TRY_AGAIN_LATER -> break
             }
         }
+        progress = ((frameI.toDouble() / listSize)*100).toInt()
+        withContext(Dispatchers.Main){mBinding.VideoCreation.setProgress(progress)}
+        withContext(Dispatchers.Main){mBinding.CreatingProgressValue.text = (" " + progress.toString() + "%")}
     }
 
     // Signal end of input stream and finalize remaining buffers
@@ -421,6 +448,14 @@ suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String): Uri?
     retriever.setDataSource(context, Uri.fromFile(File(outputPath)))
     val videoLengthMs = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0L
     Log.d("ErrorChecking","Video Length: ${videoLengthMs}")
+
+    withContext(Dispatchers.Main){mBinding.SplittingText.visibility = GONE}
+    withContext(Dispatchers.Main){mBinding.CreationText.visibility = GONE}
+    withContext(Dispatchers.Main){mBinding.VideoCreation.visibility = GONE}
+    withContext(Dispatchers.Main){mBinding.splittingBar.visibility = GONE}
+    withContext(Dispatchers.Main){mBinding.splittingProgressValue.visibility = GONE}
+    withContext(Dispatchers.Main){mBinding.CreatingProgressValue.visibility = GONE}
+
 
     return Uri.fromFile(File(outputPath))
 }

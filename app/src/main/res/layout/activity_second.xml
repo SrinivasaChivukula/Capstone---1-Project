@@ -22,6 +22,69 @@
         app:layout_constraintVertical_bias="0.10"
         tools:ignore="HardcodedText" />
 
+    <TextView
+        android:id="@+id/SplittingText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Splitting Video : "
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.35"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.45"/>
+    <TextView
+        android:id="@+id/CreationText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Creating Video : "
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.35"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.5"/>
+
+
+    <ProgressBar
+        android:id="@+id/splittingBar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/SplittingText"
+        app:layout_constraintStart_toEndOf="@id/SplittingText"
+        />
+
+    <ProgressBar
+        android:id="@+id/VideoCreation"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/CreationText"
+        app:layout_constraintStart_toEndOf="@id/CreationText"
+        />
+
+    <TextView
+        android:id="@+id/splittingProgressValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/splittingBar"
+        app:layout_constraintStart_toEndOf="@id/splittingBar"
+        android:text=" ${value}%"
+        android:textColor="@color/black"/>
+
+    <TextView
+        android:id="@+id/CreatingProgressValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/VideoCreation"
+        app:layout_constraintStart_toEndOf="@id/VideoCreation"
+        android:text=" ${value}%"
+        android:textColor="@color/black"/>
+
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -33,7 +96,8 @@
         <VideoView
             android:id="@+id/video_viewer"
             android:layout_width="411dp"
-            android:layout_height="475dp" />
+            android:layout_height="475dp"
+            android:visibility="invisible"/>
 
     </FrameLayout>
 
