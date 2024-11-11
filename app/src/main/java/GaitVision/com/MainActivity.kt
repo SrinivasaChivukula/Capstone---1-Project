@@ -4,6 +4,9 @@ import GaitVision.com.databinding.ActivityMainBinding
 import android.app.Activity
 import android.os.Bundle
 import android.widget.Button
+import android.app.Dialog
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
