@@ -97,6 +97,25 @@ class MainActivity : ComponentActivity() {
         //mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         mBinding.confirmVidBtn.setOnClickListener{startActivity(Intent(this,SecondActivity::class.java))}
         mBinding.openGalBtn.setOnClickListener{startIntentFromGallary()}
+
+        val help01Btn = findViewById<Button>(R.id.help01_btn)
+        help01Btn.setOnClickListener{
+            val dialogBinding = layoutInflater.inflate(R.layout.help_dialog, null)
+
+            val myDialog = Dialog(this)
+            myDialog.setContentView(dialogBinding)
+
+            myDialog.setCancelable(false)
+            myDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            myDialog.show()
+
+            val yesBtn = dialogBinding.findViewById<Button>(R.id.help_yes)
+            yesBtn.setOnClickListener{
+                myDialog.dismiss()
+            }
+
+        }
+        
     }
 
     private fun initClicks()
