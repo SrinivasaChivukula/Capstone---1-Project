@@ -61,11 +61,11 @@ class SecondActivity : ComponentActivity() {
         
 //        setContentView(R.layout.activity_second)
 //
-//        val uploadCSVBtn = findViewById<Button>(R.id.upload_csv_btn)
-//        uploadCSVBtn.setOnClickListener {
-//            val intent = Intent(this, ThirdActivity::class.java)
-//            startActivity(intent)
-//        }
+        val uploadCSVBtn = findViewById<Button>(R.id.upload_csv_btn)
+        uploadCSVBtn.setOnClickListener {
+            val intent = Intent(this, ThirdActivity::class.java)
+            startActivity(intent)
+        }
 
 
 
