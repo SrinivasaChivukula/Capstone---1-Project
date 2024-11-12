@@ -196,7 +196,7 @@ fun drawOnBitmap(bitmap: Bitmap,
                  leftKneeAngles: MutableList<Float>,
                  rightKneeAngles: MutableList<Float>,
                  leftHipAngles: MutableList<Float>,
-                 rightHipAngles: MutableList<Float>): Bitmap
+                 rightHipAngles: MutableList<Float>, angle : String): Bitmap
 {
     //Get all landmarks in image
     //val allPoseLandMarks = pose.getAllPoseLandmarks() //Test case for all landmarks on image
@@ -268,13 +268,48 @@ fun drawOnBitmap(bitmap: Bitmap,
     leftHipAngles.add(leftHipAngle)
     val rightHipAngle = GetAngles(rightKneeX, rightKneeY, rightHipX, rightHipY, rightShoulderX, rightShoulderY)
     rightHipAngles.add(rightHipAngle)
-
-    var text = "Right Hip: ${rightHipAngle}\u00B0"
     var canvas = Canvas(bitmap)
-    var paint = Paint()
-    paint.setARGB(255,0,0,0)
-    paint.textSize = 20.0F
-    canvas.drawText(text, 25F, 25F, paint)
+    if(angle == "hip")
+    {
+        var text = "Right Hip: ${rightHipAngle}\u00B0"
+        var paint = Paint()
+        paint.setARGB(255,0,0,0)
+        paint.textSize = 20.0F
+        canvas.drawText(text, 25F, 25F, paint)
+        text = "Left Hip: ${leftHipAngle}\u00B0"
+        canvas.drawText(text, 25F, 50F, paint)
+    }
+    else if(angle == "knee")
+    {
+        var text = "Right Knee: ${rightKneeAngle}\u00B0"
+        var paint = Paint()
+        paint.setARGB(255,0,0,0)
+        paint.textSize = 20.0F
+        canvas.drawText(text, 25F, 25F, paint)
+        text = "Left Knee: ${leftKneeAngle}\u00B0"
+        canvas.drawText(text, 25F, 50F, paint)
+    }
+    else if(angle == "ankle")
+    {
+        var text = "Right Ankle: ${rightAnkleAngle}\u00B0"
+        var paint = Paint()
+        paint.setARGB(255,0,0,0)
+        paint.textSize = 20.0F
+        canvas.drawText(text, 25F, 25F, paint)
+        text = "Left Ankle: ${leftAnkleAngle}\u00B0"
+        canvas.drawText(text, 25F, 50F, paint)
+    }
+    else if(angle == "torso")
+    {
+        var text = "Right Torso: Dummy Text"
+        var paint = Paint()
+        paint.setARGB(255,0,0,0)
+        paint.textSize = 20.0F
+        canvas.drawText(text, 25F, 25F, paint)
+        text = "Left Torso: Dummy Text"
+        canvas.drawText(text, 25F, 50F, paint)
+    }
+
 
     var paintCircleRight = Paint()
     var paintCircleLeft = Paint()
@@ -337,7 +372,7 @@ Return         :
     Uri        : This is the new video's uri that has all the drawing and pose detection
                  displayed on it.
  */
-suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String, mBinding: ActivitySecondBinding): Uri?
+suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String, mBinding: ActivitySecondBinding, angle : String): Uri?
 {
     //Angle vectors for average calculations and csv output
     val leftAnkleAngles: MutableList<Float> = mutableListOf()
@@ -388,7 +423,7 @@ suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String, mBinding: A
     {
         frameI = frameIndex
         val pose = processImageBitmap(context, frame)
-        val modifiedBitmap = drawOnBitmap(frame, pose, leftAnkleAngles, rightAnkleAngles, leftKneeAngles, rightKneeAngles, leftHipAngles, rightHipAngles)
+        val modifiedBitmap = drawOnBitmap(frame, pose, leftAnkleAngles, rightAnkleAngles, leftKneeAngles, rightKneeAngles, leftHipAngles, rightHipAngles, angle)
         // Draw the frame onto the encoder input surface
         val canvas = inputSurface.lockCanvas(null)
         canvas.drawBitmap(modifiedBitmap, 0f, 0f, null)

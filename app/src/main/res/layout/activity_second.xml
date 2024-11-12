@@ -33,7 +33,8 @@
         app:layout_constraintHorizontal_bias="0.35"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.45"/>
+        app:layout_constraintVertical_bias="0.45"
+        android:visibility="gone"/>
     <TextView
         android:id="@+id/CreationText"
         android:layout_width="wrap_content"
@@ -45,7 +46,8 @@
         app:layout_constraintHorizontal_bias="0.35"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5"/>
+        app:layout_constraintVertical_bias="0.5"
+        android:visibility="gone"/>
 
 
     <ProgressBar
@@ -55,6 +57,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@id/SplittingText"
         app:layout_constraintStart_toEndOf="@id/SplittingText"
+        android:visibility="gone"
         />
 
     <ProgressBar
@@ -64,6 +67,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@id/CreationText"
         app:layout_constraintStart_toEndOf="@id/CreationText"
+        android:visibility="gone"
         />
 
     <TextView
@@ -73,7 +77,8 @@
         app:layout_constraintTop_toTopOf="@id/splittingBar"
         app:layout_constraintStart_toEndOf="@id/splittingBar"
         android:text=" ${value}%"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black"
+        android:visibility="gone"/>
 
     <TextView
         android:id="@+id/CreatingProgressValue"
@@ -82,7 +87,8 @@
         app:layout_constraintTop_toTopOf="@id/VideoCreation"
         app:layout_constraintStart_toEndOf="@id/VideoCreation"
         android:text=" ${value}%"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black"
+        android:visibility="gone"/>
 
 
     <FrameLayout
