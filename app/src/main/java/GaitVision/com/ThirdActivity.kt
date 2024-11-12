@@ -1,5 +1,6 @@
 package GaitVision.com
 
+import android.app.AlertDialog
 import android.os.Bundle
 import android.widget.Button
 import android.content.Intent
@@ -20,8 +21,15 @@ class ThirdActivity : ComponentActivity() {
         val fileData = "placeholder text"
         submitButton.setOnClickListener {
             val fileName = participantId.text.toString()    //filename is retrieved from the participant_id text field
-
             writeToFile(fileName, fileData)                 //write to file is called with file name and placeholder as parameters
+
+            val builder: AlertDialog.Builder = AlertDialog.Builder(this)
+            builder
+                .setMessage("CSV File saved to Documents")
+                .setTitle("Successfully Exported")
+
+            val dialog: AlertDialog = builder.create()
+            dialog.show()
         }
 
         val mainMenuBtn = findViewById<Button>(R.id.main_mnu_btn)
