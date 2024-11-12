@@ -1,10 +1,14 @@
 package GaitVision.com
 
+import GaitVision.com.GraphActivity.Companion.lineChartLeftKnee
+import GaitVision.com.GraphActivity.Companion.lineChartRightKnee
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.media.MediaCodec
 import android.media.MediaCodecInfo
@@ -14,10 +18,13 @@ import android.media.MediaFormat
 import android.media.MediaMetadataRetriever
 import android.media.MediaMuxer
 import android.net.Uri
+import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.Surface
+import android.widget.Button
+import androidx.activity.ComponentActivity
 import androidx.core.content.FileProvider
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.PoseDetection
@@ -28,6 +35,31 @@ import com.google.mlkit.vision.pose.Pose
 import kotlinx.coroutines.tasks.await
 import java.io.File
 import java.nio.ByteBuffer
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.Description
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+
+fun plotLineGraph(lineChart: LineChart, angleData: List<Float>, label: String) {
+    val entries = angleData.mapIndexed { index, angle -> Entry(index.toFloat(), angle) }
+
+    val lineDataSet = LineDataSet(entries, label)
+    lineDataSet.color = Color.BLUE // Set the color for the line
+    lineDataSet.valueTextSize = 12f // Text size for data points
+    val lineData = LineData(lineDataSet)
+
+    lineChart.data = lineData
+    lineChart.invalidate() // Refresh chart
+}
+
+//Angle vectors for average calculations and csv output
+val leftAnkleAngles: MutableList<Float> = mutableListOf()
+val rightAnkleAngles: MutableList<Float> = mutableListOf()
+val leftKneeAngles: MutableList<Float> = mutableListOf()
+val rightKneeAngles: MutableList<Float> = mutableListOf()
+val leftHipAngles: MutableList<Float> = mutableListOf()
+val rightHipAngles: MutableList<Float> = mutableListOf()
 
 private var frameCounter = 0
 private val frameSkip = 5  // Only update every 5 frames
@@ -308,6 +340,30 @@ fun drawOnBitmap(bitmap: Bitmap,
     return bitmap
 }
 
+class GraphActivity : ComponentActivity() {
+    companion object {
+        lateinit var lineChartLeftKnee: LineChart
+        lateinit var lineChartRightKnee: LineChart
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_graph)
+
+        lineChartLeftKnee = findViewById(R.id.lineChartLeftKnee)
+        lineChartRightKnee = findViewById(R.id.lineChartRightKnee)
+
+        plotLineGraph(lineChartLeftKnee, leftKneeAngles, "Left Knee Angles")
+        plotLineGraph(lineChartRightKnee, rightKneeAngles, "Right Knee Angles")
+
+        val uploadCSVBtn = findViewById<Button>(R.id.upload_csv_btn)
+        uploadCSVBtn.setOnClickListener {
+            val intent = Intent(this, ThirdActivity::class.java)
+            startActivity(intent)
+        }
+    }
+}
+
 /*
 Name           : ProcVid
 Parameters     :
@@ -323,15 +379,8 @@ Return         :
     Uri        : This is the new video's uri that has all the drawing and pose detection
                  displayed on it.
  */
-suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String): Uri?
+suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String) : Uri?
 {
-    //Angle vectors for average calculations and csv output
-    val leftAnkleAngles: MutableList<Float> = mutableListOf()
-    val rightAnkleAngles: MutableList<Float> = mutableListOf()
-    val leftKneeAngles: MutableList<Float> = mutableListOf()
-    val rightKneeAngles: MutableList<Float> = mutableListOf()
-    val leftHipAngles: MutableList<Float> = mutableListOf()
-    val rightHipAngles: MutableList<Float> = mutableListOf()
 
     //val testList: MutableList<Pair<Float, Long>> = mutableListOf()
     val framesList = getFrameBitmaps(context, uri) // Get frames from the original video
@@ -411,6 +460,7 @@ suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String): Uri?
         }
     }
 
+
     // Stop and release encoder and muxer
     encoder.stop()
     encoder.release()
@@ -424,3 +474,4 @@ suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String): Uri?
 
     return Uri.fromFile(File(outputPath))
 }
+

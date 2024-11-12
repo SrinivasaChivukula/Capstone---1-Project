@@ -4,8 +4,12 @@ import android.os.Bundle
 import android.widget.Button
 import android.content.Intent
 import androidx.activity.ComponentActivity
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.data.Entry
 
-class GraphActivity : ComponentActivity() {
+/*class GraphActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_graph)
@@ -16,4 +20,4 @@ class GraphActivity : ComponentActivity() {
             startActivity(intent)
         }
     }
-}
+}*/

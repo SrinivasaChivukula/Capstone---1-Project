@@ -38,6 +38,19 @@
             app:layout_constraintTop_toBottomOf="@+id/textView3"
             tools:ignore="HardcodedText" />
 
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lineChartLeftKnee"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="16dp" />
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lineChartRightKnee"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_below="@id/lineChartLeftKnee"
+            android:layout_marginTop="16dp" />
+
         <TextView
             android:id="@+id/textView5"
             android:layout_width="wrap_content"
