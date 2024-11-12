@@ -269,24 +269,39 @@ fun drawOnBitmap(bitmap: Bitmap,
     val rightFootIndexX = rightFootIndex?.position?.x ?: 0f
     val rightFootIndexY = rightFootIndex?.position?.y ?: 0f
 
-    // Angle Calculations
+    // Angle Calculations (added Not A Number check)
     // Ankle Angles
-    val leftAnkleAngle = GetAngles(leftFootIndexX, leftFootIndexY, leftAnkleX, leftAnkleY, leftKneeX, leftKneeY)
-    leftAnkleAngles.add(leftAnkleAngle)
-    val rightAnkleAngle = GetAngles(rightFootIndexX, rightFootIndexY, rightAnkleX, rightAnkleY, rightKneeX, rightKneeY)
-    rightAnkleAngles.add(rightAnkleAngle)
+    var leftAnkleAngle = GetAngles(leftFootIndexX, leftFootIndexY, leftAnkleX, leftAnkleY, leftKneeX, leftKneeY)
+    if (!leftAnkleAngle.isNaN()) {
+        leftAnkleAngles.add(leftAnkleAngle)
+    }
+
+    var rightAnkleAngle = GetAngles(rightFootIndexX, rightFootIndexY, rightAnkleX, rightAnkleY, rightKneeX, rightKneeY)
+    if (!rightAnkleAngle.isNaN()) {
+        rightAnkleAngles.add(rightAnkleAngle)
+    }
 
     // Knee Angles
-    val leftKneeAngle = GetAngles(leftAnkleX, leftAnkleY, leftKneeX, leftKneeY, leftHipX, leftHipY)
-    leftKneeAngles.add(leftKneeAngle)
-    val rightKneeAngle = GetAngles(rightAnkleX, rightAnkleY, rightKneeX, rightKneeY, rightHipX, rightHipY)
-    rightKneeAngles.add(rightKneeAngle)
+    var leftKneeAngle = GetAngles(leftAnkleX, leftAnkleY, leftKneeX, leftKneeY, leftHipX, leftHipY)
+    if (!leftKneeAngle.isNaN()) {
+        leftKneeAngles.add(leftKneeAngle)
+    }
+
+    var rightKneeAngle = GetAngles(rightAnkleX, rightAnkleY, rightKneeX, rightKneeY, rightHipX, rightHipY)
+    if (!rightKneeAngle.isNaN()) {
+        rightKneeAngles.add(rightKneeAngle)
+    }
 
     // Hip Angles
-    val leftHipAngle = GetAngles(leftKneeX, leftKneeY, leftHipX, leftHipY, leftShoulderX, leftShoulderY)
-    leftHipAngles.add(leftHipAngle)
-    val rightHipAngle = GetAngles(rightKneeX, rightKneeY, rightHipX, rightHipY, rightShoulderX, rightShoulderY)
-    rightHipAngles.add(rightHipAngle)
+    var leftHipAngle = GetAngles(leftKneeX, leftKneeY, leftHipX, leftHipY, leftShoulderX, leftShoulderY)
+    if (!leftHipAngle.isNaN()) {
+        leftHipAngles.add(leftHipAngle)
+    }
+
+    var rightHipAngle = GetAngles(rightKneeX, rightKneeY, rightHipX, rightHipY, rightShoulderX, rightShoulderY)
+    if (!rightHipAngle.isNaN()) {
+        rightHipAngles.add(rightHipAngle)
+    }
 
     var text = "Right Hip: ${rightHipAngle}\u00B0"
     var canvas = Canvas(bitmap)
@@ -414,6 +429,9 @@ suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String) : Uri?
         frameI = frameIndex
         val pose = processImageBitmap(context, frame)
         val modifiedBitmap = drawOnBitmap(frame, pose, leftAnkleAngles, rightAnkleAngles, leftKneeAngles, rightKneeAngles, leftHipAngles, rightHipAngles)
+        // Log check to see example of mutable list
+        Log.d("MutableListContents", "leftKneeAngles after processing: $leftKneeAngles")
+        Log.d("MutableListContents", "rightKneeAngles after processing: $rightKneeAngles")
         // Draw the frame onto the encoder input surface
         val canvas = inputSurface.lockCanvas(null)
         canvas.drawBitmap(modifiedBitmap, 0f, 0f, null)
