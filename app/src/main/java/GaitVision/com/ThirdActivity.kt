@@ -20,7 +20,11 @@ class ThirdActivity : ComponentActivity() {
         val participantId = findViewById<EditText>(R.id.participant_id)
         val fileData = "placeholder text"
         submitButton.setOnClickListener {
-            val fileName = participantId.text.toString()    //filename is retrieved from the participant_id text field
+            val fileName = buildString {
+                append(participantId.text.toString())
+                append(".csv")
+            }    //filename is retrieved from the participant_id text field
+
             writeToFile(fileName, fileData)                 //write to file is called with file name and placeholder as parameters
 
             val builder: AlertDialog.Builder = AlertDialog.Builder(this)
