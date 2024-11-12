@@ -359,6 +359,10 @@ class GraphActivity : ComponentActivity() {
     companion object {
         lateinit var lineChartLeftKnee: LineChart
         lateinit var lineChartRightKnee: LineChart
+        lateinit var lineChartLeftAnkle: LineChart
+        lateinit var lineChartRightAnkle: LineChart
+        lateinit var lineChartLeftHip: LineChart
+        lateinit var lineChartRightHip: LineChart
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -367,9 +371,18 @@ class GraphActivity : ComponentActivity() {
 
         lineChartLeftKnee = findViewById(R.id.lineChartLeftKnee)
         lineChartRightKnee = findViewById(R.id.lineChartRightKnee)
+        lineChartLeftAnkle = findViewById(R.id.lineChartLeftAnkle)
+        lineChartRightAnkle = findViewById(R.id.lineChartRightAnkle)
+        lineChartLeftHip = findViewById(R.id.lineChartLeftHip)
+        lineChartRightHip = findViewById(R.id.lineChartRightHip)
 
         plotLineGraph(lineChartLeftKnee, leftKneeAngles, "Left Knee Angles")
         plotLineGraph(lineChartRightKnee, rightKneeAngles, "Right Knee Angles")
+        plotLineGraph(lineChartLeftAnkle, leftAnkleAngles, "Left Ankle Angles")
+        plotLineGraph(lineChartRightAnkle, rightAnkleAngles, "Right Ankle Angles")
+        plotLineGraph(lineChartLeftHip, leftHipAngles, "Left Hip Angles")
+        plotLineGraph(lineChartRightHip, rightHipAngles, "Right Hip Angles")
+
 
         val uploadCSVBtn = findViewById<Button>(R.id.upload_csv_btn)
         uploadCSVBtn.setOnClickListener {

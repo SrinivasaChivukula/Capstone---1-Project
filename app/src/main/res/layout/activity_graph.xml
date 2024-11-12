@@ -24,6 +24,19 @@
             app:layout_constraintBottom_toTopOf="@+id/textView4"
             tools:ignore="HardcodedText" />
 
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lineChartLeftHip"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="16dp" />
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lineChartRightHip"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_below="@id/lineChartLeftKnee"
+            android:layout_marginTop="16dp" />
+
         <TextView
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
@@ -64,6 +77,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView4"
             tools:ignore="HardcodedText" />
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lineChartLeftAnkle"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="16dp" />
+
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lineChartRightAnkle"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_below="@id/lineChartLeftKnee"
+            android:layout_marginTop="16dp" />
 
         <TextView
             android:id="@+id/textView6"
