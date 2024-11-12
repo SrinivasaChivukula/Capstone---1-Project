@@ -72,6 +72,7 @@ class SecondActivity : ComponentActivity() {
                             mBinding.VideoCreation.visibility = GONE
                             mBinding.splittingProgressValue.visibility = GONE
                             mBinding.CreatingProgressValue.visibility = GONE
+                            mBinding.selectAngleText.visibility = GONE
                             var newVideoUri = withContext(Dispatchers.IO){ProcVid(this@SecondActivity, it, outputFilePath,mBinding, "hip")}
                             mBinding.SplittingText.visibility = GONE
                             mBinding.CreationText.visibility = GONE
@@ -119,6 +120,7 @@ class SecondActivity : ComponentActivity() {
                             mBinding.VideoCreation.visibility = GONE
                             mBinding.splittingProgressValue.visibility = GONE
                             mBinding.CreatingProgressValue.visibility = GONE
+                            mBinding.selectAngleText.visibility = GONE
                             var newVideoUri = withContext(Dispatchers.IO){ProcVid(this@SecondActivity, it, outputFilePath,mBinding, "knee")}
                             mBinding.SplittingText.visibility = GONE
                             mBinding.CreationText.visibility = GONE
@@ -166,6 +168,7 @@ class SecondActivity : ComponentActivity() {
                             mBinding.VideoCreation.visibility = GONE
                             mBinding.splittingProgressValue.visibility = GONE
                             mBinding.CreatingProgressValue.visibility = GONE
+                            mBinding.selectAngleText.visibility = GONE
                             var newVideoUri = withContext(Dispatchers.IO){ProcVid(this@SecondActivity, it, outputFilePath,mBinding, "ankle")}
                             mBinding.SplittingText.visibility = GONE
                             mBinding.CreationText.visibility = GONE
@@ -213,6 +216,7 @@ class SecondActivity : ComponentActivity() {
                             mBinding.VideoCreation.visibility = GONE
                             mBinding.splittingProgressValue.visibility = GONE
                             mBinding.CreatingProgressValue.visibility = GONE
+                            mBinding.selectAngleText.visibility = GONE
                             var newVideoUri = withContext(Dispatchers.IO){ProcVid(this@SecondActivity, it, outputFilePath,mBinding, "torso")}
                             mBinding.SplittingText.visibility = GONE
                             mBinding.CreationText.visibility = GONE

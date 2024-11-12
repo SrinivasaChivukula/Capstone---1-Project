@@ -269,6 +269,9 @@ fun drawOnBitmap(bitmap: Bitmap,
     val rightHipAngle = GetAngles(rightKneeX, rightKneeY, rightHipX, rightHipY, rightShoulderX, rightShoulderY)
     rightHipAngles.add(rightHipAngle)
     var canvas = Canvas(bitmap)
+    var rectPaint = Paint()
+    rectPaint.setARGB(0,0,255,0)
+    canvas.drawRect(25F,25F,50F,50F,rectPaint)
     if(angle == "hip")
     {
         var text = "Right Hip: ${rightHipAngle}\u00B0"
@@ -452,7 +455,7 @@ suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String, mBinding: A
                 outputBufferId == MediaCodec.INFO_TRY_AGAIN_LATER -> break
             }
         }
-        progress = ((frameI.toDouble() / listSize)*100).toInt()
+        progress = (((frameI + 1).toDouble() / listSize)*100).toInt()
         withContext(Dispatchers.Main){mBinding.VideoCreation.setProgress(progress)}
         withContext(Dispatchers.Main){mBinding.CreatingProgressValue.text = (" " + progress.toString() + "%")}
     }
