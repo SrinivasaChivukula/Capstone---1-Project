@@ -270,7 +270,7 @@ fun drawOnBitmap(bitmap: Bitmap,
     rightHipAngles.add(rightHipAngle)
     var canvas = Canvas(bitmap)
     var rectPaint = Paint()
-    rectPaint.setARGB(0,0,255,0)
+    rectPaint.setARGB(255,0,255,0)
     canvas.drawRect(25F,25F,50F,50F,rectPaint)
     if(angle == "hip")
     {
