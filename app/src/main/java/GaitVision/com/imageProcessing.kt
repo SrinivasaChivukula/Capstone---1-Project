@@ -1,11 +1,15 @@
 package GaitVision.com
 
 import GaitVision.com.databinding.ActivitySecondBinding
+import GaitVision.com.GraphActivity.Companion.lineChartLeftKnee
+import GaitVision.com.GraphActivity.Companion.lineChartRightKnee
 import android.content.ContentValues
 import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.media.MediaCodec
 import android.media.MediaCodecInfo
@@ -15,12 +19,15 @@ import android.media.MediaFormat
 import android.media.MediaMetadataRetriever
 import android.media.MediaMuxer
 import android.net.Uri
+import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.util.Log
 import android.view.Surface
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.widget.Button
+import androidx.activity.ComponentActivity
 import androidx.core.content.FileProvider
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.PoseDetection
@@ -33,6 +40,31 @@ import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.withContext
 import java.io.File
 import java.nio.ByteBuffer
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.Description
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+
+fun plotLineGraph(lineChart: LineChart, angleData: List<Float>, label: String) {
+    val entries = angleData.mapIndexed { index, angle -> Entry(index.toFloat(), angle) }
+
+    val lineDataSet = LineDataSet(entries, label)
+    lineDataSet.color = Color.BLUE // Set the color for the line
+    lineDataSet.valueTextSize = 12f // Text size for data points
+    val lineData = LineData(lineDataSet)
+
+    lineChart.data = lineData
+    lineChart.invalidate() // Refresh chart
+}
+
+//Angle vectors for average calculations and csv output
+val leftAnkleAngles: MutableList<Float> = mutableListOf()
+val rightAnkleAngles: MutableList<Float> = mutableListOf()
+val leftKneeAngles: MutableList<Float> = mutableListOf()
+val rightKneeAngles: MutableList<Float> = mutableListOf()
+val leftHipAngles: MutableList<Float> = mutableListOf()
+val rightHipAngles: MutableList<Float> = mutableListOf()
 
 private var frameCounter = 0
 private val frameSkip = 5  // Only update every 5 frames
@@ -245,24 +277,41 @@ fun drawOnBitmap(bitmap: Bitmap,
     val rightFootIndexX = rightFootIndex?.position?.x ?: 0f
     val rightFootIndexY = rightFootIndex?.position?.y ?: 0f
 
-    // Angle Calculations
+    // Angle Calculations (added Not A Number check)
     // Ankle Angles
-    val leftAnkleAngle = GetAngles(leftFootIndexX, leftFootIndexY, leftAnkleX, leftAnkleY, leftKneeX, leftKneeY)
-    leftAnkleAngles.add(leftAnkleAngle)
-    val rightAnkleAngle = GetAngles(rightFootIndexX, rightFootIndexY, rightAnkleX, rightAnkleY, rightKneeX, rightKneeY)
-    rightAnkleAngles.add(rightAnkleAngle)
+    var leftAnkleAngle = GetAngles(leftFootIndexX, leftFootIndexY, leftAnkleX, leftAnkleY, leftKneeX, leftKneeY)
+    if (!leftAnkleAngle.isNaN()) {
+        leftAnkleAngles.add(leftAnkleAngle)
+    }
+
+    var rightAnkleAngle = GetAngles(rightFootIndexX, rightFootIndexY, rightAnkleX, rightAnkleY, rightKneeX, rightKneeY)
+    if (!rightAnkleAngle.isNaN()) {
+        rightAnkleAngles.add(rightAnkleAngle)
+    }
 
     // Knee Angles
-    val leftKneeAngle = GetAngles(leftAnkleX, leftAnkleY, leftKneeX, leftKneeY, leftHipX, leftHipY)
-    leftKneeAngles.add(leftKneeAngle)
-    val rightKneeAngle = GetAngles(rightAnkleX, rightAnkleY, rightKneeX, rightKneeY, rightHipX, rightHipY)
-    rightKneeAngles.add(rightKneeAngle)
+    var leftKneeAngle = GetAngles(leftAnkleX, leftAnkleY, leftKneeX, leftKneeY, leftHipX, leftHipY)
+    if (!leftKneeAngle.isNaN()) {
+        leftKneeAngles.add(leftKneeAngle)
+    }
+
+    var rightKneeAngle = GetAngles(rightAnkleX, rightAnkleY, rightKneeX, rightKneeY, rightHipX, rightHipY)
+    if (!rightKneeAngle.isNaN()) {
+        rightKneeAngles.add(rightKneeAngle)
+    }
 
     // Hip Angles
-    val leftHipAngle = GetAngles(leftKneeX, leftKneeY, leftHipX, leftHipY, leftShoulderX, leftShoulderY)
-    leftHipAngles.add(leftHipAngle)
-    val rightHipAngle = GetAngles(rightKneeX, rightKneeY, rightHipX, rightHipY, rightShoulderX, rightShoulderY)
-    rightHipAngles.add(rightHipAngle)
+    var leftHipAngle = GetAngles(leftKneeX, leftKneeY, leftHipX, leftHipY, leftShoulderX, leftShoulderY)
+    if (!leftHipAngle.isNaN()) {
+        leftHipAngles.add(leftHipAngle)
+    }
+
+    var rightHipAngle = GetAngles(rightKneeX, rightKneeY, rightHipX, rightHipY, rightShoulderX, rightShoulderY)
+    if (!rightHipAngle.isNaN()) {
+        rightHipAngles.add(rightHipAngle)
+    }
+
+    var text = "Right Hip: ${rightHipAngle}\u00B0"
     var canvas = Canvas(bitmap)
     var rectPaint = Paint()
     rectPaint.setARGB(255,255,255,255)
@@ -354,6 +403,43 @@ fun drawOnBitmap(bitmap: Bitmap,
     return bitmap
 }
 
+class GraphActivity : ComponentActivity() {
+    companion object {
+        lateinit var lineChartLeftKnee: LineChart
+        lateinit var lineChartRightKnee: LineChart
+        lateinit var lineChartLeftAnkle: LineChart
+        lateinit var lineChartRightAnkle: LineChart
+        lateinit var lineChartLeftHip: LineChart
+        lateinit var lineChartRightHip: LineChart
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_graph)
+
+        lineChartLeftKnee = findViewById(R.id.lineChartLeftKnee)
+        lineChartRightKnee = findViewById(R.id.lineChartRightKnee)
+        lineChartLeftAnkle = findViewById(R.id.lineChartLeftAnkle)
+        lineChartRightAnkle = findViewById(R.id.lineChartRightAnkle)
+        lineChartLeftHip = findViewById(R.id.lineChartLeftHip)
+        lineChartRightHip = findViewById(R.id.lineChartRightHip)
+
+        plotLineGraph(lineChartLeftKnee, leftKneeAngles, "Left Knee Angles")
+        plotLineGraph(lineChartRightKnee, rightKneeAngles, "Right Knee Angles")
+        plotLineGraph(lineChartLeftAnkle, leftAnkleAngles, "Left Ankle Angles")
+        plotLineGraph(lineChartRightAnkle, rightAnkleAngles, "Right Ankle Angles")
+        plotLineGraph(lineChartLeftHip, leftHipAngles, "Left Hip Angles")
+        plotLineGraph(lineChartRightHip, rightHipAngles, "Right Hip Angles")
+
+
+        val uploadCSVBtn = findViewById<Button>(R.id.upload_csv_btn)
+        uploadCSVBtn.setOnClickListener {
+            val intent = Intent(this, ThirdActivity::class.java)
+            startActivity(intent)
+        }
+    }
+}
+
 /*
 Name           : ProcVid
 Parameters     :
@@ -372,13 +458,6 @@ Return         :
  */
 suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String, mBinding: ActivitySecondBinding, angle : String): Uri?
 {
-    //Angle vectors for average calculations and csv output
-    val leftAnkleAngles: MutableList<Float> = mutableListOf()
-    val rightAnkleAngles: MutableList<Float> = mutableListOf()
-    val leftKneeAngles: MutableList<Float> = mutableListOf()
-    val rightKneeAngles: MutableList<Float> = mutableListOf()
-    val leftHipAngles: MutableList<Float> = mutableListOf()
-    val rightHipAngles: MutableList<Float> = mutableListOf()
 
     withContext(Dispatchers.Main){mBinding.SplittingText.visibility = VISIBLE}
     withContext(Dispatchers.Main){mBinding.CreationText.visibility = VISIBLE}
@@ -422,6 +501,9 @@ suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String, mBinding: A
         frameI = frameIndex
         val pose = processImageBitmap(context, frame)
         val modifiedBitmap = drawOnBitmap(frame, pose, leftAnkleAngles, rightAnkleAngles, leftKneeAngles, rightKneeAngles, leftHipAngles, rightHipAngles, angle)
+        // Log check to see example of mutable list
+        Log.d("MutableListContents", "leftKneeAngles after processing: $leftKneeAngles")
+        Log.d("MutableListContents", "rightKneeAngles after processing: $rightKneeAngles")
         // Draw the frame onto the encoder input surface
         val canvas = inputSurface.lockCanvas(null)
         canvas.drawBitmap(modifiedBitmap, 0f, 0f, null)
@@ -471,6 +553,7 @@ suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String, mBinding: A
         }
     }
 
+
     // Stop and release encoder and muxer
     encoder.stop()
     encoder.release()
@@ -491,3 +574,4 @@ suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String, mBinding: A
 
     return Uri.fromFile(File(outputPath))
 }
+

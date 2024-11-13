@@ -69,6 +69,9 @@ dependencies {
     // constraintLayout dependency
     implementation(libs.androidx.constraintlayout)
 
+    // Graph dependency
+    implementation("com.github.PhilJay:MPAndroidChart:3.1.0")
+
     /*
         Type: Base SDK
         Usage: Used for applications that are more time sensitive. Excels in speed over accuracy.

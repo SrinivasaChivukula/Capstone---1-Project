@@ -3,9 +3,12 @@ package GaitVision.com
 import GaitVision.com.databinding.ActivityMainBinding
 import GaitVision.com.databinding.ActivitySecondBinding
 import android.app.Activity
+import android.app.Dialog
 import android.os.Bundle
 import android.widget.Button
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Environment
 import android.util.Log
@@ -260,6 +263,23 @@ class SecondActivity : ComponentActivity() {
 
 
 
+        val help02Btn = findViewById<Button>(R.id.help02_btn)
+        help02Btn.setOnClickListener{
+            val dialogBinding = layoutInflater.inflate(R.layout.help02_dialog, null)
+
+            val myDialog = Dialog(this)
+            myDialog.setContentView(dialogBinding)
+
+            myDialog.setCancelable(false)
+            myDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            myDialog.show()
+
+            val yes02Btn = dialogBinding.findViewById<Button>(R.id.help02_yes)
+            yes02Btn.setOnClickListener{
+                myDialog.dismiss()
+            }
+
+        }
 
     }
 
