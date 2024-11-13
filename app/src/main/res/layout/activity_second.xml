@@ -76,6 +76,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@id/SplittingText"
         app:layout_constraintStart_toEndOf="@id/SplittingText"
+        android:progressTint="@color/teal_200"
         android:visibility="gone"
         />
 
@@ -86,6 +87,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="@id/CreationText"
         app:layout_constraintStart_toEndOf="@id/CreationText"
+        android:progressTint="@color/teal_200"
         android:visibility="gone"
         />
 

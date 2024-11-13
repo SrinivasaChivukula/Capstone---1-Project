@@ -67,13 +67,11 @@ suspend fun getFrameBitmaps(context: Context,fileUri: Uri?, mBinding: ActivitySe
 
     //Set data input
     retriever.setDataSource(context, fileUri)
-    Log.d("ErrorChecking", "MIME type: ${retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE)}")
 
     //Video length in microseconds
     if(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE) == "video/mp4")
     {
         val videoLengthMs = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0L
-        Log.d("ErrorChecking","Video Length: ${videoLengthMs}")
         //Change this for more or less bitmaps
         //1000L = 1 second (1fps)
         val frameInterval = (1000L * 1000L) / 30//Change back to /30
@@ -98,11 +96,9 @@ suspend fun getFrameBitmaps(context: Context,fileUri: Uri?, mBinding: ActivitySe
         //Loop through all video and get frame bitmap at current position
         while(currTime <= videoLengthUs)
         {
-            Log.d("ErrorChecking","Current Time(S): ${currTime}")
             val frame = retriever.getFrameAtTime(currTime, OPTION_CLOSEST)
             if(frame != null)
             {
-                Log.d("ErrorChecking","Adding frame to list")
                 framesList.add(frame)
             }
             progress = ((currTime.toDouble() / videoLengthUs)*100).toInt()
@@ -150,7 +146,6 @@ suspend fun processImageBitmap(context: Context, bitmap: Bitmap): Pose?
     //Try-Catch statement because InputImage throws exception if there was an error creating the InputImage
     return try
     {
-        Log.d("ErrorChecking", "Bitmap Processed")
         poseDetector.process(image).await()
     }
     catch (e: Exception)
@@ -485,7 +480,6 @@ suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String, mBinding: A
     val retriever = MediaMetadataRetriever()
     retriever.setDataSource(context, Uri.fromFile(File(outputPath)))
     val videoLengthMs = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0L
-    Log.d("ErrorChecking","Video Length: ${videoLengthMs}")
 
     withContext(Dispatchers.Main){mBinding.SplittingText.visibility = GONE}
     withContext(Dispatchers.Main){mBinding.CreationText.visibility = GONE}
