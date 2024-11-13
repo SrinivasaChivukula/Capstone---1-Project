@@ -81,6 +81,7 @@ class SecondActivity : ComponentActivity() {
                             mBinding.splittingProgressValue.visibility = GONE
                             mBinding.CreatingProgressValue.visibility = GONE
                             mBinding.videoViewer.visibility = VISIBLE
+                            mBinding.calAngleBtn.visibility = VISIBLE
 
                             Log.d("ErrorChecking", "Function URI: ${newVideoUri}")
                             videoView.setVideoURI(newVideoUri)
@@ -129,6 +130,7 @@ class SecondActivity : ComponentActivity() {
                             mBinding.splittingProgressValue.visibility = GONE
                             mBinding.CreatingProgressValue.visibility = GONE
                             mBinding.videoViewer.visibility = VISIBLE
+                            mBinding.calAngleBtn.visibility = VISIBLE
 
                             Log.d("ErrorChecking", "Function URI: ${newVideoUri}")
                             videoView.setVideoURI(newVideoUri)
@@ -177,6 +179,7 @@ class SecondActivity : ComponentActivity() {
                             mBinding.splittingProgressValue.visibility = GONE
                             mBinding.CreatingProgressValue.visibility = GONE
                             mBinding.videoViewer.visibility = VISIBLE
+                            mBinding.calAngleBtn.visibility = VISIBLE
 
                             Log.d("ErrorChecking", "Function URI: ${newVideoUri}")
                             videoView.setVideoURI(newVideoUri)
@@ -225,6 +228,7 @@ class SecondActivity : ComponentActivity() {
                             mBinding.splittingProgressValue.visibility = GONE
                             mBinding.CreatingProgressValue.visibility = GONE
                             mBinding.videoViewer.visibility = VISIBLE
+                            mBinding.calAngleBtn.visibility = VISIBLE
 
                             Log.d("ErrorChecking", "Function URI: ${newVideoUri}")
                             videoView.setVideoURI(newVideoUri)

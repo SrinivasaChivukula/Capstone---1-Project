@@ -270,8 +270,8 @@ fun drawOnBitmap(bitmap: Bitmap,
     rightHipAngles.add(rightHipAngle)
     var canvas = Canvas(bitmap)
     var rectPaint = Paint()
-    rectPaint.setARGB(255,0,255,0)
-    canvas.drawRect(25F,25F,50F,50F,rectPaint)
+    rectPaint.setARGB(255,255,255,255)
+    canvas.drawRect(20F,0F,200F,60F,rectPaint)
     if(angle == "hip")
     {
         var text = "Right Hip: ${rightHipAngle}\u00B0"
