@@ -46,7 +46,7 @@
                     android:layout_margin="10dp"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="To upload video click OPEN GALLERY then select video. After video is selected click CONFIRM VIDEO."
+                    android:text="Click CHOOSE ANGLE to select an angle. After the angle is processed, the video can be played. Click CALCULATE ANGLES to view graphs for each angle."
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
 

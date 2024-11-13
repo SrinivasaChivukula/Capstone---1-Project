@@ -36,7 +36,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.50"
-        />
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/SplittingText"
@@ -51,7 +51,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.45"
         android:visibility="gone"
-        />
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/CreationText"
@@ -66,7 +66,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5"
         android:visibility="gone"
-        />
+        tools:ignore="HardcodedText" />
 
 
     <ProgressBar
@@ -100,7 +100,7 @@
         android:text=" ${value}%"
         android:textColor="@color/black"
         android:visibility="gone"
-        />
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/CreatingProgressValue"
@@ -111,7 +111,7 @@
         android:text=" ${value}%"
         android:textColor="@color/black"
         android:visibility="gone"
-        />
+        tools:ignore="HardcodedText" />
 
 
     <FrameLayout

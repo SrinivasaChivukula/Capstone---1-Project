@@ -46,7 +46,7 @@
                     android:layout_margin="10dp"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="To upload video click OPEN GALLERY then select video. After video is selected click CONFIRM VIDEO."
+                    android:text="Type the participant ID in the text field, then click SUBMIT. Once submitted, a CSV file with all angle information will be saved in the local file manager. Click MAIN MENU to return to the main menu."
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
 

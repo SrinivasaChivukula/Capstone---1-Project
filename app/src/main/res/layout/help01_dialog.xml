@@ -46,7 +46,7 @@
                     android:layout_margin="10dp"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="To upload video click OPEN GALLERY then select video. After video is selected click CONFIRM VIDEO."
+                    android:text="To upload a video, click OPEN GALLERY, then select the video. After the video is selected, click CONFIRM VIDEO."
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
 
