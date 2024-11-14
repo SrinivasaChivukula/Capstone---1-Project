@@ -72,10 +72,10 @@ class ThirdActivity : ComponentActivity() {
 
 
         FileOutputStream(outputFile).use { output ->
+            val identifiersText = "Frame #,Angle\n"
+            output.write(identifiersText.toByteArray())
             for(i in 0 until fileData.size)
             {
-                val identifiersText = "Frame #,Angle"
-                output.write(identifiersText.toByteArray())
                 val floatData = fileData[i].toString()
                 val index = i.toString()
                 output.write(index.toByteArray())
