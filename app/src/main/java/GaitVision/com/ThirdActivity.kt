@@ -1,9 +1,6 @@
 package GaitVision.com
 
 import android.app.Dialog
-import android.os.Bundle
-import android.widget.Button
-import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.app.AlertDialog
@@ -24,7 +21,7 @@ class ThirdActivity : ComponentActivity() {
         //Functionality for writing to CSV
         val submitButton = findViewById<Button>(R.id.submit_id_btn)
         val participantId = findViewById<EditText>(R.id.participant_id)
-        val fileData = "placeholder text"
+        val fileData = leftKneeAngles
         submitButton.setOnClickListener {
             val fileName = buildString {
                 append(participantId.text.toString())
@@ -69,12 +66,24 @@ class ThirdActivity : ComponentActivity() {
     }
 
     //Function for writing to file
-    private fun writeToFile(fileName:String, fileData:String) {
+    private fun writeToFile(fileName:String, fileData:MutableList<Float>) {
         val fileDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) //Directory of the Documents folder is located
         val outputFile = File(fileDirectory, fileName)
 
-        FileOutputStream(outputFile).use {
-                output -> output.write(fileData.toByteArray())
+
+        FileOutputStream(outputFile).use { output ->
+            for(i in 0 until fileData.size)
+            {
+                val identifiersText = "Frame #,Angle"
+                output.write(identifiersText.toByteArray())
+                val floatData = fileData[i].toString()
+                val index = i.toString()
+                output.write(index.toByteArray())
+                output.write(",".toByteArray())
+                output.write(floatData.toByteArray())
+                output.write("\n".toByteArray())
+            }
+
         }
     }
 }
