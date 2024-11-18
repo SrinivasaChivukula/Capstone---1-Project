@@ -21,14 +21,37 @@ class ThirdActivity : ComponentActivity() {
         //Functionality for writing to CSV
         val submitButton = findViewById<Button>(R.id.submit_id_btn)
         val participantId = findViewById<EditText>(R.id.participant_id)
-        val fileData = leftKneeAngles
-        submitButton.setOnClickListener {
-            val fileName = buildString {
-                append(participantId.text.toString())
-                append(".csv")
-            }    //filename is retrieved from the participant_id text field
 
-            writeToFile(fileName, fileData)                 //write to file is called with file name and placeholder as parameters
+        val fileData: List<MutableList<Float>>  = mutableListOf(        //list of all data lists
+            leftHipAngles,
+            rightHipAngles,
+            leftKneeAngles,
+            rightKneeAngles,
+            leftAnkleAngles,
+            rightAnkleAngles
+        )
+
+        val angleNames = listOf(        //list of names used for files
+            "LeftHip",
+            "RightHip",
+            "LeftKnee",
+            "RightKnee",
+            "LeftAnkle",
+            "RightAnkle",
+        )
+
+        submitButton.setOnClickListener {
+
+            for (i in fileData.indices) {       //for-loop iterates through the fileData list and creates a csv file for each of the angle graphs.
+                val fileName = buildString {
+                    append(participantId.text.toString())
+                    append("_")
+                    append(angleNames[i])
+                    append(".csv")
+                }    //filename participantId_angle
+
+                writeToFile(fileName, fileData[i])                 //write to file is called with file name and placeholder as parameters
+            }
 
             val builder: AlertDialog.Builder = AlertDialog.Builder(this)
             builder
