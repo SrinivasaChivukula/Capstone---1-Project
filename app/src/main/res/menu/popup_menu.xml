@@ -21,5 +21,10 @@
         android:id="@+id/menu_torso"
         android:title="TORSO"
         tools:ignore="HardcodedText" />
-  
+
+    <item
+        android:id="@+id/menu_all_agl"
+        android:title="ALL ANGLES"
+        tools:ignore="HardcodedText" />
+
 </menu>

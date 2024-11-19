@@ -243,25 +243,16 @@ class SecondActivity : ComponentActivity() {
                     Log.e("ErrorChecking", "Video URI is NULL")
                 }
             }
+            else if (id == R.id.menu_all_agl){
+                // toggle here
 
+            }
             false
         }
 
         chooseAngleBtn.setOnClickListener {
             popupMenu.show()
         }
-        
-//        setContentView(R.layout.activity_second)
-//
-//        val uploadCSVBtn = findViewById<Button>(R.id.upload_csv_btn)
-//        uploadCSVBtn.setOnClickListener {
-//            val intent = Intent(this, ThirdActivity::class.java)
-//            startActivity(intent)
-//        }
-
-
-
-
 
         val help02Btn = findViewById<Button>(R.id.help02_btn)
         help02Btn.setOnClickListener{
