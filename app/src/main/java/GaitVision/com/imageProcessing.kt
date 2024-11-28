@@ -10,7 +10,10 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Matrix
 import android.graphics.Paint
+import android.graphics.Typeface
+import android.icu.lang.UProperty.MATH
 import android.media.MediaCodec
 import android.media.MediaCodecInfo
 import android.media.MediaCodecList
@@ -45,6 +48,7 @@ import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import java.lang.Math.pow
 
 fun plotLineGraph(lineChart: LineChart, angleData: List<Float>, label: String) {
     val entries = angleData.mapIndexed { index, angle -> Entry(index.toFloat(), angle) }
@@ -189,6 +193,11 @@ suspend fun processImageBitmap(context: Context, bitmap: Bitmap): Pose?
 
 }
 
+fun resizeBitmap(bitmap: Bitmap, targetWidth: Int, targetHeight: Int): Bitmap
+{
+    return Bitmap.createScaledBitmap(bitmap, targetWidth, targetHeight, false)
+}
+
 /*
 Name                   : drawOnBitmap
 Parameters             :
@@ -311,50 +320,85 @@ fun drawOnBitmap(bitmap: Bitmap,
         rightHipAngles.add(rightHipAngle)
     }
 
-    var text = "Right Hip: ${rightHipAngle}\u00B0"
     var canvas = Canvas(bitmap)
     var rectPaint = Paint()
     rectPaint.setARGB(255,255,255,255)
-    canvas.drawRect(20F,0F,200F,60F,rectPaint)
+    if(angle != "all") {
+        //lIMIT RIGHT: 480
+        //LIMIT BOTTOM: 270
+        canvas.drawRect(0F, 0F, 350F, 150F, rectPaint)
+    }
+    else if(angle == "all")
+    {
+        canvas.drawRect(0F,0F,1400F,150F,rectPaint)
+    }
+    //canvas.drawRect(20F,0F, 20+recLength, 0+recHeight, rectPaint)
     if(angle == "hip")
     {
         var text = "Right Hip: ${rightHipAngle}\u00B0"
         var paint = Paint()
         paint.setARGB(255,0,0,0)
-        paint.textSize = 20.0F
-        canvas.drawText(text, 25F, 25F, paint)
+        paint.textSize = 40.0F
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD))
+        canvas.drawText(text, 10F, 75F, paint)
         text = "Left Hip: ${leftHipAngle}\u00B0"
-        canvas.drawText(text, 25F, 50F, paint)
+        canvas.drawText(text, 10F, 125F, paint)
     }
     else if(angle == "knee")
     {
         var text = "Right Knee: ${rightKneeAngle}\u00B0"
         var paint = Paint()
         paint.setARGB(255,0,0,0)
-        paint.textSize = 20.0F
-        canvas.drawText(text, 25F, 25F, paint)
+        paint.textSize = 40.0F
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD))
+        canvas.drawText(text, 10F, 75F, paint)
         text = "Left Knee: ${leftKneeAngle}\u00B0"
-        canvas.drawText(text, 25F, 50F, paint)
+        canvas.drawText(text, 10F, 125F, paint)
     }
     else if(angle == "ankle")
     {
         var text = "Right Ankle: ${rightAnkleAngle}\u00B0"
         var paint = Paint()
         paint.setARGB(255,0,0,0)
-        paint.textSize = 20.0F
-        canvas.drawText(text, 25F, 25F, paint)
+        paint.textSize = 40.0F
+        canvas.drawText(text, 10F, 75F, paint)
         text = "Left Ankle: ${leftAnkleAngle}\u00B0"
-        canvas.drawText(text, 25F, 50F, paint)
+        canvas.drawText(text, 10F, 125F, paint)
     }
     else if(angle == "torso")
     {
         var text = "Right Torso: Dummy Text"
         var paint = Paint()
         paint.setARGB(255,0,0,0)
-        paint.textSize = 20.0F
-        canvas.drawText(text, 25F, 25F, paint)
+        paint.textSize = 40.0F
+        canvas.drawText(text, 10F, 75F, paint)
         text = "Left Torso: Dummy Text"
-        canvas.drawText(text, 25F, 50F, paint)
+        canvas.drawText(text, 10F, 125F, paint)
+    }
+    else if(angle == "all")
+    {
+        var text = "Right Hip: ${rightHipAngle}\u00B0"
+        var paint = Paint()
+        paint.setARGB(255,0,0,0)
+        paint.textSize = 40.0F
+        canvas.drawText(text, 10F, 75F, paint)
+        text = "Left Hip: ${leftHipAngle}\u00B0"
+        canvas.drawText(text, 10F, 125F, paint)
+
+        text = "Right Knee: ${rightKneeAngle}\u00B0"
+        canvas.drawText(text, 360F, 75F, paint)
+        text = "Left Knee: ${leftKneeAngle}\u00B0"
+        canvas.drawText(text, 360F, 125F, paint)
+
+        text = "Right Ankle: ${rightAnkleAngle}\u00B0"
+        canvas.drawText(text, 710F, 75F, paint)
+        text = "Left Ankle: ${leftAnkleAngle}\u00B0"
+        canvas.drawText(text, 710F, 125F, paint)
+
+        text = "Right Torso: Dummy Text"
+        canvas.drawText(text, 1060F, 75F, paint)
+        text = "Left Torso: Dummy Text"
+        canvas.drawText(text, 1060F, 125F, paint)
     }
 
 
@@ -440,6 +484,17 @@ class GraphActivity : ComponentActivity() {
     }
 }
 
+fun ensureLandscapeOrientation(bitmap: Bitmap): Bitmap {
+    return if (bitmap.width < bitmap.height) {
+        // Rotate the bitmap 90 degrees to landscape
+        val matrix = Matrix()
+        matrix.postRotate(90f)
+        Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+    } else {
+        bitmap // Already landscape
+    }
+}
+
 /*
 Name           : ProcVid
 Parameters     :
@@ -472,11 +527,19 @@ suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String, mBinding: A
     val height = firstFrame.height
 
     val mediaMuxer = MediaMuxer(outputPath, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
-    var format = MediaFormat.createVideoFormat("video/avc",width, height)
+    var format = MediaFormat.createVideoFormat("video/avc", 1920, 1080)
     format.setInteger(MediaFormat.KEY_BIT_RATE, 1000000)
     format.setInteger(MediaFormat.KEY_FRAME_RATE, 30)
     format.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface)
     format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 1)
+    format.setInteger(MediaFormat.KEY_ROTATION, 0)
+
+    mediaMuxer.setOrientationHint(0)
+
+    val retriever1 = MediaMetadataRetriever()
+    retriever1.setDataSource(context, uri)
+    Log.d("errorchecking","Video Orientation: ${retriever1.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)}")
+    retriever1.release()
 
     var encoder = MediaCodec.createEncoderByType("video/avc")
     encoder.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
@@ -499,8 +562,10 @@ suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String, mBinding: A
     for ((frameIndex, frame) in framesList.withIndex())
     {
         frameI = frameIndex
-        val pose = processImageBitmap(context, frame)
-        val modifiedBitmap = drawOnBitmap(frame, pose, leftAnkleAngles, rightAnkleAngles, leftKneeAngles, rightKneeAngles, leftHipAngles, rightHipAngles, angle)
+        val oriFrame = ensureLandscapeOrientation(frame)
+        val orientedFrame = resizeBitmap(oriFrame,1920,1080)
+        val pose = processImageBitmap(context, orientedFrame)
+        val modifiedBitmap = drawOnBitmap(orientedFrame, pose, leftAnkleAngles, rightAnkleAngles, leftKneeAngles, rightKneeAngles, leftHipAngles, rightHipAngles, angle)
         // Log check to see example of mutable list
         Log.d("MutableListContents", "leftKneeAngles after processing: $leftKneeAngles")
         Log.d("MutableListContents", "rightKneeAngles after processing: $rightKneeAngles")

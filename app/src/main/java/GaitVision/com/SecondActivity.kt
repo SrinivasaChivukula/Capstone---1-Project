@@ -245,6 +245,52 @@ class SecondActivity : ComponentActivity() {
             }
             else if (id == R.id.menu_all_agl){
                 // toggle here
+                val uriString = intent.getStringExtra("VIDEO_URI")
+                val videoView = findViewById<VideoView>(R.id.video_viewer)
+                videoUri = Uri.parse(uriString)
+                val mediaController = MediaController(this)
+                videoView.setMediaController(mediaController)
+
+                videoUri?.let{
+                    lifecycleScope.launch{
+                        try{
+                            Log.d("ErrorChecking", "Gallery URI: ${videoUri}")
+                            val outputPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).absolutePath + "/edited_video.mp4"
+                            val outputFilePath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)}/edited_video.mp4"
+                            val outputFile = File(outputFilePath)
+                            if(outputFile.exists())
+                            {
+                                Log.d("ErrorChecking", "Video Exists")
+                                outputFile.delete()
+                            }
+                            Log.d("ErrorChecking", "Before function")
+                            mBinding.videoViewer.visibility = GONE
+                            mBinding.SplittingText.visibility = GONE
+                            mBinding.CreationText.visibility = GONE
+                            mBinding.splittingBar.visibility = GONE
+                            mBinding.VideoCreation.visibility = GONE
+                            mBinding.splittingProgressValue.visibility = GONE
+                            mBinding.CreatingProgressValue.visibility = GONE
+                            mBinding.selectAngleText.visibility = GONE
+                            var newVideoUri = withContext(Dispatchers.IO){ProcVid(this@SecondActivity, it, outputFilePath,mBinding, "all")}
+                            mBinding.SplittingText.visibility = GONE
+                            mBinding.CreationText.visibility = GONE
+                            mBinding.splittingBar.visibility = GONE
+                            mBinding.VideoCreation.visibility = GONE
+                            mBinding.splittingProgressValue.visibility = GONE
+                            mBinding.CreatingProgressValue.visibility = GONE
+                            mBinding.videoViewer.visibility = VISIBLE
+                            mBinding.calAngleBtn.visibility = VISIBLE
+
+                            Log.d("ErrorChecking", "Function URI: ${newVideoUri}")
+                            videoView.setVideoURI(newVideoUri)
+                        } catch(e:Exception){
+                            Log.e("ErrorChecking","Error processing video: ${e.message}")
+                        }
+                    }
+                } ?:run{
+                    Log.e("ErrorChecking", "Video URI is NULL")
+                }
 
             }
             false
