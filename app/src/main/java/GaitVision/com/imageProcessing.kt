@@ -361,6 +361,7 @@ fun drawOnBitmap(bitmap: Bitmap,
         var paint = Paint()
         paint.setARGB(255,0,0,0)
         paint.textSize = 40.0F
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD))
         canvas.drawText(text, 10F, 75F, paint)
         text = "Left Ankle: ${leftAnkleAngle}\u00B0"
         canvas.drawText(text, 10F, 125F, paint)
@@ -371,6 +372,7 @@ fun drawOnBitmap(bitmap: Bitmap,
         var paint = Paint()
         paint.setARGB(255,0,0,0)
         paint.textSize = 40.0F
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD))
         canvas.drawText(text, 10F, 75F, paint)
         text = "Left Torso: Dummy Text"
         canvas.drawText(text, 10F, 125F, paint)
@@ -381,6 +383,7 @@ fun drawOnBitmap(bitmap: Bitmap,
         var paint = Paint()
         paint.setARGB(255,0,0,0)
         paint.textSize = 40.0F
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD))
         canvas.drawText(text, 10F, 75F, paint)
         text = "Left Hip: ${leftHipAngle}\u00B0"
         canvas.drawText(text, 10F, 125F, paint)
@@ -628,6 +631,7 @@ suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String, mBinding: A
     val retriever = MediaMetadataRetriever()
     retriever.setDataSource(context, Uri.fromFile(File(outputPath)))
     val videoLengthMs = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0L
+    retriever.release()
 
     withContext(Dispatchers.Main){mBinding.SplittingText.visibility = GONE}
     withContext(Dispatchers.Main){mBinding.CreationText.visibility = GONE}
