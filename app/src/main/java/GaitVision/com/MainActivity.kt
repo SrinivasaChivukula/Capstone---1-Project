@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
             ActivityCompat.requestPermissions(this, permissions, REQUEST_CODE_PERMISSIONS)
         } else {
             // Permissions already granted, proceed with your task
-            proceedWithMediaAccess()
+            //proceedWithMediaAccess()
         }
     }
 
@@ -72,11 +72,12 @@ class MainActivity : ComponentActivity() {
     private val getResult: ActivityResultLauncher<String> =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
             uri?.let {
-                videoUri = it
+//                videoUri = it
+                galleryUri = it
+//                val intent= Intent(this, SecondActivity::class.java).apply {
+//                    putExtra("VIDEO_URI", videoUri.toString())
 
-                val intent= Intent(this, SecondActivity::class.java).apply {
-                    putExtra("VIDEO_URI", videoUri.toString())
-                }
+                intent = Intent(this,SecondActivity::class.java)
                 startActivity(intent)
             }
         }
@@ -91,6 +92,18 @@ class MainActivity : ComponentActivity() {
 //            startActivity(intent)
 //        }
         checkPermissions()
+
+        //Initialize all global variables
+        galleryUri = null
+        editedUri = null
+        frameList.clear()
+        leftAnkleAngles.clear()
+        rightAnkleAngles.clear()
+        leftKneeAngles.clear()
+        rightKneeAngles.clear()
+        leftHipAngles.clear()
+        rightHipAngles.clear()
+
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         //mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)

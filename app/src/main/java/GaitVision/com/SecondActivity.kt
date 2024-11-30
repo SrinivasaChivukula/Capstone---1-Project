@@ -45,20 +45,25 @@ class SecondActivity : ComponentActivity() {
         val popupMenu = PopupMenu(this, chooseAngleBtn)
         popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
 
+        if(galleryUri == null)
+        {
+            startActivity(Intent(this, MainActivity::class.java))
+        }
+
         popupMenu.setOnMenuItemClickListener { menuItem -> val id = menuItem.itemId
 
             if (id == R.id.menu_hip){
                 // toggle here
-                val uriString = intent.getStringExtra("VIDEO_URI")
+//                val uriString = intent.getStringExtra("VIDEO_URI")
                 val videoView = findViewById<VideoView>(R.id.video_viewer)
-                videoUri = Uri.parse(uriString)
+//                videoUri = Uri.parse(uriString)
                 val mediaController = MediaController(this)
                 videoView.setMediaController(mediaController)
 
-                videoUri?.let{
+                galleryUri?.let{
                     lifecycleScope.launch{
                         try{
-                            Log.d("ErrorChecking", "Gallery URI: ${videoUri}")
+                            Log.d("ErrorChecking", "Gallery URI: ${galleryUri}")
                             val outputPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).absolutePath + "/edited_video.mp4"
                             val outputFilePath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)}/edited_video.mp4"
                             val outputFile = File(outputFilePath)
@@ -76,7 +81,27 @@ class SecondActivity : ComponentActivity() {
                             mBinding.splittingProgressValue.visibility = GONE
                             mBinding.CreatingProgressValue.visibility = GONE
                             mBinding.selectAngleText.visibility = GONE
-                            var newVideoUri = withContext(Dispatchers.IO){ProcVid(this@SecondActivity, it, outputFilePath,mBinding, "hip")}
+                            if(frameList.isEmpty()) {
+                                editedUri = withContext(Dispatchers.IO) {
+                                    ProcVidEmpty(
+                                        this@SecondActivity,
+                                        outputFilePath,
+                                        mBinding,
+                                        "hip"
+                                    )
+                                }
+                            }
+                            else
+                            {
+                                editedUri = withContext(Dispatchers.IO) {
+                                    ProcVidCon(
+                                        this@SecondActivity,
+                                        outputFilePath,
+                                        mBinding,
+                                        "hip"
+                                    )
+                                }
+                            }
                             mBinding.SplittingText.visibility = GONE
                             mBinding.CreationText.visibility = GONE
                             mBinding.splittingBar.visibility = GONE
@@ -86,28 +111,28 @@ class SecondActivity : ComponentActivity() {
                             mBinding.videoViewer.visibility = VISIBLE
                             mBinding.calAngleBtn.visibility = VISIBLE
 
-                            Log.d("ErrorChecking", "Function URI: ${newVideoUri}")
-                            videoView.setVideoURI(newVideoUri)
+                            Log.d("ErrorChecking", "Function URI: ${editedUri}")
+                            videoView.setVideoURI(editedUri)
                         } catch(e:Exception){
                             Log.e("ErrorChecking","Error processing video: ${e.message}")
                         }
                     }
                 } ?:run{
-                    Log.e("ErrorChecking", "Video URI is NULL")
+                    Log.e("ErrorChecking", "Gallery URI is NULL")
                 }
             }
             else if (id == R.id.menu_knee){
                 // toggle here
-                val uriString = intent.getStringExtra("VIDEO_URI")
+//                val uriString = intent.getStringExtra("VIDEO_URI")
                 val videoView = findViewById<VideoView>(R.id.video_viewer)
-                videoUri = Uri.parse(uriString)
+//                videoUri = Uri.parse(uriString)
                 val mediaController = MediaController(this)
                 videoView.setMediaController(mediaController)
 
-                videoUri?.let{
+                galleryUri?.let{
                     lifecycleScope.launch{
                         try{
-                            Log.d("ErrorChecking", "Gallery URI: ${videoUri}")
+                            Log.d("ErrorChecking", "Gallery URI: ${galleryUri}")
                             val outputPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).absolutePath + "/edited_video.mp4"
                             val outputFilePath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)}/edited_video.mp4"
                             val outputFile = File(outputFilePath)
@@ -125,7 +150,27 @@ class SecondActivity : ComponentActivity() {
                             mBinding.splittingProgressValue.visibility = GONE
                             mBinding.CreatingProgressValue.visibility = GONE
                             mBinding.selectAngleText.visibility = GONE
-                            var newVideoUri = withContext(Dispatchers.IO){ProcVid(this@SecondActivity, it, outputFilePath,mBinding, "knee")}
+                            if(frameList.isEmpty()) {
+                                editedUri = withContext(Dispatchers.IO) {
+                                    ProcVidEmpty(
+                                        this@SecondActivity,
+                                        outputFilePath,
+                                        mBinding,
+                                        "knee"
+                                    )
+                                }
+                            }
+                            else
+                            {
+                                editedUri = withContext(Dispatchers.IO) {
+                                    ProcVidCon(
+                                        this@SecondActivity,
+                                        outputFilePath,
+                                        mBinding,
+                                        "knee"
+                                    )
+                                }
+                            }
                             mBinding.SplittingText.visibility = GONE
                             mBinding.CreationText.visibility = GONE
                             mBinding.splittingBar.visibility = GONE
@@ -135,28 +180,28 @@ class SecondActivity : ComponentActivity() {
                             mBinding.videoViewer.visibility = VISIBLE
                             mBinding.calAngleBtn.visibility = VISIBLE
 
-                            Log.d("ErrorChecking", "Function URI: ${newVideoUri}")
-                            videoView.setVideoURI(newVideoUri)
+                            Log.d("ErrorChecking", "Function URI: ${editedUri}")
+                            videoView.setVideoURI(editedUri)
                         } catch(e:Exception){
                             Log.e("ErrorChecking","Error processing video: ${e.message}")
                         }
                     }
                 } ?:run{
-                    Log.e("ErrorChecking", "Video URI is NULL")
+                    Log.e("ErrorChecking", "Gallery URI is NULL")
                 }
             }
             else if (id == R.id.menu_ankle){
                 // toggle here
-                val uriString = intent.getStringExtra("VIDEO_URI")
+//                val uriString = intent.getStringExtra("VIDEO_URI")
                 val videoView = findViewById<VideoView>(R.id.video_viewer)
-                videoUri = Uri.parse(uriString)
+//                videoUri = Uri.parse(uriString)
                 val mediaController = MediaController(this)
                 videoView.setMediaController(mediaController)
 
-                videoUri?.let{
+                galleryUri?.let{
                     lifecycleScope.launch{
                         try{
-                            Log.d("ErrorChecking", "Gallery URI: ${videoUri}")
+                            Log.d("ErrorChecking", "Gallery URI: ${galleryUri}")
                             val outputPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).absolutePath + "/edited_video.mp4"
                             val outputFilePath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)}/edited_video.mp4"
                             val outputFile = File(outputFilePath)
@@ -174,7 +219,27 @@ class SecondActivity : ComponentActivity() {
                             mBinding.splittingProgressValue.visibility = GONE
                             mBinding.CreatingProgressValue.visibility = GONE
                             mBinding.selectAngleText.visibility = GONE
-                            var newVideoUri = withContext(Dispatchers.IO){ProcVid(this@SecondActivity, it, outputFilePath,mBinding, "ankle")}
+                            if(frameList.isEmpty()) {
+                                editedUri = withContext(Dispatchers.IO) {
+                                    ProcVidEmpty(
+                                        this@SecondActivity,
+                                        outputFilePath,
+                                        mBinding,
+                                        "ankle"
+                                    )
+                                }
+                            }
+                            else
+                            {
+                                editedUri = withContext(Dispatchers.IO) {
+                                    ProcVidCon(
+                                        this@SecondActivity,
+                                        outputFilePath,
+                                        mBinding,
+                                        "ankle"
+                                    )
+                                }
+                            }
                             mBinding.SplittingText.visibility = GONE
                             mBinding.CreationText.visibility = GONE
                             mBinding.splittingBar.visibility = GONE
@@ -184,28 +249,28 @@ class SecondActivity : ComponentActivity() {
                             mBinding.videoViewer.visibility = VISIBLE
                             mBinding.calAngleBtn.visibility = VISIBLE
 
-                            Log.d("ErrorChecking", "Function URI: ${newVideoUri}")
-                            videoView.setVideoURI(newVideoUri)
+                            Log.d("ErrorChecking", "Function URI: ${editedUri}")
+                            videoView.setVideoURI(editedUri)
                         } catch(e:Exception){
                             Log.e("ErrorChecking","Error processing video: ${e.message}")
                         }
                     }
                 } ?:run{
-                    Log.e("ErrorChecking", "Video URI is NULL")
+                    Log.e("ErrorChecking", "Gallery URI is NULL")
                 }
             }
             else if (id == R.id.menu_torso){
                 // toggle here
-                val uriString = intent.getStringExtra("VIDEO_URI")
+//                val uriString = intent.getStringExtra("VIDEO_URI")
                 val videoView = findViewById<VideoView>(R.id.video_viewer)
-                videoUri = Uri.parse(uriString)
+//                videoUri = Uri.parse(uriString)
                 val mediaController = MediaController(this)
                 videoView.setMediaController(mediaController)
 
-                videoUri?.let{
+                galleryUri?.let{
                     lifecycleScope.launch{
                         try{
-                            Log.d("ErrorChecking", "Gallery URI: ${videoUri}")
+                            Log.d("ErrorChecking", "Gallery URI: ${galleryUri}")
                             val outputPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).absolutePath + "/edited_video.mp4"
                             val outputFilePath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)}/edited_video.mp4"
                             val outputFile = File(outputFilePath)
@@ -223,7 +288,27 @@ class SecondActivity : ComponentActivity() {
                             mBinding.splittingProgressValue.visibility = GONE
                             mBinding.CreatingProgressValue.visibility = GONE
                             mBinding.selectAngleText.visibility = GONE
-                            var newVideoUri = withContext(Dispatchers.IO){ProcVid(this@SecondActivity, it, outputFilePath,mBinding, "torso")}
+                            if(frameList.isEmpty()) {
+                                editedUri = withContext(Dispatchers.IO) {
+                                    ProcVidEmpty(
+                                        this@SecondActivity,
+                                        outputFilePath,
+                                        mBinding,
+                                        "torso"
+                                    )
+                                }
+                            }
+                            else
+                            {
+                                editedUri = withContext(Dispatchers.IO) {
+                                    ProcVidCon(
+                                        this@SecondActivity,
+                                        outputFilePath,
+                                        mBinding,
+                                        "torso"
+                                    )
+                                }
+                            }
                             mBinding.SplittingText.visibility = GONE
                             mBinding.CreationText.visibility = GONE
                             mBinding.splittingBar.visibility = GONE
@@ -233,28 +318,28 @@ class SecondActivity : ComponentActivity() {
                             mBinding.videoViewer.visibility = VISIBLE
                             mBinding.calAngleBtn.visibility = VISIBLE
 
-                            Log.d("ErrorChecking", "Function URI: ${newVideoUri}")
-                            videoView.setVideoURI(newVideoUri)
+                            Log.d("ErrorChecking", "Function URI: ${editedUri}")
+                            videoView.setVideoURI(editedUri)
                         } catch(e:Exception){
                             Log.e("ErrorChecking","Error processing video: ${e.message}")
                         }
                     }
                 } ?:run{
-                    Log.e("ErrorChecking", "Video URI is NULL")
+                    Log.e("ErrorChecking", "Gallery URI is NULL")
                 }
             }
             else if (id == R.id.menu_all_agl){
                 // toggle here
-                val uriString = intent.getStringExtra("VIDEO_URI")
+//                val uriString = intent.getStringExtra("VIDEO_URI")
                 val videoView = findViewById<VideoView>(R.id.video_viewer)
-                videoUri = Uri.parse(uriString)
+//                videoUri = Uri.parse(uriString)
                 val mediaController = MediaController(this)
                 videoView.setMediaController(mediaController)
 
-                videoUri?.let{
+                galleryUri?.let{
                     lifecycleScope.launch{
                         try{
-                            Log.d("ErrorChecking", "Gallery URI: ${videoUri}")
+                            Log.d("ErrorChecking", "Gallery URI: ${galleryUri}")
                             val outputPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).absolutePath + "/edited_video.mp4"
                             val outputFilePath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)}/edited_video.mp4"
                             val outputFile = File(outputFilePath)
@@ -272,7 +357,27 @@ class SecondActivity : ComponentActivity() {
                             mBinding.splittingProgressValue.visibility = GONE
                             mBinding.CreatingProgressValue.visibility = GONE
                             mBinding.selectAngleText.visibility = GONE
-                            var newVideoUri = withContext(Dispatchers.IO){ProcVid(this@SecondActivity, it, outputFilePath,mBinding, "all")}
+                            if(frameList.isEmpty()) {
+                                editedUri = withContext(Dispatchers.IO) {
+                                    ProcVidEmpty(
+                                        this@SecondActivity,
+                                        outputFilePath,
+                                        mBinding,
+                                        "all"
+                                    )
+                                }
+                            }
+                            else
+                            {
+                                editedUri = withContext(Dispatchers.IO) {
+                                    ProcVidCon(
+                                        this@SecondActivity,
+                                        outputFilePath,
+                                        mBinding,
+                                        "all"
+                                    )
+                                }
+                            }
                             mBinding.SplittingText.visibility = GONE
                             mBinding.CreationText.visibility = GONE
                             mBinding.splittingBar.visibility = GONE
@@ -282,14 +387,14 @@ class SecondActivity : ComponentActivity() {
                             mBinding.videoViewer.visibility = VISIBLE
                             mBinding.calAngleBtn.visibility = VISIBLE
 
-                            Log.d("ErrorChecking", "Function URI: ${newVideoUri}")
-                            videoView.setVideoURI(newVideoUri)
+                            Log.d("ErrorChecking", "Function URI: ${editedUri}")
+                            videoView.setVideoURI(editedUri)
                         } catch(e:Exception){
                             Log.e("ErrorChecking","Error processing video: ${e.message}")
                         }
                     }
                 } ?:run{
-                    Log.e("ErrorChecking", "Video URI is NULL")
+                    Log.e("ErrorChecking", "Gallery URI is NULL")
                 }
 
             }
