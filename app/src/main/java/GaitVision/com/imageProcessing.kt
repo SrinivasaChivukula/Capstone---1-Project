@@ -663,6 +663,11 @@ suspend fun ProcVidCon(context: Context, outputPath: String, mBinding: ActivityS
 
     if(frameList.isEmpty()) return galleryUri
 
+    withContext(Dispatchers.Main){mBinding.splittingBar.visibility = VISIBLE}
+    withContext(Dispatchers.Main){mBinding.splittingProgressValue.visibility = VISIBLE}
+    withContext(Dispatchers.Main){mBinding.splittingBar.setProgress(100)}
+    withContext(Dispatchers.Main){mBinding.splittingProgressValue.text = " 100%"}
+
     val firstFrame = frameList[0]
     val width = firstFrame.width
     val height = firstFrame.height

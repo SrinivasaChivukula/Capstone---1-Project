@@ -1,31 +1,28 @@
 package GaitVision.com
 
-import GaitVision.com.databinding.ActivityMainBinding
 import GaitVision.com.databinding.ActivitySecondBinding
-import android.app.Activity
 import android.app.Dialog
-import android.os.Bundle
-import android.widget.Button
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.media.MediaScannerConnection
 import android.net.Uri
+import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.widget.PopupMenu
+import android.widget.Button
 import android.widget.MediaController
+import android.widget.PopupMenu
 import android.widget.VideoView
 import androidx.activity.ComponentActivity
-import androidx.appcompat.app.AppCompatActivity
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import okhttp3.Dispatcher
 import java.io.File
+import java.security.AccessController.getContext
 
 
 class SecondActivity : ComponentActivity() {
@@ -111,6 +108,13 @@ class SecondActivity : ComponentActivity() {
                             mBinding.videoViewer.visibility = VISIBLE
                             mBinding.calAngleBtn.visibility = VISIBLE
 
+                            MediaScannerConnection.scanFile(
+                                this@SecondActivity,
+                                arrayOf(editedUri?.path),
+                                null
+                            ) { path, uri ->
+                                Log.d("GalleryUpdate", "File $path was scanned successfully with URI: $uri")
+                            }
                             Log.d("ErrorChecking", "Function URI: ${editedUri}")
                             videoView.setVideoURI(editedUri)
                         } catch(e:Exception){
@@ -180,6 +184,13 @@ class SecondActivity : ComponentActivity() {
                             mBinding.videoViewer.visibility = VISIBLE
                             mBinding.calAngleBtn.visibility = VISIBLE
 
+                            MediaScannerConnection.scanFile(
+                                this@SecondActivity,
+                                arrayOf(editedUri?.path),
+                                null
+                            ) { path, uri ->
+                                Log.d("GalleryUpdate", "File $path was scanned successfully with URI: $uri")
+                            }
                             Log.d("ErrorChecking", "Function URI: ${editedUri}")
                             videoView.setVideoURI(editedUri)
                         } catch(e:Exception){
@@ -249,6 +260,13 @@ class SecondActivity : ComponentActivity() {
                             mBinding.videoViewer.visibility = VISIBLE
                             mBinding.calAngleBtn.visibility = VISIBLE
 
+                            MediaScannerConnection.scanFile(
+                                this@SecondActivity,
+                                arrayOf(editedUri?.path),
+                                null
+                            ) { path, uri ->
+                                Log.d("GalleryUpdate", "File $path was scanned successfully with URI: $uri")
+                            }
                             Log.d("ErrorChecking", "Function URI: ${editedUri}")
                             videoView.setVideoURI(editedUri)
                         } catch(e:Exception){
@@ -318,6 +336,13 @@ class SecondActivity : ComponentActivity() {
                             mBinding.videoViewer.visibility = VISIBLE
                             mBinding.calAngleBtn.visibility = VISIBLE
 
+                            MediaScannerConnection.scanFile(
+                                this@SecondActivity,
+                                arrayOf(editedUri?.path),
+                                null
+                            ) { path, uri ->
+                                Log.d("GalleryUpdate", "File $path was scanned successfully with URI: $uri")
+                            }
                             Log.d("ErrorChecking", "Function URI: ${editedUri}")
                             videoView.setVideoURI(editedUri)
                         } catch(e:Exception){
@@ -387,6 +412,13 @@ class SecondActivity : ComponentActivity() {
                             mBinding.videoViewer.visibility = VISIBLE
                             mBinding.calAngleBtn.visibility = VISIBLE
 
+                            MediaScannerConnection.scanFile(
+                                this@SecondActivity,
+                                arrayOf(editedUri?.path),
+                                null
+                            ) { path, uri ->
+                                Log.d("GalleryUpdate", "File $path was scanned successfully with URI: $uri")
+                            }
                             Log.d("ErrorChecking", "Function URI: ${editedUri}")
                             videoView.setVideoURI(editedUri)
                         } catch(e:Exception){
