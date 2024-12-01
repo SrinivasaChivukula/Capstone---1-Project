@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.widget.Button
 import android.content.Intent
@@ -68,7 +69,7 @@ class ThirdActivity : ComponentActivity() {
             startActivity(intent)
         }
 
-        val help03Btn = findViewById<Button>(R.id.help03_btn)
+        /*val help03Btn = findViewById<Button>(R.id.help03_btn)
         help03Btn.setOnClickListener{
             val dialogBinding = layoutInflater.inflate(R.layout.help03_dialog, null)
 
@@ -84,8 +85,40 @@ class ThirdActivity : ComponentActivity() {
                 myDialog.dismiss()
             }
 
+        }*/
+
+        val sharedPref = getSharedPreferences("HelpPrefs", Context.MODE_PRIVATE)
+        val isHelpShown = sharedPref.getBoolean("Help03Shown", false)
+
+        if (!isHelpShown) {
+            showHelpDialog()
+
+            val editor = sharedPref.edit()
+            editor.putBoolean("Help03Shown", true)
+            editor.apply()
         }
 
+        val help03Btn = findViewById<Button>(R.id.help03_btn)
+        help03Btn.setOnClickListener {
+            showHelpDialog()
+        }
+
+    }
+
+    private fun showHelpDialog() {
+        val dialogBinding = layoutInflater.inflate(R.layout.help03_dialog, null)
+
+        val myDialog = Dialog(this)
+        myDialog.setContentView(dialogBinding)
+
+        myDialog.setCancelable(false)
+        myDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        myDialog.show()
+
+        val yes03Btn = dialogBinding.findViewById<Button>(R.id.help03_yes)
+        yes03Btn.setOnClickListener {
+            myDialog.dismiss()
+        }
     }
 
     //Function for writing to file

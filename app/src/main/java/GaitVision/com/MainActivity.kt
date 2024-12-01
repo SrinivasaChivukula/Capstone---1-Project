@@ -4,6 +4,7 @@ import GaitVision.com.databinding.ActivityMainBinding
 import android.os.Bundle
 import android.widget.Button
 import android.app.Dialog
+import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.content.Intent
@@ -83,13 +84,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_main)
-//
-//        val confirmVidBtn = findViewById<Button>(R.id.confirm_vid_btn)
-//        confirmVidBtn.setOnClickListener{
-//            val intent = Intent(this, SecondActivity::class.java)
-//            startActivity(intent)
-//        }
+
         checkPermissions()
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
@@ -97,7 +92,7 @@ class MainActivity : ComponentActivity() {
         mBinding.confirmVidBtn.setOnClickListener{startActivity(Intent(this,SecondActivity::class.java))}
         mBinding.openGalBtn.setOnClickListener{startIntentFromGallary()}
 
-        val help01Btn = findViewById<Button>(R.id.help01_btn)
+        /*val help01Btn = findViewById<Button>(R.id.help01_btn)
         help01Btn.setOnClickListener{
             val dialogBinding = layoutInflater.inflate(R.layout.help01_dialog, null)
 
@@ -113,8 +108,40 @@ class MainActivity : ComponentActivity() {
                 myDialog.dismiss()
             }
 
+        }*/
+
+        val sharedPref = getSharedPreferences("HelpPrefs", Context.MODE_PRIVATE)
+        val isHelpShown = sharedPref.getBoolean("Help01Shown", false)
+
+        if (!isHelpShown) {
+            showHelpDialog()
+
+            val editor = sharedPref.edit()
+            editor.putBoolean("Help01Shown", true)
+            editor.apply()
         }
-        
+
+        val help01Btn = findViewById<Button>(R.id.help01_btn)
+        help01Btn.setOnClickListener {
+            showHelpDialog()
+        }
+
+    }
+
+    private fun showHelpDialog() {
+        val dialogBinding = layoutInflater.inflate(R.layout.help01_dialog, null)
+
+        val myDialog = Dialog(this)
+        myDialog.setContentView(dialogBinding)
+
+        myDialog.setCancelable(false)
+        myDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        myDialog.show()
+
+        val yes01Btn = dialogBinding.findViewById<Button>(R.id.help01_yes)
+        yes01Btn.setOnClickListener {
+            myDialog.dismiss()
+        }
     }
 
     private fun initClicks()
@@ -127,21 +154,4 @@ class MainActivity : ComponentActivity() {
     private fun startIntentFromGallary() {
        getResult.launch("video/*")
     }
-
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?)
-//    {
-//        super.onActivityResult(requestCode, resultCode, data)
-//
-//            if(requestCode == REQUESTCODE_GALLERY && resultCode == Activity.RESULT_OK)
-//            {
-//                videoUri = data?.data
-//
-//                val intent= Intent(this, SecondActivity::class.java).apply{
-//                    putExtra("VIDEO_URI", videoUri.toString())
-//                }
-//                startActivity(intent)
-//            }
-//
-//
-//    }
 }
