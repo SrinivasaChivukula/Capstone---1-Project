@@ -2,6 +2,9 @@ package GaitVision.com
 
 import GaitVision.com.databinding.ActivitySecondBinding
 import android.app.Dialog
+import android.content.Context
+import android.os.Bundle
+import android.widget.Button
 import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -437,7 +440,7 @@ class SecondActivity : ComponentActivity() {
             popupMenu.show()
         }
 
-        val help02Btn = findViewById<Button>(R.id.help02_btn)
+        /*val help02Btn = findViewById<Button>(R.id.help02_btn)
         help02Btn.setOnClickListener{
             val dialogBinding = layoutInflater.inflate(R.layout.help02_dialog, null)
 
@@ -453,8 +456,40 @@ class SecondActivity : ComponentActivity() {
                 myDialog.dismiss()
             }
 
+        }*/
+
+        val sharedPref = getSharedPreferences("HelpPrefs", Context.MODE_PRIVATE)
+        val isHelpShown = sharedPref.getBoolean("Help02Shown", false)
+
+        if (!isHelpShown) {
+            showHelpDialog()
+
+            val editor = sharedPref.edit()
+            editor.putBoolean("Help02Shown", true)
+            editor.apply()
         }
 
+        val help02Btn = findViewById<Button>(R.id.help02_btn)
+        help02Btn.setOnClickListener {
+            showHelpDialog()
+        }
+
+    }
+
+    private fun showHelpDialog() {
+        val dialogBinding = layoutInflater.inflate(R.layout.help02_dialog, null)
+
+        val myDialog = Dialog(this)
+        myDialog.setContentView(dialogBinding)
+
+        myDialog.setCancelable(false)
+        myDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        myDialog.show()
+
+        val yes02Btn = dialogBinding.findViewById<Button>(R.id.help02_yes)
+        yes02Btn.setOnClickListener {
+            myDialog.dismiss()
+        }
     }
 
 }
