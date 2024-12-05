@@ -135,7 +135,7 @@
         android:id="@+id/cal_angle_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Calculate Angles"
+        android:text="View Graphs"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
