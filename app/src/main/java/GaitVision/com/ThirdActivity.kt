@@ -29,7 +29,8 @@ class ThirdActivity : ComponentActivity() {
             leftKneeAngles,
             rightKneeAngles,
             leftAnkleAngles,
-            rightAnkleAngles
+            rightAnkleAngles,
+            torsoAngles
         )
 
         val angleNames = listOf(        //list of names used for files
@@ -39,6 +40,7 @@ class ThirdActivity : ComponentActivity() {
             "RightKnee",
             "LeftAnkle",
             "RightAnkle",
+            "Torso"
         )
 
         submitButton.setOnClickListener {
@@ -56,7 +58,7 @@ class ThirdActivity : ComponentActivity() {
 
             val builder: AlertDialog.Builder = AlertDialog.Builder(this)
             builder
-                .setMessage("CSV File saved to Documents")
+                .setMessage("CSV Files saved to Documents as ParticipantID_GraphName.csv")
                 .setTitle("Successfully Exported")
 
             val dialog: AlertDialog = builder.create()
