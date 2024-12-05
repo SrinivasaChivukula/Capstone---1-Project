@@ -123,6 +123,15 @@
             app:layout_constraintBottom_toTopOf="@id/upload_csv_btn"
             tools:ignore="HardcodedText" />
 
+        <com.github.mikephil.charting.charts.LineChart
+            android:id="@+id/lineChartTorso"
+            android:layout_width="match_parent"
+            android:layout_height="300dp"
+            android:layout_marginTop="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textTorso" />
+
         <Button
             android:id="@+id/upload_csv_btn"
             android:layout_width="wrap_content"
@@ -133,7 +142,7 @@
             android:layout_marginTop="50sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textTorso"
+            app:layout_constraintTop_toBottomOf="@id/lineChartTorso"
             tools:ignore="HardcodedText" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

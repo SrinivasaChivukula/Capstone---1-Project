@@ -51,7 +51,9 @@ import com.github.mikephil.charting.data.LineDataSet
 import java.lang.Math.pow
 
 fun plotLineGraph(lineChart: LineChart, angleData: List<Float>, label: String) {
-    val entries = angleData.mapIndexed { index, angle -> Entry(index.toFloat(), angle) }
+    val entries = angleData.mapIndexed {index, angle ->
+        val ConvertToSecond = index/30f
+        Entry(ConvertToSecond, angle) }
 
     val lineDataSet = LineDataSet(entries, label)
     lineDataSet.color = Color.BLUE // Set the color for the line
@@ -315,6 +317,13 @@ fun drawOnBitmap(bitmap: Bitmap,
         rightHipAngles.add(rightHipAngle)
     }
 
+    // Torso Angle
+    var torsoAngle = GetAngles((leftHipX+rightHipX)/2,(leftHipY+rightHipY)/2,rightHipX, rightHipY, (rightShoulderX+leftShoulderX)/2,(rightShoulderY+leftShoulderY)/2)
+    torsoAngle = torsoAngle-90 // Setting base state of torso to correct degree length.
+    if (!torsoAngle.isNaN()) {
+        torsoAngles.add(torsoAngle)
+    }
+
     var canvas = Canvas(bitmap)
     var rectPaint = Paint()
     rectPaint.setARGB(255,255,255,255)
@@ -363,14 +372,12 @@ fun drawOnBitmap(bitmap: Bitmap,
     }
     else if(angle == "torso")
     {
-        var text = "Right Torso: Dummy Text"
+        var text = "Right Torso: ${torsoAngle}\u00B0"
         var paint = Paint()
         paint.setARGB(255,0,0,0)
         paint.textSize = 40.0F
         paint.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD))
         canvas.drawText(text, 10F, 75F, paint)
-        text = "Left Torso: Dummy Text"
-        canvas.drawText(text, 10F, 125F, paint)
     }
     else if(angle == "all")
     {
@@ -393,10 +400,8 @@ fun drawOnBitmap(bitmap: Bitmap,
         text = "Left Ankle: ${leftAnkleAngle}\u00B0"
         canvas.drawText(text, 710F, 125F, paint)
 
-        text = "Right Torso: Dummy Text"
+        text = "Torso: ${torsoAngle}\u00B0"
         canvas.drawText(text, 1060F, 75F, paint)
-        text = "Left Torso: Dummy Text"
-        canvas.drawText(text, 1060F, 125F, paint)
     }
 
 
@@ -453,6 +458,7 @@ class GraphActivity : ComponentActivity() {
         lateinit var lineChartRightAnkle: LineChart
         lateinit var lineChartLeftHip: LineChart
         lateinit var lineChartRightHip: LineChart
+        lateinit var lineChartTorso: LineChart
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -465,6 +471,7 @@ class GraphActivity : ComponentActivity() {
         lineChartRightAnkle = findViewById(R.id.lineChartRightAnkle)
         lineChartLeftHip = findViewById(R.id.lineChartLeftHip)
         lineChartRightHip = findViewById(R.id.lineChartRightHip)
+        lineChartTorso = findViewById(R.id.lineChartTorso)
 
         plotLineGraph(lineChartLeftKnee, leftKneeAngles, "Left Knee Angles")
         plotLineGraph(lineChartRightKnee, rightKneeAngles, "Right Knee Angles")
@@ -472,6 +479,7 @@ class GraphActivity : ComponentActivity() {
         plotLineGraph(lineChartRightAnkle, rightAnkleAngles, "Right Ankle Angles")
         plotLineGraph(lineChartLeftHip, leftHipAngles, "Left Hip Angles")
         plotLineGraph(lineChartRightHip, rightHipAngles, "Right Hip Angles")
+        plotLineGraph(lineChartTorso, torsoAngles, "Torso Angles")
 
 
         val uploadCSVBtn = findViewById<Button>(R.id.upload_csv_btn)
