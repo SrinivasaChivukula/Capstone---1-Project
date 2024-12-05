@@ -10,12 +10,10 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.media.MediaScannerConnection
 import android.net.Uri
-import android.os.Bundle
 import android.os.Environment
 import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
-import android.widget.Button
 import android.widget.MediaController
 import android.widget.PopupMenu
 import android.widget.VideoView
