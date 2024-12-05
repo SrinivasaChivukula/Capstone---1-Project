@@ -120,7 +120,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/lineChartRightAnkle"
-            app:layout_constraintBottom_toTopOf="@id/upload_csv_btn"
             tools:ignore="HardcodedText" />
 
         <com.github.mikephil.charting.charts.LineChart
