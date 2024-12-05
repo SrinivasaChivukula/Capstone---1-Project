@@ -525,6 +525,7 @@ suspend fun ProcVidEmpty(context: Context, outputPath: String, mBinding: Activit
     rightKneeAngles.clear()
     leftHipAngles.clear()
     rightHipAngles.clear()
+    torsoAngles.clear()
 
 
     withContext(Dispatchers.Main){mBinding.SplittingText.visibility = VISIBLE}
@@ -662,6 +663,7 @@ suspend fun ProcVidCon(context: Context, outputPath: String, mBinding: ActivityS
     rightKneeAngles.clear()
     leftHipAngles.clear()
     rightHipAngles.clear()
+    torsoAngles.clear()
 
 
     withContext(Dispatchers.Main){mBinding.SplittingText.visibility = VISIBLE}
