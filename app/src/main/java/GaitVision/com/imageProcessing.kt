@@ -286,12 +286,12 @@ fun drawOnBitmap(bitmap: Bitmap,
     // Angle Calculations (added Not A Number check)
     // Ankle Angles
     var leftAnkleAngle = GetAngles(leftFootIndexX, leftFootIndexY, leftAnkleX, leftAnkleY, leftKneeX, leftKneeY)
-    if (!leftAnkleAngle.isNaN()) {
+    if (!leftAnkleAngle.isNaN() && leftAnkleAngle < 90 && leftAnkleAngle > 50) {
         leftAnkleAngles.add(leftAnkleAngle)
     }
 
     var rightAnkleAngle = GetAngles(rightFootIndexX, rightFootIndexY, rightAnkleX, rightAnkleY, rightKneeX, rightKneeY)
-    if (!rightAnkleAngle.isNaN()) {
+    if (!rightAnkleAngle.isNaN() && rightAnkleAngle < 90 && rightAnkleAngle > 50) {
         rightAnkleAngles.add(rightAnkleAngle)
     }
 
@@ -319,8 +319,7 @@ fun drawOnBitmap(bitmap: Bitmap,
 
     // Torso Angle
     var torsoAngle = GetAngles((leftHipX+rightHipX)/2,(leftHipY+rightHipY)/2,rightHipX, rightHipY, (rightShoulderX+leftShoulderX)/2,(rightShoulderY+leftShoulderY)/2)
-    torsoAngle = torsoAngle-90 // Setting base state of torso to correct degree length.
-    if (!torsoAngle.isNaN()) {
+    if (!torsoAngle.isNaN() && torsoAngle < 105 && torsoAngle > 75) {
         torsoAngles.add(torsoAngle)
     }
 
