@@ -98,6 +98,7 @@ class MainActivity : ComponentActivity() {
         rightKneeAngles.clear()
         leftHipAngles.clear()
         rightHipAngles.clear()
+        torsoAngles.clear()
 
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
