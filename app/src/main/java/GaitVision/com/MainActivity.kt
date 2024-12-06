@@ -10,12 +10,14 @@ import android.graphics.drawable.ColorDrawable
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+
 
 class MainActivity : ComponentActivity() {
 
@@ -85,7 +87,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        setContentView(R.layout.activity_main)
         checkPermissions()
 
         //Initialize all global variables
@@ -106,23 +108,20 @@ class MainActivity : ComponentActivity() {
         mBinding.confirmVidBtn.setOnClickListener{startActivity(Intent(this,SecondActivity::class.java))}
         mBinding.openGalBtn.setOnClickListener{startIntentFromGallary()}
 
-        /*val help01Btn = findViewById<Button>(R.id.help01_btn)
-        help01Btn.setOnClickListener{
-            val dialogBinding = layoutInflater.inflate(R.layout.help01_dialog, null)
+        //Creating typing animation
+        val textView = findViewById<TextView>(R.id.textView1)
+        val label   = " GaitVision"
+        val stringBuilder = StringBuilder()
 
-            val myDialog = Dialog(this)
-            myDialog.setContentView(dialogBinding)
-
-            myDialog.setCancelable(false)
-            myDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            myDialog.show()
-
-            val yes01Btn = dialogBinding.findViewById<Button>(R.id.help01_yes)
-            yes01Btn.setOnClickListener{
-                myDialog.dismiss()
+        Thread{
+            for(letter in label){
+                stringBuilder.append(letter)
+                Thread.sleep(100    )
+                runOnUiThread{
+                    textView.text = stringBuilder.toString()
+                }
             }
-
-        }*/
+        }.start()
 
         val sharedPref = getSharedPreferences("HelpPrefs", Context.MODE_PRIVATE)
         val isHelpShown = sharedPref.getBoolean("Help01Shown", false)
