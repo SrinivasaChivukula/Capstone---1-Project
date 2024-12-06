@@ -116,7 +116,7 @@ class MainActivity : ComponentActivity() {
         Thread{
             for(letter in label){
                 stringBuilder.append(letter)
-                Thread.sleep(100    )
+                Thread.sleep(150    )
                 runOnUiThread{
                     textView.text = stringBuilder.toString()
                 }
