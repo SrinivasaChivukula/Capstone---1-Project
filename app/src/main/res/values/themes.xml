@@ -2,6 +2,24 @@
 
 <resources>
 
-    <style name="Theme.GaitVision" parent="android:Theme.Material.Light.NoActionBar" />
+    <style name="Theme.GaitVision" parent="android:Theme.Material.Light.NoActionBar" >
+        <item name = "colorPrimary">@color/black</item>
+        <item name = "colorPrimaryVariant">@color/black</item>
+        <item name = "colorOnPrimary">@color/black</item>
+
+        <item name = "colorSecondary">@color/logo_blue</item>
+        <item name = "colorSecondaryVariant">@color/logo_blue</item>
+        <item name = "colorOnSecondary">@color/white</item>
+
+
+        <item name = "android:statusBarColor">?attr/colorPrimaryVariant</item>
+
+    </style>
+
+
+    <style name="DialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/slide_in</item>
+        <item name="android:windowExitAnimation">@anim/slide_out</item>
+    </style>
 
 </resources>
