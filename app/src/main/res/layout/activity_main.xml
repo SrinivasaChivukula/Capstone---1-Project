@@ -11,7 +11,7 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="10dp"
+        android:layout_marginRight="10dp"
         android:fontFamily="@font/montserrat_variablefont_wght"
         tools:text="GaitVision"
         android:textAlignment="center"
