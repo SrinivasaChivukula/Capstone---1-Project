@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.widget.Button
 import android.content.Intent
@@ -28,7 +29,8 @@ class ThirdActivity : ComponentActivity() {
             leftKneeAngles,
             rightKneeAngles,
             leftAnkleAngles,
-            rightAnkleAngles
+            rightAnkleAngles,
+            torsoAngles
         )
 
         val angleNames = listOf(        //list of names used for files
@@ -38,6 +40,7 @@ class ThirdActivity : ComponentActivity() {
             "RightKnee",
             "LeftAnkle",
             "RightAnkle",
+            "Torso"
         )
 
         submitButton.setOnClickListener {
@@ -51,11 +54,12 @@ class ThirdActivity : ComponentActivity() {
                 }    //filename participantId_angle
 
                 writeToFile(fileName, fileData[i])                 //write to file is called with file name and placeholder as parameters
+                renameTo(participantId.text.toString())
             }
 
             val builder: AlertDialog.Builder = AlertDialog.Builder(this)
             builder
-                .setMessage("CSV File saved to Documents")
+                .setMessage("CSV Files saved to Documents as ParticipantID_GraphName.csv.\n\nUpdated video saved to Videos as ParticipantID_video.mp4")
                 .setTitle("Successfully Exported")
 
             val dialog: AlertDialog = builder.create()
@@ -68,7 +72,7 @@ class ThirdActivity : ComponentActivity() {
             startActivity(intent)
         }
 
-        val help03Btn = findViewById<Button>(R.id.help03_btn)
+        /*val help03Btn = findViewById<Button>(R.id.help03_btn)
         help03Btn.setOnClickListener{
             val dialogBinding = layoutInflater.inflate(R.layout.help03_dialog, null)
 
@@ -84,8 +88,40 @@ class ThirdActivity : ComponentActivity() {
                 myDialog.dismiss()
             }
 
+        }*/
+
+        val sharedPref = getSharedPreferences("HelpPrefs", Context.MODE_PRIVATE)
+        val isHelpShown = sharedPref.getBoolean("Help03Shown", false)
+
+        if (!isHelpShown) {
+            showHelpDialog()
+
+            val editor = sharedPref.edit()
+            editor.putBoolean("Help03Shown", true)
+            editor.apply()
         }
 
+        val help03Btn = findViewById<Button>(R.id.help03_btn)
+        help03Btn.setOnClickListener {
+            showHelpDialog()
+        }
+
+    }
+
+    private fun showHelpDialog() {
+        val dialogBinding = layoutInflater.inflate(R.layout.help03_dialog, null)
+
+        val myDialog = Dialog(this)
+        myDialog.setContentView(dialogBinding)
+
+        myDialog.setCancelable(false)
+        myDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        myDialog.show()
+
+        val yes03Btn = dialogBinding.findViewById<Button>(R.id.help03_yes)
+        yes03Btn.setOnClickListener {
+            myDialog.dismiss()
+        }
     }
 
     //Function for writing to file
@@ -108,5 +144,21 @@ class ThirdActivity : ComponentActivity() {
             }
 
         }
+
+
+    }
+
+    //Function for renaming the edited video
+    private fun renameTo(participantId:String) {
+        val vidName = buildString {     //string is built to include participant ID in the name
+            append("Movies/")
+            append(participantId)
+            append("_video.mp4")
+        }
+
+        val oldFilePath = File(Environment.getExternalStorageDirectory(), "Movies/edited_video.mp4")    //Path of the existing edited video
+        val newFilePath = File(Environment.getExternalStorageDirectory(), vidName)                           //New path for the renamed video
+
+        oldFilePath.renameTo(newFilePath)
     }
 }

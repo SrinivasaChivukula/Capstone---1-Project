@@ -10,7 +10,10 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Matrix
 import android.graphics.Paint
+import android.graphics.Typeface
+import android.icu.lang.UProperty.MATH
 import android.media.MediaCodec
 import android.media.MediaCodecInfo
 import android.media.MediaCodecList
@@ -45,9 +48,12 @@ import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import java.lang.Math.pow
 
 fun plotLineGraph(lineChart: LineChart, angleData: List<Float>, label: String) {
-    val entries = angleData.mapIndexed { index, angle -> Entry(index.toFloat(), angle) }
+    val entries = angleData.mapIndexed {index, angle ->
+        val ConvertToSecond = index/30f
+        Entry(ConvertToSecond, angle) }
 
     val lineDataSet = LineDataSet(entries, label)
     lineDataSet.color = Color.BLUE // Set the color for the line
@@ -59,12 +65,12 @@ fun plotLineGraph(lineChart: LineChart, angleData: List<Float>, label: String) {
 }
 
 //Angle vectors for average calculations and csv output
-val leftAnkleAngles: MutableList<Float> = mutableListOf()
-val rightAnkleAngles: MutableList<Float> = mutableListOf()
-val leftKneeAngles: MutableList<Float> = mutableListOf()
-val rightKneeAngles: MutableList<Float> = mutableListOf()
-val leftHipAngles: MutableList<Float> = mutableListOf()
-val rightHipAngles: MutableList<Float> = mutableListOf()
+//val leftAnkleAngles: MutableList<Float> = mutableListOf()
+//val rightAnkleAngles: MutableList<Float> = mutableListOf()
+//val leftKneeAngles: MutableList<Float> = mutableListOf()
+//val rightKneeAngles: MutableList<Float> = mutableListOf()
+//val leftHipAngles: MutableList<Float> = mutableListOf()
+//val rightHipAngles: MutableList<Float> = mutableListOf()
 
 private var frameCounter = 0
 private val frameSkip = 5  // Only update every 5 frames
@@ -81,11 +87,11 @@ Description      : This function takes a uri of a video and sends it through a p
 Return           :
     List<Bitmap> : List of bitmaps for images picked up from frames
  */
-suspend fun getFrameBitmaps(context: Context,fileUri: Uri?, mBinding: ActivitySecondBinding): List<Bitmap>
+suspend fun getFrameBitmaps(context: Context,fileUri: Uri?, mBinding: ActivitySecondBinding)
 {
     if(fileUri == null)
     {
-        return emptyList()
+        return
     }
     //Declare and initialize constants that can be used for frame syncing
     val OPTION_PREVIOUS_SYNC = MediaMetadataRetriever.OPTION_PREVIOUS_SYNC
@@ -95,7 +101,7 @@ suspend fun getFrameBitmaps(context: Context,fileUri: Uri?, mBinding: ActivitySe
 
     //Declare and initialize variables to be used in function
     val retriever = MediaMetadataRetriever()
-    val framesList = mutableListOf<Bitmap>()
+    frameList = mutableListOf<Bitmap>()
 
     //Set data input
     retriever.setDataSource(context, fileUri)
@@ -131,7 +137,7 @@ suspend fun getFrameBitmaps(context: Context,fileUri: Uri?, mBinding: ActivitySe
             val frame = retriever.getFrameAtTime(currTime, OPTION_CLOSEST)
             if(frame != null)
             {
-                framesList.add(frame)
+                frameList.add(frame)
             }
             progress = ((currTime.toDouble() / videoLengthUs)*100).toInt()
             withContext(Dispatchers.Main){mBinding.splittingBar.setProgress(progress)}
@@ -143,14 +149,14 @@ suspend fun getFrameBitmaps(context: Context,fileUri: Uri?, mBinding: ActivitySe
     {
         val stream = context.contentResolver.openInputStream(fileUri)
         val frame = BitmapFactory.decodeStream(stream)
-        framesList.add(frame)
+        frameList.add(frame)
     }
 
     //Release resources
     retriever.release()
 
     //Return bitmap list
-    return framesList
+    return
 }
 
 /*
@@ -189,6 +195,11 @@ suspend fun processImageBitmap(context: Context, bitmap: Bitmap): Pose?
 
 }
 
+fun resizeBitmap(bitmap: Bitmap, targetWidth: Int, targetHeight: Int): Bitmap
+{
+    return Bitmap.createScaledBitmap(bitmap, targetWidth, targetHeight, false)
+}
+
 /*
 Name                   : drawOnBitmap
 Parameters             :
@@ -218,12 +229,7 @@ Return                 :
  */
 fun drawOnBitmap(bitmap: Bitmap,
                  pose: Pose?,
-                 leftAnkleAngles: MutableList<Float>,
-                 rightAnkleAngles: MutableList<Float>,
-                 leftKneeAngles: MutableList<Float>,
-                 rightKneeAngles: MutableList<Float>,
-                 leftHipAngles: MutableList<Float>,
-                 rightHipAngles: MutableList<Float>, angle : String): Bitmap
+                 angle : String): Bitmap
 {
     //Get all landmarks in image
     //val allPoseLandMarks = pose.getAllPoseLandmarks() //Test case for all landmarks on image
@@ -280,12 +286,12 @@ fun drawOnBitmap(bitmap: Bitmap,
     // Angle Calculations (added Not A Number check)
     // Ankle Angles
     var leftAnkleAngle = GetAngles(leftFootIndexX, leftFootIndexY, leftAnkleX, leftAnkleY, leftKneeX, leftKneeY)
-    if (!leftAnkleAngle.isNaN()) {
+    if (!leftAnkleAngle.isNaN() && leftAnkleAngle < 90 && leftAnkleAngle > 50) {
         leftAnkleAngles.add(leftAnkleAngle)
     }
 
     var rightAnkleAngle = GetAngles(rightFootIndexX, rightFootIndexY, rightAnkleX, rightAnkleY, rightKneeX, rightKneeY)
-    if (!rightAnkleAngle.isNaN()) {
+    if (!rightAnkleAngle.isNaN() && rightAnkleAngle < 90 && rightAnkleAngle > 50) {
         rightAnkleAngles.add(rightAnkleAngle)
     }
 
@@ -311,50 +317,90 @@ fun drawOnBitmap(bitmap: Bitmap,
         rightHipAngles.add(rightHipAngle)
     }
 
-    var text = "Right Hip: ${rightHipAngle}\u00B0"
+    // Torso Angle
+    var torsoAngle = GetAngles((leftHipX+rightHipX)/2,(leftHipY+rightHipY)/2,rightHipX, rightHipY, (rightShoulderX+leftShoulderX)/2,(rightShoulderY+leftShoulderY)/2)
+    if (!torsoAngle.isNaN() && torsoAngle < 105 && torsoAngle > 75) {
+        torsoAngles.add(torsoAngle)
+    }
+
     var canvas = Canvas(bitmap)
     var rectPaint = Paint()
     rectPaint.setARGB(255,255,255,255)
-    canvas.drawRect(20F,0F,200F,60F,rectPaint)
+    if(angle != "all") {
+        //lIMIT RIGHT: 480
+        //LIMIT BOTTOM: 270
+        canvas.drawRect(0F, 0F, 350F, 150F, rectPaint)
+    }
+    else if(angle == "all")
+    {
+        canvas.drawRect(0F,0F,1400F,150F,rectPaint)
+    }
+    //canvas.drawRect(20F,0F, 20+recLength, 0+recHeight, rectPaint)
     if(angle == "hip")
     {
         var text = "Right Hip: ${rightHipAngle}\u00B0"
         var paint = Paint()
         paint.setARGB(255,0,0,0)
-        paint.textSize = 20.0F
-        canvas.drawText(text, 25F, 25F, paint)
+        paint.textSize = 40.0F
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD))
+        canvas.drawText(text, 10F, 75F, paint)
         text = "Left Hip: ${leftHipAngle}\u00B0"
-        canvas.drawText(text, 25F, 50F, paint)
+        canvas.drawText(text, 10F, 125F, paint)
     }
     else if(angle == "knee")
     {
         var text = "Right Knee: ${rightKneeAngle}\u00B0"
         var paint = Paint()
         paint.setARGB(255,0,0,0)
-        paint.textSize = 20.0F
-        canvas.drawText(text, 25F, 25F, paint)
+        paint.textSize = 40.0F
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD))
+        canvas.drawText(text, 10F, 75F, paint)
         text = "Left Knee: ${leftKneeAngle}\u00B0"
-        canvas.drawText(text, 25F, 50F, paint)
+        canvas.drawText(text, 10F, 125F, paint)
     }
     else if(angle == "ankle")
     {
         var text = "Right Ankle: ${rightAnkleAngle}\u00B0"
         var paint = Paint()
         paint.setARGB(255,0,0,0)
-        paint.textSize = 20.0F
-        canvas.drawText(text, 25F, 25F, paint)
+        paint.textSize = 40.0F
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD))
+        canvas.drawText(text, 10F, 75F, paint)
         text = "Left Ankle: ${leftAnkleAngle}\u00B0"
-        canvas.drawText(text, 25F, 50F, paint)
+        canvas.drawText(text, 10F, 125F, paint)
     }
     else if(angle == "torso")
     {
-        var text = "Right Torso: Dummy Text"
+        var text = "Right Torso: ${torsoAngle}\u00B0"
         var paint = Paint()
         paint.setARGB(255,0,0,0)
-        paint.textSize = 20.0F
-        canvas.drawText(text, 25F, 25F, paint)
-        text = "Left Torso: Dummy Text"
-        canvas.drawText(text, 25F, 50F, paint)
+        paint.textSize = 40.0F
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD))
+        canvas.drawText(text, 10F, 75F, paint)
+    }
+    else if(angle == "all")
+    {
+        var text = "Right Hip: ${rightHipAngle}\u00B0"
+        var paint = Paint()
+        paint.setARGB(255,0,0,0)
+        paint.textSize = 40.0F
+        paint.setTypeface(Typeface.create(Typeface.DEFAULT,Typeface.BOLD))
+        canvas.drawText(text, 10F, 75F, paint)
+        text = "Left Hip: ${leftHipAngle}\u00B0"
+        canvas.drawText(text, 10F, 125F, paint)
+
+        text = "Right Knee: ${rightKneeAngle}\u00B0"
+        canvas.drawText(text, 360F, 75F, paint)
+        text = "Left Knee: ${leftKneeAngle}\u00B0"
+        canvas.drawText(text, 360F, 125F, paint)
+
+        text = "Right Ankle: ${rightAnkleAngle}\u00B0"
+        canvas.drawText(text, 710F, 75F, paint)
+        text = "Left Ankle: ${leftAnkleAngle}\u00B0"
+        canvas.drawText(text, 710F, 125F, paint)
+
+        text = "Torso: ${torsoAngle}\u00B0"
+        canvas.drawText(text, 1060F, 75F, paint)
     }
 
 
@@ -411,6 +457,7 @@ class GraphActivity : ComponentActivity() {
         lateinit var lineChartRightAnkle: LineChart
         lateinit var lineChartLeftHip: LineChart
         lateinit var lineChartRightHip: LineChart
+        lateinit var lineChartTorso: LineChart
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -423,6 +470,7 @@ class GraphActivity : ComponentActivity() {
         lineChartRightAnkle = findViewById(R.id.lineChartRightAnkle)
         lineChartLeftHip = findViewById(R.id.lineChartLeftHip)
         lineChartRightHip = findViewById(R.id.lineChartRightHip)
+        lineChartTorso = findViewById(R.id.lineChartTorso)
 
         plotLineGraph(lineChartLeftKnee, leftKneeAngles, "Left Knee Angles")
         plotLineGraph(lineChartRightKnee, rightKneeAngles, "Right Knee Angles")
@@ -430,6 +478,7 @@ class GraphActivity : ComponentActivity() {
         plotLineGraph(lineChartRightAnkle, rightAnkleAngles, "Right Ankle Angles")
         plotLineGraph(lineChartLeftHip, leftHipAngles, "Left Hip Angles")
         plotLineGraph(lineChartRightHip, rightHipAngles, "Right Hip Angles")
+        plotLineGraph(lineChartTorso, torsoAngles, "Torso Angles")
 
 
         val uploadCSVBtn = findViewById<Button>(R.id.upload_csv_btn)
@@ -437,6 +486,17 @@ class GraphActivity : ComponentActivity() {
             val intent = Intent(this, ThirdActivity::class.java)
             startActivity(intent)
         }
+    }
+}
+
+fun ensureLandscapeOrientation(bitmap: Bitmap): Bitmap {
+    return if (bitmap.width < bitmap.height) {
+        // Rotate the bitmap 90 degrees to landscape
+        val matrix = Matrix()
+        matrix.postRotate(90f)
+        Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+    } else {
+        bitmap // Already landscape
     }
 }
 
@@ -456,27 +516,43 @@ Return         :
     Uri        : This is the new video's uri that has all the drawing and pose detection
                  displayed on it.
  */
-suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String, mBinding: ActivitySecondBinding, angle : String): Uri?
+suspend fun ProcVidEmpty(context: Context, outputPath: String, mBinding: ActivitySecondBinding, angle : String): Uri?
 {
+    leftAnkleAngles.clear()
+    rightAnkleAngles.clear()
+    leftKneeAngles.clear()
+    rightKneeAngles.clear()
+    leftHipAngles.clear()
+    rightHipAngles.clear()
+    torsoAngles.clear()
+
 
     withContext(Dispatchers.Main){mBinding.SplittingText.visibility = VISIBLE}
     withContext(Dispatchers.Main){mBinding.CreationText.visibility = VISIBLE}
     withContext(Dispatchers.Main){mBinding.splittingProgressValue.visibility = GONE}
     withContext(Dispatchers.Main){mBinding.CreatingProgressValue.visibility = GONE}
-    //val testList: MutableList<Pair<Float, Long>> = mutableListOf()
-    val framesList = getFrameBitmaps(context, uri, mBinding) // Get frames from the original video
-    if(framesList.isEmpty()) return uri
 
-    val firstFrame = framesList[0]
+    getFrameBitmaps(context, galleryUri, mBinding) // Get frames from the original video
+    if(frameList.isEmpty()) return galleryUri
+
+    val firstFrame = frameList[0]
     val width = firstFrame.width
     val height = firstFrame.height
 
     val mediaMuxer = MediaMuxer(outputPath, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
-    var format = MediaFormat.createVideoFormat("video/avc",width, height)
+    var format = MediaFormat.createVideoFormat("video/avc", 1920, 1080)
     format.setInteger(MediaFormat.KEY_BIT_RATE, 1000000)
     format.setInteger(MediaFormat.KEY_FRAME_RATE, 30)
     format.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface)
     format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 1)
+    format.setInteger(MediaFormat.KEY_ROTATION, 0)
+
+    mediaMuxer.setOrientationHint(0)
+
+    val retriever1 = MediaMetadataRetriever()
+    retriever1.setDataSource(context, galleryUri)
+    Log.d("errorchecking","Video Orientation: ${retriever1.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)}")
+    retriever1.release()
 
     var encoder = MediaCodec.createEncoderByType("video/avc")
     encoder.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
@@ -489,18 +565,20 @@ suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String, mBinding: A
     var muxerStarted = false
     val bufferInfo = MediaCodec.BufferInfo()
 
-    val listSize = framesList.size
+    val listSize = frameList.size
     var progress : Int
 
     var frameI = 0
     withContext(Dispatchers.Main){mBinding.VideoCreation.visibility = VISIBLE}
     withContext(Dispatchers.Main){mBinding.CreatingProgressValue.visibility = VISIBLE}
     withContext(Dispatchers.Main){mBinding.CreatingProgressValue.text = " 0%"}
-    for ((frameIndex, frame) in framesList.withIndex())
+    for ((frameIndex, frame) in frameList.withIndex())
     {
         frameI = frameIndex
-        val pose = processImageBitmap(context, frame)
-        val modifiedBitmap = drawOnBitmap(frame, pose, leftAnkleAngles, rightAnkleAngles, leftKneeAngles, rightKneeAngles, leftHipAngles, rightHipAngles, angle)
+        val oriFrame = ensureLandscapeOrientation(frame)
+        val orientedFrame = resizeBitmap(oriFrame,1920,1080)
+        val pose = processImageBitmap(context, orientedFrame)
+        val modifiedBitmap = drawOnBitmap(orientedFrame, pose,  angle)
         // Log check to see example of mutable list
         Log.d("MutableListContents", "leftKneeAngles after processing: $leftKneeAngles")
         Log.d("MutableListContents", "rightKneeAngles after processing: $rightKneeAngles")
@@ -563,6 +641,149 @@ suspend fun ProcVid(context: Context, uri: Uri?, outputPath: String, mBinding: A
     val retriever = MediaMetadataRetriever()
     retriever.setDataSource(context, Uri.fromFile(File(outputPath)))
     val videoLengthMs = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0L
+    retriever.release()
+
+    withContext(Dispatchers.Main){mBinding.SplittingText.visibility = GONE}
+    withContext(Dispatchers.Main){mBinding.CreationText.visibility = GONE}
+    withContext(Dispatchers.Main){mBinding.VideoCreation.visibility = GONE}
+    withContext(Dispatchers.Main){mBinding.splittingBar.visibility = GONE}
+    withContext(Dispatchers.Main){mBinding.splittingProgressValue.visibility = GONE}
+    withContext(Dispatchers.Main){mBinding.CreatingProgressValue.visibility = GONE}
+
+
+    return Uri.fromFile(File(outputPath))
+}
+
+suspend fun ProcVidCon(context: Context, outputPath: String, mBinding: ActivitySecondBinding, angle : String): Uri?
+{
+    leftAnkleAngles.clear()
+    rightAnkleAngles.clear()
+    leftKneeAngles.clear()
+    rightKneeAngles.clear()
+    leftHipAngles.clear()
+    rightHipAngles.clear()
+    torsoAngles.clear()
+
+
+    withContext(Dispatchers.Main){mBinding.SplittingText.visibility = VISIBLE}
+    withContext(Dispatchers.Main){mBinding.CreationText.visibility = VISIBLE}
+    withContext(Dispatchers.Main){mBinding.splittingProgressValue.visibility = GONE}
+    withContext(Dispatchers.Main){mBinding.CreatingProgressValue.visibility = GONE}
+
+    if(frameList.isEmpty()) return galleryUri
+
+    withContext(Dispatchers.Main){mBinding.splittingBar.visibility = VISIBLE}
+    withContext(Dispatchers.Main){mBinding.splittingProgressValue.visibility = VISIBLE}
+    withContext(Dispatchers.Main){mBinding.splittingBar.setProgress(100)}
+    withContext(Dispatchers.Main){mBinding.splittingProgressValue.text = " 100%"}
+
+    val firstFrame = frameList[0]
+    val width = firstFrame.width
+    val height = firstFrame.height
+
+    val mediaMuxer = MediaMuxer(outputPath, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
+    var format = MediaFormat.createVideoFormat("video/avc", 1920, 1080)
+    format.setInteger(MediaFormat.KEY_BIT_RATE, 1000000)
+    format.setInteger(MediaFormat.KEY_FRAME_RATE, 30)
+    format.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface)
+    format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 1)
+    format.setInteger(MediaFormat.KEY_ROTATION, 0)
+
+    mediaMuxer.setOrientationHint(0)
+
+    val retriever1 = MediaMetadataRetriever()
+    retriever1.setDataSource(context, galleryUri)
+    Log.d("errorchecking","Video Orientation: ${retriever1.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)}")
+    retriever1.release()
+
+    var encoder = MediaCodec.createEncoderByType("video/avc")
+    encoder.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
+    var inputSurface = encoder.createInputSurface()
+    encoder.start()
+
+    val frameDurationUs = 1000000L / 30  // microseconds per frame for 30 fps
+
+    var trackIndex = -1
+    var muxerStarted = false
+    val bufferInfo = MediaCodec.BufferInfo()
+
+    val listSize = frameList.size
+    var progress : Int
+
+    var frameI = 0
+    withContext(Dispatchers.Main){mBinding.VideoCreation.visibility = VISIBLE}
+    withContext(Dispatchers.Main){mBinding.CreatingProgressValue.visibility = VISIBLE}
+    withContext(Dispatchers.Main){mBinding.CreatingProgressValue.text = " 0%"}
+    for ((frameIndex, frame) in frameList.withIndex())
+    {
+        frameI = frameIndex
+        val oriFrame = ensureLandscapeOrientation(frame)
+        val orientedFrame = resizeBitmap(oriFrame,1920,1080)
+        val pose = processImageBitmap(context, orientedFrame)
+        val modifiedBitmap = drawOnBitmap(orientedFrame, pose,  angle)
+        // Log check to see example of mutable list
+        Log.d("MutableListContents", "leftKneeAngles after processing: $leftKneeAngles")
+        Log.d("MutableListContents", "rightKneeAngles after processing: $rightKneeAngles")
+        // Draw the frame onto the encoder input surface
+        val canvas = inputSurface.lockCanvas(null)
+        canvas.drawBitmap(modifiedBitmap, 0f, 0f, null)
+        inputSurface.unlockCanvasAndPost(canvas)
+
+        // Drain encoder output buffers
+        while (true) {
+            val outputBufferId = encoder.dequeueOutputBuffer(bufferInfo, 10000)
+            when {
+                outputBufferId == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> {
+                    // Add track and start the muxer once
+                    if (!muxerStarted) {
+                        trackIndex = mediaMuxer.addTrack(encoder.outputFormat)
+                        mediaMuxer.start()
+                        muxerStarted = true
+                    }
+                }
+                outputBufferId >= 0 -> {
+                    val outputBuffer = encoder.getOutputBuffer(outputBufferId) ?: continue
+                    if (muxerStarted) {
+                        bufferInfo.presentationTimeUs = frameIndex * frameDurationUs
+                        mediaMuxer.writeSampleData(trackIndex, outputBuffer, bufferInfo)
+                    }
+                    encoder.releaseOutputBuffer(outputBufferId, false)
+                }
+                outputBufferId == MediaCodec.INFO_TRY_AGAIN_LATER -> break
+            }
+        }
+        progress = (((frameI + 1).toDouble() / listSize)*100).toInt()
+        withContext(Dispatchers.Main){mBinding.VideoCreation.setProgress(progress)}
+        withContext(Dispatchers.Main){mBinding.CreatingProgressValue.text = (" " + progress.toString() + "%")}
+    }
+
+    // Signal end of input stream and finalize remaining buffers
+    encoder.signalEndOfInputStream()
+    while (true) {
+        val outputBufferId = encoder.dequeueOutputBuffer(bufferInfo, 10000)
+        if (outputBufferId >= 0) {
+            val outputBuffer = encoder.getOutputBuffer(outputBufferId) ?: break
+            if (muxerStarted) {
+                bufferInfo.presentationTimeUs = frameI * frameDurationUs
+                mediaMuxer.writeSampleData(trackIndex, outputBuffer, bufferInfo)
+            }
+            encoder.releaseOutputBuffer(outputBufferId, false)
+        } else {
+            break
+        }
+    }
+
+
+    // Stop and release encoder and muxer
+    encoder.stop()
+    encoder.release()
+    mediaMuxer.stop()
+    mediaMuxer.release()
+
+    val retriever = MediaMetadataRetriever()
+    retriever.setDataSource(context, Uri.fromFile(File(outputPath)))
+    val videoLengthMs = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0L
+    retriever.release()
 
     withContext(Dispatchers.Main){mBinding.SplittingText.visibility = GONE}
     withContext(Dispatchers.Main){mBinding.CreationText.visibility = GONE}

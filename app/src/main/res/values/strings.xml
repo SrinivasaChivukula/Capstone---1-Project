@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">GaitVision</string>
+    <string name="open_nav">Open Navigation Drawer</string>
+    <string name="close_nav">Close Naviagation Drawer</string>
+    <string name="home">Home</string>
+    <string name="settings">Setting</string>
+    <string name="share">Share</string>
+    <string name="about">About</string>
+    <string name="logout">Logout</string>
+    <string name="plus">Plus</string>
 </resources>

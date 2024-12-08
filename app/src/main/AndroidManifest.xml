@@ -26,20 +26,24 @@
         <activity
             android:name=".GraphActivity"
             android:exported="true"
-            android:parentActivityName=".SecondActivity"/>
+            android:parentActivityName=".SecondActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".ThirdActivity"
             android:exported="true"
-            android:parentActivityName=".GraphActivity" />
+            android:parentActivityName=".GraphActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".SecondActivity"
             android:exported="true"
-            android:parentActivityName=".MainActivity" />
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/Theme.GaitVision">
+            android:theme="@style/Theme.GaitVision"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
