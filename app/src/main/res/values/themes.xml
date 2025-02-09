@@ -2,7 +2,7 @@
 
 <resources>
 
-    <style name="Theme.GaitVision" parent="android:Theme.Material.Light.NoActionBar" >
+    <style name="Theme.GaitVision" parent="android:Theme.Material.Light.DarkActionBar">
         <item name = "colorPrimary">@color/black</item>
         <item name = "colorPrimaryVariant">@color/black</item>
         <item name = "colorOnPrimary">@color/black</item>

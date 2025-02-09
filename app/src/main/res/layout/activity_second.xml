@@ -11,7 +11,7 @@
         android:id="@+id/choose_agl_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Choose Angle"
+        android:text="Select Angle"
         android:textColor="@color/black"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -124,10 +124,9 @@
 
         <VideoView
             android:id="@+id/video_viewer"
-            android:layout_width="411dp"
-            android:layout_height="475dp"
-            android:visibility="invisible"
-            />
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:visibility="invisible" />
 
     </FrameLayout>
 
@@ -162,7 +161,5 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.980"
         tools:ignore="HardcodedText" />
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
