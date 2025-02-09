@@ -582,6 +582,34 @@ suspend fun ProcVidEmpty(context: Context, outputPath: String, mBinding: Activit
         // Log check to see example of mutable list
         Log.d("MutableListContents", "leftKneeAngles after processing: $leftKneeAngles")
         Log.d("MutableListContents", "rightKneeAngles after processing: $rightKneeAngles")
+        // Log check to see Local Min/Max
+        val LeftKneeMin = FindLocalMin(leftKneeAngles)
+        val LeftKneeMax = FindLocalMax(leftKneeAngles)
+        Log.d("LocalMinMax", "Left Knee Min: $LeftKneeMin, Max: $LeftKneeMax")
+
+        val RightKneeMin = FindLocalMin(rightKneeAngles)
+        val RightKneeMax = FindLocalMax(rightKneeAngles)
+        Log.d("LocalMinMax", "Right Knee Min: $RightKneeMin, Max: $RightKneeMax")
+
+        val LeftAnkleMin = FindLocalMin(leftAnkleAngles)
+        val LeftAnkleMax = FindLocalMax(leftAnkleAngles)
+        Log.d("LocalMinMax", "Left Ankle Min: $LeftAnkleMin, Max: $LeftAnkleMax")
+
+        val RightAnkleMin = FindLocalMin(rightAnkleAngles)
+        val RightAnkleMax = FindLocalMax(rightAnkleAngles)
+        Log.d("LocalMinMax", "Right Ankle Min: $RightAnkleMin, Max: $RightAnkleMax")
+
+        val LeftHipMin = FindLocalMin(leftHipAngles)
+        val LeftHipMax = FindLocalMax(leftHipAngles)
+        Log.d("LocalMinMax", "Left Hip Min: $LeftHipMin, Max: $LeftHipMax")
+
+        val RightHipMin = FindLocalMin(rightHipAngles)
+        val RightHipMax = FindLocalMax(rightHipAngles)
+        Log.d("LocalMinMax", "Right Hip Min: $RightHipMin, Max: $RightHipMax")
+
+        val TorsoMin = FindLocalMin(torsoAngles)
+        val TorsoMax = FindLocalMax(torsoAngles)
+        Log.d("LocalMinMax", "Torso Min: $TorsoMin, Max: $TorsoMax")
         // Draw the frame onto the encoder input surface
         val canvas = inputSurface.lockCanvas(null)
         canvas.drawBitmap(modifiedBitmap, 0f, 0f, null)
