@@ -14,13 +14,13 @@
         android:text="Gait Score"
         android:textAlignment="center"
         android:textColor="@color/black"
-        android:textSize="50sp"
+        android:textSize="30sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.500"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.035"
+        app:layout_constraintVertical_bias="0.215"
         tools:ignore="HardcodedText" />
 
     <ImageView
@@ -32,8 +32,8 @@
         app:layout_constraintHorizontal_bias="0.500"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.130"
-        android:visibility="invisible"/>
+        app:layout_constraintVertical_bias="0.045"
+        android:visibility="visible"/>
 
     <TextView
         android:id="@+id/score_textview"
@@ -48,7 +48,7 @@
         app:layout_constraintHorizontal_bias="0.500"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.140"/>
+        app:layout_constraintVertical_bias="0.060"/>
 
     <Button
         android:id="@+id/select_graph_btn"
