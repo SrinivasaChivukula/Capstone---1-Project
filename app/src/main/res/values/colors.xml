@@ -8,5 +8,7 @@
     <color name="purple_500">#FF6200EE</color>
     <color name="purple_700">#FF3700B3</color>
     <color name="logo_blue">#68b6ff</color>
-    <color name="logo_cream">#faffd0</color>
+    <color name="logo_Green">#2F4F4F</color>
+    <color name="button_blue">#56A0D3</color>
+    <color name="help_red">#CB4154</color>
 </resources>

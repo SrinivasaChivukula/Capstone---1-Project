@@ -4,27 +4,22 @@
 
     <item
         android:id="@+id/menu_hip"
-        android:title="HIP ANGLE"
+        android:title="HIP GRAPH"
         tools:ignore="HardcodedText" />
 
     <item
         android:id="@+id/menu_knee"
-        android:title="KNEE ANGLE"
+        android:title="KNEE GRAPH"
         tools:ignore="HardcodedText" />
 
     <item
         android:id="@+id/menu_ankle"
-        android:title="ANKLE ANGLE"
+        android:title="ANKLE GRAPH"
         tools:ignore="HardcodedText" />
 
     <item
         android:id="@+id/menu_torso"
-        android:title="TORSO ANGLE"
-        tools:ignore="HardcodedText" />
-
-    <item
-        android:id="@+id/menu_all_agl"
-        android:title="ALL ANGLES"
+        android:title="TORSO GRAPH"
         tools:ignore="HardcodedText" />
 
 </menu>

@@ -28,7 +28,7 @@
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="HOW TO USE"
-                android:textColor="@color/purple_500"
+                android:textColor="@color/logo_Green"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 android:visibility="visible"
@@ -46,7 +46,7 @@
                     android:layout_margin="10dp"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="Click CHOOSE ANGLE to select an angle. After the angle is processed, the video can be played. Click CALCULATE ANGLES to view graphs for each angle."
+                    android:text="SELECT ANGLE then play video. VIEW ANALYSIS to view patient score and graphs."
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
 
@@ -70,7 +70,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:background="@color/purple_500"
+                        android:background="@color/logo_Green"
                         android:gravity="center"
                         android:text="OK, GOT IT!"
                         android:textAllCaps="true"

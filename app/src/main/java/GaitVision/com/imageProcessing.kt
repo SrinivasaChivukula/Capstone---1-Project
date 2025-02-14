@@ -481,11 +481,11 @@ class GraphActivity : ComponentActivity() {
         plotLineGraph(lineChartTorso, torsoAngles, "Torso Angles")
 
 
-        val uploadCSVBtn = findViewById<Button>(R.id.upload_csv_btn)
+        /*val uploadCSVBtn = findViewById<Button>(R.id.upload_csv_btn)
         uploadCSVBtn.setOnClickListener {
-            val intent = Intent(this, ThirdActivity::class.java)
+            val intent = Intent(this, GraphActivity::class.java)
             startActivity(intent)
-        }
+        }*/ //Update this later
     }
 }
 

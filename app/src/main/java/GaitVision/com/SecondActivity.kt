@@ -16,6 +16,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.MediaController
 import android.widget.PopupMenu
+import android.widget.TextView
 import android.widget.VideoView
 import androidx.activity.ComponentActivity
 import androidx.lifecycle.lifecycleScope
@@ -36,8 +37,7 @@ class SecondActivity : ComponentActivity() {
 
         mBinding = ActivitySecondBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
-//        mBinding= DataBindingUtil.setContentView(this, R.layout.activity_second)
-        mBinding.calAngleBtn.setOnClickListener{startActivity(Intent(this, GraphActivity::class.java))}
+        mBinding.calAngleBtn.setOnClickListener{startActivity(Intent(this, LastActivity::class.java))}
 
         val chooseAngleBtn = findViewById<Button>(R.id.choose_agl_btn)
         val popupMenu = PopupMenu(this, chooseAngleBtn)
@@ -52,6 +52,11 @@ class SecondActivity : ComponentActivity() {
 
             if (id == R.id.menu_hip){
                 // toggle here
+
+                val angleHip = findViewById<TextView>(R.id.choose_agl_btn)
+                val angleHipName = "HIP ANGLE"
+                angleHip.text = angleHipName.toString()
+
 //                val uriString = intent.getStringExtra("VIDEO_URI")
                 val videoView = findViewById<VideoView>(R.id.video_viewer)
 //                videoUri = Uri.parse(uriString)
@@ -128,6 +133,11 @@ class SecondActivity : ComponentActivity() {
             }
             else if (id == R.id.menu_knee){
                 // toggle here
+
+                val angleKnee = findViewById<TextView>(R.id.choose_agl_btn)
+                val angleKneeName = "KNEE ANGLE"
+                angleKnee.text = angleKneeName.toString()
+
 //                val uriString = intent.getStringExtra("VIDEO_URI")
                 val videoView = findViewById<VideoView>(R.id.video_viewer)
 //                videoUri = Uri.parse(uriString)
@@ -204,6 +214,11 @@ class SecondActivity : ComponentActivity() {
             }
             else if (id == R.id.menu_ankle){
                 // toggle here
+
+                val angleAnkle = findViewById<TextView>(R.id.choose_agl_btn)
+                val angleAnkleName = "ANKLE ANGLE"
+                angleAnkle.text = angleAnkleName.toString()
+
 //                val uriString = intent.getStringExtra("VIDEO_URI")
                 val videoView = findViewById<VideoView>(R.id.video_viewer)
 //                videoUri = Uri.parse(uriString)
@@ -280,6 +295,11 @@ class SecondActivity : ComponentActivity() {
             }
             else if (id == R.id.menu_torso){
                 // toggle here
+
+                val angleTorso = findViewById<TextView>(R.id.choose_agl_btn)
+                val angleTorsoName = "TORSO ANGLE"
+                angleTorso.text = angleTorsoName.toString()
+
 //                val uriString = intent.getStringExtra("VIDEO_URI")
                 val videoView = findViewById<VideoView>(R.id.video_viewer)
 //                videoUri = Uri.parse(uriString)
@@ -356,6 +376,11 @@ class SecondActivity : ComponentActivity() {
             }
             else if (id == R.id.menu_all_agl){
                 // toggle here
+
+                val angleAll = findViewById<TextView>(R.id.choose_agl_btn)
+                val angleAllName = "ALL ANGLES"
+                angleAll.text = angleAllName.toString()
+
 //                val uriString = intent.getStringExtra("VIDEO_URI")
                 val videoView = findViewById<VideoView>(R.id.video_viewer)
 //                videoUri = Uri.parse(uriString)

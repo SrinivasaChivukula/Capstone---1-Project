@@ -18,7 +18,6 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 
-
 class MainActivity : ComponentActivity() {
 
     private lateinit var mBinding: ActivityMainBinding
