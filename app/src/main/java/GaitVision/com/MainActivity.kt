@@ -17,6 +17,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.result.ActivityResultLauncher
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import android.widget.EditText
+
 
 class MainActivity : ComponentActivity() {
 
@@ -79,8 +81,14 @@ class MainActivity : ComponentActivity() {
 //                val intent= Intent(this, SecondActivity::class.java).apply {
 //                    putExtra("VIDEO_URI", videoUri.toString())
 
-                intent = Intent(this,SecondActivity::class.java)
-                startActivity(intent)
+                val inputId = findViewById<EditText>(R.id.participant_id)
+                val participantId = inputId.text.toString()
+                val sharedPref = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
+                sharedPref.edit().putString("participantId", participantId).apply()
+                val intent = Intent(this, LastActivity::class.java)
+                intent.putExtra("PARTICIPANT_ID", participantId)
+                startActivity(Intent(this,SecondActivity::class.java))
+                startActivity(Intent(this,SecondActivity::class.java))
             }
         }
 
