@@ -85,8 +85,6 @@ class LastActivity : ComponentActivity() {
             "Torso"
         )
 
-        val SharedPref = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
-        val participantId = intent.getStringExtra("PARTICIPANT_ID") ?: SharedPref.getString("participantId", "No ID Found")
         val exportButton = findViewById<Button>(R.id.submit_id_btn)
         exportButton.setOnClickListener {
             for (i in fileData.indices) {       //for-loop iterates through the fileData list and creates a csv file for each of the angle graphs.

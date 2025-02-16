@@ -117,6 +117,8 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -125,8 +127,10 @@
         <VideoView
             android:id="@+id/video_viewer"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:visibility="invisible" />
+            android:layout_height="400dp"
+            android:visibility="invisible"
+            android:layout_gravity="center"
+            />
 
     </FrameLayout>
 

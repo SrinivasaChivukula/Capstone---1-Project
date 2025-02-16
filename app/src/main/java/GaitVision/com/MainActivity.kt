@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.media.MediaMetadataRetriever
 import android.net.Uri
 import android.widget.TextView
 import android.widget.Toast
@@ -81,14 +82,13 @@ class MainActivity : ComponentActivity() {
 //                val intent= Intent(this, SecondActivity::class.java).apply {
 //                    putExtra("VIDEO_URI", videoUri.toString())
 
-                val inputId = findViewById<EditText>(R.id.participant_id)
-                val participantId = inputId.text.toString()
-                val sharedPref = getSharedPreferences("AppPrefs", Context.MODE_PRIVATE)
-                sharedPref.edit().putString("participantId", participantId).apply()
-                val intent = Intent(this, LastActivity::class.java)
-                intent.putExtra("PARTICIPANT_ID", participantId)
-                startActivity(Intent(this,SecondActivity::class.java))
-                startActivity(Intent(this,SecondActivity::class.java))
+
+                val OPTION_CLOSEST = MediaMetadataRetriever.OPTION_CLOSEST
+                val retriever = MediaMetadataRetriever()
+                retriever.setDataSource(this, galleryUri)
+                val frame = retriever.getFrameAtTime(0, OPTION_CLOSEST)
+                mBinding.imageView5.setImageBitmap(frame)
+                retriever.release()
             }
         }
 
@@ -108,11 +108,19 @@ class MainActivity : ComponentActivity() {
         leftHipAngles.clear()
         rightHipAngles.clear()
         torsoAngles.clear()
+        participantId = ""
+        participantHeight = 0
 
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
         //mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        mBinding.confirmVidBtn.setOnClickListener{startActivity(Intent(this,SecondActivity::class.java))}
+        mBinding.confirmVidBtn.setOnClickListener{
+            val inputId = findViewById<EditText>(R.id.participant_id)
+            participantId = inputId.text.toString()
+            val heightId = findViewById<EditText>(R.id.height_id)
+            var heightText = heightId.text.toString()
+            participantHeight = heightText.toIntOrNull() ?: 0
+            startActivity(Intent(this,SecondActivity::class.java))}
         mBinding.openGalBtn.setOnClickListener{startIntentFromGallary()}
 
         //Creating typing animation
