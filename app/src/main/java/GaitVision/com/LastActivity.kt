@@ -1,5 +1,6 @@
 package GaitVision.com
 
+
 import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -9,6 +10,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.content.Intent
 import android.os.Environment
+import android.view.View
 import android.widget.EditText
 import android.widget.PopupMenu
 import androidx.activity.ComponentActivity
@@ -30,6 +32,16 @@ class LastActivity : ComponentActivity() {
         val popupMenu = PopupMenu(this, chooseGraphBtn)
         popupMenu.menuInflater.inflate(R.menu.popup_menu_2, popupMenu.menu)
 
+        var hipGraph = findViewById<com.github.mikephil.charting.charts.LineChart>(R.id.lineChartHip)
+        var kneeGraph = findViewById<com.github.mikephil.charting.charts.LineChart>(R.id.lineChartKnee)
+        var ankleGraph = findViewById<com.github.mikephil.charting.charts.LineChart>(R.id.lineChartAnkle)
+        var torsoGraph = findViewById<com.github.mikephil.charting.charts.LineChart>(R.id.lineChartTorso)
+
+        plotLineGraph(kneeGraph, leftKneeAngles, rightKneeAngles, "Left Knee Angles", "Right Knee Angles")
+        plotLineGraph(ankleGraph, leftAnkleAngles, rightAnkleAngles, "Left Ankle Angles", "Right Ankle Angles")
+        plotLineGraph(hipGraph, leftHipAngles, rightHipAngles, "Left Hip Angles", "Right Hip Angles")
+        plotLineGraph(torsoGraph, torsoAngles, torsoAngles, "Torso Angles", "Torso Angles") // Assuming torso is the same
+
         popupMenu.setOnMenuItemClickListener { menuItem -> val id = menuItem.itemId
 
             if (id == R.id.menu_hip) {
@@ -37,24 +49,44 @@ class LastActivity : ComponentActivity() {
                 val graphHip = findViewById<TextView>(R.id.select_graph_btn)
                 val graphHipName = "HIP GRAPH"
                 graphHip.text = graphHipName.toString()
+
+                hipGraph.visibility = View.VISIBLE
+                kneeGraph.visibility = View.INVISIBLE
+                ankleGraph.visibility = View.INVISIBLE
+                torsoGraph.visibility = View.INVISIBLE
             }
             else if (id == R.id.menu_knee) {
                 // knee graph
                 val graphKnee = findViewById<TextView>(R.id.select_graph_btn)
                 val graphKneeName = "KNEE GRAPH"
                 graphKnee.text = graphKneeName.toString()
+
+                hipGraph.visibility = View.INVISIBLE
+                kneeGraph.visibility = View.VISIBLE
+                ankleGraph.visibility = View.INVISIBLE
+                torsoGraph.visibility = View.INVISIBLE
             }
             else if (id == R.id.menu_ankle) {
                 // ankle graph
                 val graphAnkle = findViewById<TextView>(R.id.select_graph_btn)
                 val graphAnkleName = "ANKLE GRAPH"
                 graphAnkle.text = graphAnkleName.toString()
+
+                hipGraph.visibility = View.INVISIBLE
+                kneeGraph.visibility = View.INVISIBLE
+                ankleGraph.visibility = View.VISIBLE
+                torsoGraph.visibility = View.INVISIBLE
             }
             else if (id == R.id.menu_torso){
                 // torso graph
                 val graphTorso = findViewById<TextView>(R.id.select_graph_btn)
                 val graphTorsoName = "TORSO GRAPH"
                 graphTorso.text = graphTorsoName.toString()
+
+                hipGraph.visibility = View.INVISIBLE
+                kneeGraph.visibility = View.INVISIBLE
+                ankleGraph.visibility = View.INVISIBLE
+                torsoGraph.visibility = View.VISIBLE
             }
             false
         }
