@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?> 
 <androidx.constraintlayout.widget.ConstraintLayout
     tools:context=".LastActivity"
     android:layout_width="match_parent"
@@ -65,6 +65,54 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.300"
         tools:ignore="HardcodedText" />
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/lineChartHip"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.500"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.550" />
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/lineChartKnee"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.500"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.550" />
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/lineChartAnkle"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.500"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.550" />
+
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/lineChartTorso"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.500"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.550" />
 
     <Button
         android:id="@+id/submit_id_btn"
