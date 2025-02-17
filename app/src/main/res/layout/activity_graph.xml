@@ -21,26 +21,13 @@
             android:background="@drawable/textview_border"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/lineChartLeftHip"
+            app:layout_constraintBottom_toTopOf="@+id/lineChartHip"
             tools:ignore="HardcodedText" />
 
         <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/lineChartLeftHip"
+            android:id="@+id/lineChartHip"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textHip" />
-
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/lineChartRightHip"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lineChartLeftHip" />
+            android:layout_height="250dp"/>
 
         <TextView
             android:id="@+id/textKnee"
@@ -53,27 +40,14 @@
             android:layout_marginTop="50sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lineChartRightHip"
-            app:layout_constraintBottom_toTopOf="@+id/lineChartLeftKnee"
+            app:layout_constraintTop_toBottomOf="@+id/lineChartHip"
+            app:layout_constraintBottom_toTopOf="@+id/lineChartKnee"
             tools:ignore="HardcodedText" />
 
         <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/lineChartLeftKnee"
+            android:id="@+id/lineChartKnee"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textKnee" />
-
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/lineChartRightKnee"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lineChartLeftKnee" />
+            android:layout_height="250dp"/>
 
         <TextView
             android:id="@+id/textAnkle"
@@ -86,27 +60,15 @@
             android:layout_marginTop="50sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lineChartRightKnee"
-            app:layout_constraintBottom_toTopOf="@+id/lineChartLeftAnkle"
+            app:layout_constraintTop_toBottomOf="@+id/lineChartKnee"
+            app:layout_constraintBottom_toTopOf="@+id/lineChartAnkle"
             tools:ignore="HardcodedText" />
 
         <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/lineChartLeftAnkle"
+            android:id="@+id/lineChartAnkle"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textAnkle" />
+            android:layout_height="250dp"/>
 
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/lineChartRightAnkle"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lineChartLeftAnkle" />
 
         <TextView
             android:id="@+id/textTorso"
@@ -119,17 +81,13 @@
             android:layout_marginTop="50sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/lineChartRightAnkle"
+            app:layout_constraintTop_toBottomOf="@+id/lineChartAnkle"
             tools:ignore="HardcodedText" />
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/lineChartTorso"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_marginTop="10dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textTorso" />
+            android:layout_height="250dp"/>
 
         <Button
             android:id="@+id/upload_csv_btn"

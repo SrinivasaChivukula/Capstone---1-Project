@@ -1,8 +1,6 @@
 package GaitVision.com
 
 import GaitVision.com.databinding.ActivitySecondBinding
-import GaitVision.com.GraphActivity.Companion.lineChartLeftKnee
-import GaitVision.com.GraphActivity.Companion.lineChartRightKnee
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -50,15 +48,31 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import java.lang.Math.pow
 
-fun plotLineGraph(lineChart: LineChart, angleData: List<Float>, label: String) {
-    val entries = angleData.mapIndexed {index, angle ->
-        val ConvertToSecond = index/30f
-        Entry(ConvertToSecond, angle) }
+fun plotLineGraph(
+    lineChart: LineChart,
+    leftData: List<Float>,
+    rightData: List<Float>,
+    labelLeft: String,
+    labelRight: String
+) {
+    val leftEntries = leftData.mapIndexed { index, angle ->
+        val convertToSecond = index / 30f
+        Entry(convertToSecond, angle)
+    }
+    val rightEntries = rightData.mapIndexed { index, angle ->
+        val convertToSecond = index / 30f
+        Entry(convertToSecond, angle)
+    }
 
-    val lineDataSet = LineDataSet(entries, label)
-    lineDataSet.color = Color.BLUE // Set the color for the line
-    lineDataSet.valueTextSize = 12f // Text size for data points
-    val lineData = LineData(lineDataSet)
+    val leftDataSet = LineDataSet(leftEntries, labelLeft)
+    leftDataSet.color = Color.BLUE
+    leftDataSet.valueTextSize = 12f
+
+    val rightDataSet = LineDataSet(rightEntries, labelRight)
+    rightDataSet.color = Color.RED
+    rightDataSet.valueTextSize = 12f
+
+    val lineData = LineData(leftDataSet, rightDataSet)
 
     lineChart.data = lineData
     lineChart.invalidate() // Refresh chart
@@ -484,12 +498,9 @@ fun drawOnBitmap(bitmap: Bitmap,
 
 class GraphActivity : ComponentActivity() {
     companion object {
-        lateinit var lineChartLeftKnee: LineChart
-        lateinit var lineChartRightKnee: LineChart
-        lateinit var lineChartLeftAnkle: LineChart
-        lateinit var lineChartRightAnkle: LineChart
-        lateinit var lineChartLeftHip: LineChart
-        lateinit var lineChartRightHip: LineChart
+        lateinit var lineChartKnees: LineChart
+        lateinit var lineChartAnkles: LineChart
+        lateinit var lineChartHips: LineChart
         lateinit var lineChartTorso: LineChart
     }
 
@@ -497,28 +508,21 @@ class GraphActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_graph)
 
-        lineChartLeftKnee = findViewById(R.id.lineChartLeftKnee)
-        lineChartRightKnee = findViewById(R.id.lineChartRightKnee)
-        lineChartLeftAnkle = findViewById(R.id.lineChartLeftAnkle)
-        lineChartRightAnkle = findViewById(R.id.lineChartRightAnkle)
-        lineChartLeftHip = findViewById(R.id.lineChartLeftHip)
-        lineChartRightHip = findViewById(R.id.lineChartRightHip)
+        lineChartKnees = findViewById(R.id.lineChartKnee)
+        lineChartAnkles = findViewById(R.id.lineChartAnkle)
+        lineChartHips = findViewById(R.id.lineChartHip)
         lineChartTorso = findViewById(R.id.lineChartTorso)
 
-        plotLineGraph(lineChartLeftKnee, leftKneeAngles, "Left Knee Angles")
-        plotLineGraph(lineChartRightKnee, rightKneeAngles, "Right Knee Angles")
-        plotLineGraph(lineChartLeftAnkle, leftAnkleAngles, "Left Ankle Angles")
-        plotLineGraph(lineChartRightAnkle, rightAnkleAngles, "Right Ankle Angles")
-        plotLineGraph(lineChartLeftHip, leftHipAngles, "Left Hip Angles")
-        plotLineGraph(lineChartRightHip, rightHipAngles, "Right Hip Angles")
-        plotLineGraph(lineChartTorso, torsoAngles, "Torso Angles")
+        plotLineGraph(lineChartKnees, leftKneeAngles, rightKneeAngles, "Left Knee Angles", "Right Knee Angles")
+        plotLineGraph(lineChartAnkles, leftAnkleAngles, rightAnkleAngles, "Left Ankle Angles", "Right Ankle Angles")
+        plotLineGraph(lineChartHips, leftHipAngles, rightHipAngles, "Left Hip Angles", "Right Hip Angles")
+        plotLineGraph(lineChartTorso, torsoAngles, torsoAngles, "Torso Angles", "Torso Angles") // Assuming torso is the same
 
-
-        /*val uploadCSVBtn = findViewById<Button>(R.id.upload_csv_btn)
+        val uploadCSVBtn = findViewById<Button>(R.id.upload_csv_btn)
         uploadCSVBtn.setOnClickListener {
             val intent = Intent(this, GraphActivity::class.java)
             startActivity(intent)
-        }*/ //Update this later
+        }
     }
 }
 
