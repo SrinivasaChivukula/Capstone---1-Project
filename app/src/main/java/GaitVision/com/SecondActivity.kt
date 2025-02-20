@@ -53,10 +53,11 @@ class SecondActivity : ComponentActivity() {
             if (id == R.id.menu_hip){
                 // toggle here
 
-                count = 0
                 val angleHip = findViewById<TextView>(R.id.choose_agl_btn)
                 val angleHipName = "HIP ANGLE"
                 angleHip.text = angleHipName.toString()
+
+                count = 0
 
 //                val uriString = intent.getStringExtra("VIDEO_URI")
                 val videoView = findViewById<VideoView>(R.id.video_viewer)
@@ -281,10 +282,11 @@ class SecondActivity : ComponentActivity() {
             else if (id == R.id.menu_knee){
                 // toggle here
 
-                count = 0
                 val angleKnee = findViewById<TextView>(R.id.choose_agl_btn)
                 val angleKneeName = "KNEE ANGLE"
                 angleKnee.text = angleKneeName.toString()
+
+                count = 0
 
 //                val uriString = intent.getStringExtra("VIDEO_URI")
                 val videoView = findViewById<VideoView>(R.id.video_viewer)
@@ -509,10 +511,11 @@ class SecondActivity : ComponentActivity() {
             else if (id == R.id.menu_ankle){
                 // toggle here
 
-                count = 0
                 val angleAnkle = findViewById<TextView>(R.id.choose_agl_btn)
                 val angleAnkleName = "ANKLE ANGLE"
                 angleAnkle.text = angleAnkleName.toString()
+
+                count = 0
 
 //                val uriString = intent.getStringExtra("VIDEO_URI")
                 val videoView = findViewById<VideoView>(R.id.video_viewer)
@@ -738,10 +741,11 @@ class SecondActivity : ComponentActivity() {
             else if (id == R.id.menu_torso){
                 // toggle here
 
-                count = 0
                 val angleTorso = findViewById<TextView>(R.id.choose_agl_btn)
                 val angleTorsoName = "TORSO ANGLE"
                 angleTorso.text = angleTorsoName.toString()
+
+                count = 0
 
 //                val uriString = intent.getStringExtra("VIDEO_URI")
                 val videoView = findViewById<VideoView>(R.id.video_viewer)
@@ -966,6 +970,10 @@ class SecondActivity : ComponentActivity() {
             }
             else if (id == R.id.menu_all_agl){
                 // toggle here
+
+                val angleAll = findViewById<TextView>(R.id.choose_agl_btn)
+                val angleAllName = "ALL ANGLES"
+                angleAll.text = angleAllName.toString()
 
                 count = 0
 //                val uriString = intent.getStringExtra("VIDEO_URI")
