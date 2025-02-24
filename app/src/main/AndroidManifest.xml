@@ -24,26 +24,24 @@
         android:theme="@style/Theme.GaitVision"
         tools:targetApi="31">
         <activity
-            android:name=".GraphActivity"
+            android:name=".LastActivity"
             android:exported="true"
             android:parentActivityName=".SecondActivity"
-            android:screenOrientation="portrait"/>
-        <activity
-            android:name=".ThirdActivity"
-            android:exported="true"
-            android:parentActivityName=".GraphActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
         <activity
             android:name=".SecondActivity"
             android:exported="true"
             android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.GaitVision"
-            android:screenOrientation="portrait">
+            tools:ignore="DiscouragedApi,LockedOrientationActivity,RedundantLabel">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

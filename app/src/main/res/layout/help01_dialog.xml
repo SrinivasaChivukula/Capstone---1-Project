@@ -28,7 +28,7 @@
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="HOW TO USE"
-                android:textColor="@color/purple_500"
+                android:textColor="@color/logo_Green"
                 android:textSize="15sp"
                 android:textStyle="bold"
                 android:visibility="visible"
@@ -46,7 +46,7 @@
                     android:layout_margin="10dp"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="To upload a video, click OPEN GALLERY, then select the video. After the video is selected, click CONFIRM VIDEO."
+                    android:text="    Enter patient details. SELECT VIDEO then START GAIT."
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
 
@@ -70,7 +70,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:background="@color/purple_500"
+                        android:background="@color/logo_Green"
                         android:gravity="center"
                         android:text="OK, GOT IT!"
                         android:textAllCaps="true"

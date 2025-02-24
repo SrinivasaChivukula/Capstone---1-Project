@@ -21,3 +21,9 @@ import com.github.mikephil.charting.data.Entry
         }
     }
 }*/
+
+/*val mainMenuBtn = findViewById<Button>(R.id.main_mnu_btn)
+mainMenuBtn.setOnClickListener {
+    val intent = Intent(this, MainActivity::class.java)
+    startActivity(intent)
+}*/

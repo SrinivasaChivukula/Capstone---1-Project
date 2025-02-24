@@ -1,8 +1,6 @@
 package GaitVision.com
 
 import GaitVision.com.databinding.ActivitySecondBinding
-import GaitVision.com.GraphActivity.Companion.lineChartLeftKnee
-import GaitVision.com.GraphActivity.Companion.lineChartRightKnee
 import android.content.ContentValues
 import android.content.Context
 import android.content.Intent
@@ -50,15 +48,31 @@ import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import java.lang.Math.pow
 
-fun plotLineGraph(lineChart: LineChart, angleData: List<Float>, label: String) {
-    val entries = angleData.mapIndexed {index, angle ->
-        val ConvertToSecond = index/30f
-        Entry(ConvertToSecond, angle) }
+fun plotLineGraph(
+    lineChart: LineChart,
+    leftData: List<Float>,
+    rightData: List<Float>,
+    labelLeft: String,
+    labelRight: String
+) {
+    val leftEntries = leftData.mapIndexed { index, angle ->
+        val convertToSecond = index / 30f
+        Entry(convertToSecond, angle)
+    }
+    val rightEntries = rightData.mapIndexed { index, angle ->
+        val convertToSecond = index / 30f
+        Entry(convertToSecond, angle)
+    }
 
-    val lineDataSet = LineDataSet(entries, label)
-    lineDataSet.color = Color.BLUE // Set the color for the line
-    lineDataSet.valueTextSize = 12f // Text size for data points
-    val lineData = LineData(lineDataSet)
+    val leftDataSet = LineDataSet(leftEntries, labelLeft)
+    leftDataSet.color = Color.BLUE
+    leftDataSet.valueTextSize = 12f
+
+    val rightDataSet = LineDataSet(rightEntries, labelRight)
+    rightDataSet.color = Color.RED
+    rightDataSet.valueTextSize = 12f
+
+    val lineData = LineData(leftDataSet, rightDataSet)
 
     lineChart.data = lineData
     lineChart.invalidate() // Refresh chart
@@ -126,6 +140,7 @@ suspend fun getFrameBitmaps(context: Context,fileUri: Uri?, mBinding: ActivitySe
         var currTime = 0L
 
         val videoLengthUs = videoLengthMs * 1000L
+        videoLength = videoLengthUs
 
         withContext(Dispatchers.Main){mBinding.splittingBar.visibility = VISIBLE}
         withContext(Dispatchers.Main){mBinding.splittingProgressValue.visibility = VISIBLE}
@@ -197,7 +212,7 @@ suspend fun processImageBitmap(context: Context, bitmap: Bitmap): Pose?
 
 fun resizeBitmap(bitmap: Bitmap, targetWidth: Int, targetHeight: Int): Bitmap
 {
-    return Bitmap.createScaledBitmap(bitmap, targetWidth, targetHeight, false)
+    return Bitmap.createScaledBitmap(bitmap, targetWidth, targetHeight, true)
 }
 
 /*
@@ -283,16 +298,34 @@ fun drawOnBitmap(bitmap: Bitmap,
     val rightFootIndexX = rightFootIndex?.position?.x ?: 0f
     val rightFootIndexY = rightFootIndex?.position?.y ?: 0f
 
-    // Angle Calculations (added Not A Number check)
-    // Ankle Angles
-    var leftAnkleAngle = GetAngles(leftFootIndexX, leftFootIndexY, leftAnkleX, leftAnkleY, leftKneeX, leftKneeY)
-    if (!leftAnkleAngle.isNaN() && leftAnkleAngle < 90 && leftAnkleAngle > 50) {
-        leftAnkleAngles.add(leftAnkleAngle)
+    if(leftShoulderX == 0f || leftShoulderY == 0f || rightShoulderX == 0f || rightShoulderY == 0f)
+    {
+
     }
 
-    var rightAnkleAngle = GetAngles(rightFootIndexX, rightFootIndexY, rightAnkleX, rightAnkleY, rightKneeX, rightKneeY)
-    if (!rightAnkleAngle.isNaN() && rightAnkleAngle < 90 && rightAnkleAngle > 50) {
+    // Angle Calculations (added Not A Number check)
+    // Ankle Angles
+    var leftAnkleAngle = GetAnglesA(leftFootIndexX, leftFootIndexY, leftAnkleX, leftAnkleY, leftKneeX, leftKneeY)
+    if (!leftAnkleAngle.isNaN() && leftAnkleAngle < 60 && leftAnkleAngle > -25) {
+        leftAnkleAngles.add(leftAnkleAngle)
+        minLeftAnkleY.add(leftAnkleY)
+    }
+    else
+    {
+        count++
+        Log.d("ErrorCheck","Left Ankle: $leftAnkleAngle")
+        Log.d("ErrorCheck","LeftFoot: ($leftFootIndexX,$leftFootIndexY), Left Ankle: ($leftAnkleX,$leftAnkleY), Left Knee: ($leftKneeX,$leftKneeY)")
+    }
+
+    var rightAnkleAngle = GetAnglesA(rightFootIndexX, rightFootIndexY, rightAnkleX, rightAnkleY, rightKneeX, rightKneeY)
+    if (!rightAnkleAngle.isNaN() && rightAnkleAngle < 60 && rightAnkleAngle > -25) {
         rightAnkleAngles.add(rightAnkleAngle)
+        minRightAnkleY.add(rightAnkleY)
+    }
+    else
+    {
+        Log.d("ErrorCheck","Right Ankle: $rightAnkleAngle")
+        Log.d("ErrorCheck","RightFoot: ($rightFootIndexX,$rightFootIndexY), Right Ankle: ($rightAnkleX,$rightAnkleY), Right Knee: ($rightKneeX,$rightKneeY)")
     }
 
     // Knee Angles
@@ -318,12 +351,26 @@ fun drawOnBitmap(bitmap: Bitmap,
     }
 
     // Torso Angle
-    var torsoAngle = GetAngles((leftHipX+rightHipX)/2,(leftHipY+rightHipY)/2,rightHipX, rightHipY, (rightShoulderX+leftShoulderX)/2,(rightShoulderY+leftShoulderY)/2)
-    if (!torsoAngle.isNaN() && torsoAngle < 105 && torsoAngle > 75) {
+    //var torsoAngle = GetAngles((leftHipX+rightHipX)/2,(leftHipY+rightHipY)/2,rightHipX, rightHipY, (rightShoulderX+leftShoulderX)/2,(rightShoulderY+leftShoulderY)/2)
+    var torsoAngle = calcTorso((leftHipX+rightHipX)/2,(leftHipY+rightHipY)/2,(rightShoulderX+leftShoulderX)/2,(rightShoulderY+leftShoulderY)/2)
+    if (!torsoAngle.isNaN() && torsoAngle > -20 && torsoAngle < 20) {
         torsoAngles.add(torsoAngle)
     }
+    else
+    {
+        count++
+        Log.d("ErrorCheck","TorsoAngle: $torsoAngle, shoulder: ($rightShoulderX,$rightShoulderY) ($leftShoulderX,$leftShoulderY), Hip: ($rightHipX,$rightHipY) ($leftHipX,$leftHipY)")
+    }
+
+
+
+    var strideAngle = calcStrideAngle(leftHeelX,leftHeelY,(leftHipX+rightHipX)/2f,(leftHipY+rightHipY)/2,rightHeelX,rightHeelY)
+    strideAngles.add(strideAngle)
+
+    centerOfMass(leftHipX,leftHipY,rightHipX,rightHipY,leftShoulderX,leftShoulderY,rightShoulderX,rightShoulderY)
 
     var canvas = Canvas(bitmap)
+    /*
     var rectPaint = Paint()
     rectPaint.setARGB(255,255,255,255)
     if(angle != "all") {
@@ -402,7 +449,7 @@ fun drawOnBitmap(bitmap: Bitmap,
         text = "Torso: ${torsoAngle}\u00B0"
         canvas.drawText(text, 1060F, 75F, paint)
     }
-
+*/
 
     var paintCircleRight = Paint()
     var paintCircleLeft = Paint()
@@ -451,12 +498,9 @@ fun drawOnBitmap(bitmap: Bitmap,
 
 class GraphActivity : ComponentActivity() {
     companion object {
-        lateinit var lineChartLeftKnee: LineChart
-        lateinit var lineChartRightKnee: LineChart
-        lateinit var lineChartLeftAnkle: LineChart
-        lateinit var lineChartRightAnkle: LineChart
-        lateinit var lineChartLeftHip: LineChart
-        lateinit var lineChartRightHip: LineChart
+        lateinit var lineChartKnees: LineChart
+        lateinit var lineChartAnkles: LineChart
+        lateinit var lineChartHips: LineChart
         lateinit var lineChartTorso: LineChart
     }
 
@@ -464,33 +508,26 @@ class GraphActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_graph)
 
-        lineChartLeftKnee = findViewById(R.id.lineChartLeftKnee)
-        lineChartRightKnee = findViewById(R.id.lineChartRightKnee)
-        lineChartLeftAnkle = findViewById(R.id.lineChartLeftAnkle)
-        lineChartRightAnkle = findViewById(R.id.lineChartRightAnkle)
-        lineChartLeftHip = findViewById(R.id.lineChartLeftHip)
-        lineChartRightHip = findViewById(R.id.lineChartRightHip)
+        lineChartKnees = findViewById(R.id.lineChartKnee)
+        lineChartAnkles = findViewById(R.id.lineChartAnkle)
+        lineChartHips = findViewById(R.id.lineChartHip)
         lineChartTorso = findViewById(R.id.lineChartTorso)
 
-        plotLineGraph(lineChartLeftKnee, leftKneeAngles, "Left Knee Angles")
-        plotLineGraph(lineChartRightKnee, rightKneeAngles, "Right Knee Angles")
-        plotLineGraph(lineChartLeftAnkle, leftAnkleAngles, "Left Ankle Angles")
-        plotLineGraph(lineChartRightAnkle, rightAnkleAngles, "Right Ankle Angles")
-        plotLineGraph(lineChartLeftHip, leftHipAngles, "Left Hip Angles")
-        plotLineGraph(lineChartRightHip, rightHipAngles, "Right Hip Angles")
-        plotLineGraph(lineChartTorso, torsoAngles, "Torso Angles")
-
+        plotLineGraph(lineChartKnees, leftKneeAngles, rightKneeAngles, "Left Knee Angles", "Right Knee Angles")
+        plotLineGraph(lineChartAnkles, leftAnkleAngles, rightAnkleAngles, "Left Ankle Angles", "Right Ankle Angles")
+        plotLineGraph(lineChartHips, leftHipAngles, rightHipAngles, "Left Hip Angles", "Right Hip Angles")
+        plotLineGraph(lineChartTorso, torsoAngles, torsoAngles, "Torso Angles", "Torso Angles") // Assuming torso is the same
 
         val uploadCSVBtn = findViewById<Button>(R.id.upload_csv_btn)
         uploadCSVBtn.setOnClickListener {
-            val intent = Intent(this, ThirdActivity::class.java)
+            val intent = Intent(this, GraphActivity::class.java)
             startActivity(intent)
         }
     }
 }
 
-fun ensureLandscapeOrientation(bitmap: Bitmap): Bitmap {
-    return if (bitmap.width < bitmap.height) {
+fun ensureLandscapeOrientation(bitmap: Bitmap, orientation: Int?): Bitmap {
+    return if (orientation != 0) {
         // Rotate the bitmap 90 degrees to landscape
         val matrix = Matrix()
         matrix.postRotate(90f)
@@ -536,11 +573,12 @@ suspend fun ProcVidEmpty(context: Context, outputPath: String, mBinding: Activit
     if(frameList.isEmpty()) return galleryUri
 
     val firstFrame = frameList[0]
-    val width = firstFrame.width
-    val height = firstFrame.height
+    var width = firstFrame.width
+    var height = firstFrame.height
+
 
     val mediaMuxer = MediaMuxer(outputPath, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
-    var format = MediaFormat.createVideoFormat("video/avc", 1920, 1080)
+    var format = MediaFormat.createVideoFormat("video/avc", width, height)
     format.setInteger(MediaFormat.KEY_BIT_RATE, 1000000)
     format.setInteger(MediaFormat.KEY_FRAME_RATE, 30)
     format.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface)
@@ -551,7 +589,8 @@ suspend fun ProcVidEmpty(context: Context, outputPath: String, mBinding: Activit
 
     val retriever1 = MediaMetadataRetriever()
     retriever1.setDataSource(context, galleryUri)
-    Log.d("errorchecking","Video Orientation: ${retriever1.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)}")
+    var orientation = retriever1.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)
+    Log.d("ErrorCheck","Video Orientation: $orientation")
     retriever1.release()
 
     var encoder = MediaCodec.createEncoderByType("video/avc")
@@ -575,41 +614,11 @@ suspend fun ProcVidEmpty(context: Context, outputPath: String, mBinding: Activit
     for ((frameIndex, frame) in frameList.withIndex())
     {
         frameI = frameIndex
-        val oriFrame = ensureLandscapeOrientation(frame)
-        val orientedFrame = resizeBitmap(oriFrame,1920,1080)
+        val oriFrame = ensureLandscapeOrientation(frame, orientation?.toInt())
+        val orientedFrame = resizeBitmap(oriFrame,width,height)
         val pose = processImageBitmap(context, orientedFrame)
         val modifiedBitmap = drawOnBitmap(orientedFrame, pose,  angle)
-        // Log check to see example of mutable list
-        Log.d("MutableListContents", "leftKneeAngles after processing: $leftKneeAngles")
-        Log.d("MutableListContents", "rightKneeAngles after processing: $rightKneeAngles")
-        // Log check to see Local Min/Max
-        val LeftKneeMin = FindLocalMin(leftKneeAngles)
-        val LeftKneeMax = FindLocalMax(leftKneeAngles)
-        Log.d("LocalMinMax", "Left Knee Min: $LeftKneeMin, Max: $LeftKneeMax")
 
-        val RightKneeMin = FindLocalMin(rightKneeAngles)
-        val RightKneeMax = FindLocalMax(rightKneeAngles)
-        Log.d("LocalMinMax", "Right Knee Min: $RightKneeMin, Max: $RightKneeMax")
-
-        val LeftAnkleMin = FindLocalMin(leftAnkleAngles)
-        val LeftAnkleMax = FindLocalMax(leftAnkleAngles)
-        Log.d("LocalMinMax", "Left Ankle Min: $LeftAnkleMin, Max: $LeftAnkleMax")
-
-        val RightAnkleMin = FindLocalMin(rightAnkleAngles)
-        val RightAnkleMax = FindLocalMax(rightAnkleAngles)
-        Log.d("LocalMinMax", "Right Ankle Min: $RightAnkleMin, Max: $RightAnkleMax")
-
-        val LeftHipMin = FindLocalMin(leftHipAngles)
-        val LeftHipMax = FindLocalMax(leftHipAngles)
-        Log.d("LocalMinMax", "Left Hip Min: $LeftHipMin, Max: $LeftHipMax")
-
-        val RightHipMin = FindLocalMin(rightHipAngles)
-        val RightHipMax = FindLocalMax(rightHipAngles)
-        Log.d("LocalMinMax", "Right Hip Min: $RightHipMin, Max: $RightHipMax")
-
-        val TorsoMin = FindLocalMin(torsoAngles)
-        val TorsoMax = FindLocalMax(torsoAngles)
-        Log.d("LocalMinMax", "Torso Min: $TorsoMin, Max: $TorsoMax")
         // Draw the frame onto the encoder input surface
         val canvas = inputSurface.lockCanvas(null)
         canvas.drawBitmap(modifiedBitmap, 0f, 0f, null)
@@ -678,6 +687,27 @@ suspend fun ProcVidEmpty(context: Context, outputPath: String, mBinding: Activit
     withContext(Dispatchers.Main){mBinding.splittingProgressValue.visibility = GONE}
     withContext(Dispatchers.Main){mBinding.CreatingProgressValue.visibility = GONE}
 
+    //    smoothDataUsingGaussianFilter(rightKneeAngles, 1.0)
+//    smoothDataUsingEMA(rightKneeAngles, 0.3f)
+    smoothDataUsingMovingAverage(rightKneeAngles, 5)
+    smoothDataUsingMovingAverage(leftKneeAngles, 5)
+
+    smoothDataUsingMovingAverage(rightHipAngles, 5)
+    smoothDataUsingMovingAverage(leftHipAngles, 5)
+
+    smoothDataUsingMovingAverage(rightAnkleAngles, 5)
+    smoothDataUsingMovingAverage(leftAnkleAngles, 5)
+
+    smoothDataUsingMovingAverage(torsoAngles, 5)
+
+    smoothDataUsingMovingAverage(strideAngles, 5)
+//    smoothDataUsingGaussianFilter(leftKneeAngles, 1.0)
+//    smoothDataUsingGaussianFilter(rightHipAngles, 1.0)
+//    smoothDataUsingGaussianFilter(leftHipAngles, 1.0)
+//    smoothDataUsingGaussianFilter(rightAnkleAngles, 1.0)
+//    smoothDataUsingGaussianFilter(leftAnkleAngles, 1.0)
+//    smoothDataUsingGaussianFilter(torsoAngles, 1.0)
+
 
     return Uri.fromFile(File(outputPath))
 }
@@ -710,7 +740,7 @@ suspend fun ProcVidCon(context: Context, outputPath: String, mBinding: ActivityS
     val height = firstFrame.height
 
     val mediaMuxer = MediaMuxer(outputPath, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
-    var format = MediaFormat.createVideoFormat("video/avc", 1920, 1080)
+    var format = MediaFormat.createVideoFormat("video/avc", width, height)
     format.setInteger(MediaFormat.KEY_BIT_RATE, 1000000)
     format.setInteger(MediaFormat.KEY_FRAME_RATE, 30)
     format.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface)
@@ -721,7 +751,8 @@ suspend fun ProcVidCon(context: Context, outputPath: String, mBinding: ActivityS
 
     val retriever1 = MediaMetadataRetriever()
     retriever1.setDataSource(context, galleryUri)
-    Log.d("errorchecking","Video Orientation: ${retriever1.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)}")
+    var orientation = retriever1.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)
+    Log.d("errorchecking","Video Orientation: $orientation")
     retriever1.release()
 
     var encoder = MediaCodec.createEncoderByType("video/avc")
@@ -745,8 +776,8 @@ suspend fun ProcVidCon(context: Context, outputPath: String, mBinding: ActivityS
     for ((frameIndex, frame) in frameList.withIndex())
     {
         frameI = frameIndex
-        val oriFrame = ensureLandscapeOrientation(frame)
-        val orientedFrame = resizeBitmap(oriFrame,1920,1080)
+        val oriFrame = ensureLandscapeOrientation(frame, orientation?.toInt())
+        val orientedFrame = resizeBitmap(oriFrame,width,height)
         val pose = processImageBitmap(context, orientedFrame)
         val modifiedBitmap = drawOnBitmap(orientedFrame, pose,  angle)
         // Log check to see example of mutable list

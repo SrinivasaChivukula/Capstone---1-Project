@@ -8,7 +8,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <EditText
-        android:id="@+id/participant_id"
+        android:id="@+id/participant_idx"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:autofillHints="ParticipantID"
@@ -24,7 +24,7 @@
         tools:ignore="HardcodedText" />
     
     <Button
-        android:id="@+id/submit_id_btn"
+        android:id="@+id/submit_id_btnx"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Submit"
@@ -36,37 +36,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.25"
-        tools:ignore="HardcodedText" />
-
-    <Button
-        android:id="@+id/main_mnu_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Main Menu"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.80"
-        tools:ignore="HardcodedText" />
-
-    <Button
-        android:id="@+id/help03_btn"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:text="Help"
-        android:textColor="@color/white"
-        android:textSize="15sp"
-        android:background="@drawable/round_button"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.95"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.980"
         tools:ignore="HardcodedText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

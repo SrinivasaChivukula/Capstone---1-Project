@@ -9,19 +9,19 @@
 
     <Button
         android:id="@+id/choose_agl_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="175dp"
         android:layout_height="wrap_content"
-        android:text="Select Angle"
-        android:textColor="@color/black"
+        android:text="SELECT ANGLE"
+        android:textColor="@color/white"
         android:textSize="20sp"
+        android:background="@drawable/custom_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.500"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.10"
-        tools:ignore="HardcodedText"
-        />
+        app:layout_constraintVertical_bias="0.150"
+        tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/selectAngleText"
@@ -117,6 +117,8 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -125,24 +127,27 @@
         <VideoView
             android:id="@+id/video_viewer"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:visibility="invisible" />
+            android:layout_height="400dp"
+            android:visibility="invisible"
+            android:layout_gravity="center"
+            />
 
     </FrameLayout>
 
     <Button
         android:id="@+id/cal_angle_btn"
-        android:layout_width="wrap_content"
+        android:layout_width="175dp"
         android:layout_height="wrap_content"
-        android:text="View Graphs"
-        android:textColor="@color/black"
+        android:text="VIEW ANALYSIS"
+        android:textColor="@color/white"
         android:textSize="20sp"
+        android:background="@drawable/custom_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.90"
+        app:layout_constraintVertical_bias="0.850"
         android:visibility="gone"
         tools:ignore="HardcodedText" />
 
@@ -156,7 +161,7 @@
         android:background="@drawable/round_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintHorizontal_bias="0.950"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.980"
