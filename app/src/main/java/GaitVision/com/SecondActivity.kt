@@ -11,6 +11,8 @@ import android.graphics.drawable.ColorDrawable
 import android.media.MediaScannerConnection
 import android.net.Uri
 import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
@@ -31,6 +33,8 @@ class SecondActivity : ComponentActivity() {
 
     private lateinit var mBinding: ActivitySecondBinding
     private var videoUri: Uri?=null
+    private val handler = Handler(Looper.getMainLooper())
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -1190,6 +1194,37 @@ class SecondActivity : ComponentActivity() {
                             }
                             Log.d("ErrorChecking", "Function URI: ${editedUri}")
                             videoView.setVideoURI(editedUri)
+                            var i = 0;
+                            videoView.setOnPreparedListener{
+                                videoView.start()
+                                val updateRunnable = object : Runnable {
+                                    override fun run() {
+                                        val currentPosition = videoView.currentPosition
+                                        var string = ""
+                                        if(i < rightAnkleAngles.size) {
+                                            string += "Right Ankle:\n" + rightAnkleAngles[i].toString()
+
+                                        }
+                                        else
+                                        {
+                                            string += "Right Ankle:\nERROR"
+
+                                        }
+                                        if(i < leftAnkleAngles.size)
+                                        {
+                                            string+= "\nLeft Ankle:\n" + leftAnkleAngles[i].toString()
+                                        }
+                                        else
+                                        {
+                                            string+="\nLeft Ankle:\nERROR"
+                                        }
+                                        mBinding.AnkleAngle.text = string
+                                        i++
+                                        handler.postDelayed(this, 33)
+                                    }
+                                }
+                                handler.post(updateRunnable)
+                            }
                         } catch(e:Exception){
                             Log.e("ErrorChecking","Error processing video: ${e.message}")
                         }
