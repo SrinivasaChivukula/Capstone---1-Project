@@ -306,7 +306,7 @@ fun drawOnBitmap(bitmap: Bitmap,
     // Angle Calculations (added Not A Number check)
     // Ankle Angles
     var leftAnkleAngle = GetAnglesA(leftFootIndexX, leftFootIndexY, leftAnkleX, leftAnkleY, leftKneeX, leftKneeY)
-    if (!leftAnkleAngle.isNaN() && leftAnkleAngle < 60 && leftAnkleAngle > -25) {
+    if (!leftAnkleAngle.isNaN() && leftAnkleAngle < 70 && leftAnkleAngle > -25) {
         leftAnkleAngles.add(leftAnkleAngle)
         minLeftAnkleY.add(leftAnkleY)
     }
@@ -318,7 +318,7 @@ fun drawOnBitmap(bitmap: Bitmap,
     }
 
     var rightAnkleAngle = GetAnglesA(rightFootIndexX, rightFootIndexY, rightAnkleX, rightAnkleY, rightKneeX, rightKneeY)
-    if (!rightAnkleAngle.isNaN() && rightAnkleAngle < 60 && rightAnkleAngle > -25) {
+    if (!rightAnkleAngle.isNaN() && rightAnkleAngle < 70 && rightAnkleAngle > -25) {
         rightAnkleAngles.add(rightAnkleAngle)
         minRightAnkleY.add(rightAnkleY)
     }
