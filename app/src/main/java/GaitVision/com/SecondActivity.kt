@@ -26,6 +26,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
+import java.lang.Boolean.FALSE
+import java.lang.Boolean.TRUE
 import java.security.AccessController.getContext
 
 
@@ -156,6 +158,7 @@ class SecondActivity : ComponentActivity()
                     mBinding.KneeAngle.visibility = GONE
                     mBinding.HipAngle.visibility = GONE
                     mBinding.TorsoAngle.visibility = GONE
+                    mBinding.chooseAglBtn.isClickable = FALSE
                     if(frameList.isEmpty())
                     {
                         editedUri = withContext(Dispatchers.IO)
@@ -333,6 +336,7 @@ class SecondActivity : ComponentActivity()
                     mBinding.CreatingProgressValue.visibility = GONE
                     mBinding.videoViewer.visibility = VISIBLE
                     mBinding.calAngleBtn.visibility = VISIBLE
+                    mBinding.chooseAglBtn.isClickable = TRUE
 
                     MediaScannerConnection.scanFile(
                         this@SecondActivity,
