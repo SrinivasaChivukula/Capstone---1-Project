@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    tools:context=".SecondActivity"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    tools:context=".SecondActivity">
 
     <Button
         android:id="@+id/choose_agl_btn"
@@ -20,8 +19,44 @@
         app:layout_constraintHorizontal_bias="0.500"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.150"
+        app:layout_constraintVertical_bias="0.060"
         tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/AnkleAngle"
+        android:layout_width="0dp"
+        android:layout_height="75dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/choose_agl_btn"
+        app:layout_constraintWidth_percent="0.25"
+        android:gravity="center_horizontal"/>
+
+    <TextView
+        android:id="@+id/KneeAngle"
+        android:layout_width="0dp"
+        android:layout_height="75dp"
+        app:layout_constraintStart_toEndOf="@id/AnkleAngle"
+        app:layout_constraintTop_toBottomOf="@id/choose_agl_btn"
+        app:layout_constraintWidth_percent="0.25"
+        android:gravity="center_horizontal"/>
+
+    <TextView
+        android:id="@+id/HipAngle"
+        android:layout_width="0dp"
+        android:layout_height="75dp"
+        app:layout_constraintStart_toEndOf="@id/KneeAngle"
+        app:layout_constraintTop_toBottomOf="@id/choose_agl_btn"
+        app:layout_constraintWidth_percent="0.25"
+        android:gravity="center_horizontal"/>
+
+    <TextView
+        android:id="@+id/TorsoAngle"
+        android:layout_width="0dp"
+        android:layout_height="75dp"
+        app:layout_constraintStart_toEndOf="@id/HipAngle"
+        app:layout_constraintTop_toBottomOf="@id/choose_agl_btn"
+        app:layout_constraintWidth_percent="0.25"
+        android:gravity="center_horizontal"/>
 
     <TextView
         android:id="@+id/selectAngleText"
@@ -44,13 +79,13 @@
         android:layout_height="wrap_content"
         android:text="Splitting Video : "
         android:textColor="@color/black"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.35"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.45"
-        android:visibility="gone"
         tools:ignore="HardcodedText" />
 
     <TextView
@@ -59,13 +94,13 @@
         android:layout_height="wrap_content"
         android:text="Creating Video : "
         android:textColor="@color/black"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.35"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.5"
-        android:visibility="gone"
         tools:ignore="HardcodedText" />
 
 
@@ -74,43 +109,41 @@
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/SplittingText"
-        app:layout_constraintStart_toEndOf="@id/SplittingText"
         android:progressTint="@color/teal_200"
         android:visibility="gone"
-        />
+        app:layout_constraintStart_toEndOf="@id/SplittingText"
+        app:layout_constraintTop_toTopOf="@id/SplittingText" />
 
     <ProgressBar
         android:id="@+id/VideoCreation"
         style="@android:style/Widget.ProgressBar.Horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/CreationText"
-        app:layout_constraintStart_toEndOf="@id/CreationText"
         android:progressTint="@color/teal_200"
         android:visibility="gone"
-        />
+        app:layout_constraintStart_toEndOf="@id/CreationText"
+        app:layout_constraintTop_toTopOf="@id/CreationText" />
 
     <TextView
         android:id="@+id/splittingProgressValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/splittingBar"
-        app:layout_constraintStart_toEndOf="@id/splittingBar"
         android:text=" ${value}%"
         android:textColor="@color/black"
         android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@id/splittingBar"
+        app:layout_constraintTop_toTopOf="@id/splittingBar"
         tools:ignore="HardcodedText" />
 
     <TextView
         android:id="@+id/CreatingProgressValue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/VideoCreation"
-        app:layout_constraintStart_toEndOf="@id/VideoCreation"
         android:text=" ${value}%"
         android:textColor="@color/black"
         android:visibility="gone"
+        app:layout_constraintStart_toEndOf="@id/VideoCreation"
+        app:layout_constraintTop_toTopOf="@id/VideoCreation"
         tools:ignore="HardcodedText" />
 
 
@@ -128,9 +161,8 @@
             android:id="@+id/video_viewer"
             android:layout_width="fill_parent"
             android:layout_height="400dp"
-            android:visibility="invisible"
             android:layout_gravity="center"
-            />
+            android:visibility="invisible" />
 
     </FrameLayout>
 
@@ -138,27 +170,27 @@
         android:id="@+id/cal_angle_btn"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/custom_button"
         android:text="VIEW ANALYSIS"
         android:textColor="@color/white"
         android:textSize="20sp"
-        android:background="@drawable/custom_button"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.850"
-        android:visibility="gone"
         tools:ignore="HardcodedText" />
 
     <Button
         android:id="@+id/help02_btn"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:background="@drawable/round_button"
         android:text="Help"
         android:textColor="@color/white"
         android:textSize="15sp"
-        android:background="@drawable/round_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.950"
