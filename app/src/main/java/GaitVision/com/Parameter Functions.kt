@@ -284,6 +284,7 @@ fun calcStrideLength(heightInches: Float) : Float
         )
         sum += strideLength
     }
+    sum /= 39.37F
     return sum
 }
 
@@ -308,5 +309,6 @@ fun calcStrideLengthAvg(heightInches: Float) : Float
         )
         sum += strideLength
     }
+    sum /= 39.37F
     return sum/maxAngles.size
 }

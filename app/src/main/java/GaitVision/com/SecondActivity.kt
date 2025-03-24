@@ -29,6 +29,7 @@ import java.io.File
 import java.lang.Boolean.FALSE
 import java.lang.Boolean.TRUE
 import java.security.AccessController.getContext
+import kotlin.math.roundToLong
 
 
 class SecondActivity : ComponentActivity()
@@ -229,11 +230,11 @@ class SecondActivity : ComponentActivity()
                         Log.d("ErrorCheck","Swing-Stance Ratio Left: ${calculateSwingStanceRatio(avgSwingTimeL,avgStanceTimeL)}")
                         Log.d("ErrorCheck","Swing-Stance Ratio Right: ${calculateSwingStanceRatio(avgSwingTimeR,avgStanceTimeR)}")
 
-                        var sum = calcStrideLength(participantHeight.toFloat()) // Change height here to ur height in inches
+                        var sum = calcStrideLength(participantHeight.toFloat())
                         var strideSpeedAvg = sum / (videoLength * 0.000001)
 
-                        Log.d("ErrorCheck", "Stride Speed AVG(In/s): ${strideSpeedAvg}")
-                        Log.d("ErrorCheck", "Stride Length AVG(In): ${calcStrideLengthAvg(participantHeight.toFloat())}") // Change height here to ur height in inches
+                        Log.d("ErrorCheck", "Stride Speed AVG(m/s): ${strideSpeedAvg}")
+                        Log.d("ErrorCheck", "Stride Length AVG(m): ${calcStrideLengthAvg(participantHeight.toFloat())}")
                         Log.d("ErrorCheck","---------------")
                         Log.d("ErrorCheck","Stride Angles: ${FindLocalMax(strideAngles)}")
                         Log.d("ErrorCheck","Lowest Ankle Left Placements: ${minLeftAnkleY.max()}")
@@ -313,11 +314,11 @@ class SecondActivity : ComponentActivity()
                         Log.d("ErrorCheck","Swing-Stance Ratio Left: ${calculateSwingStanceRatio(avgSwingTimeL,avgStanceTimeL)}")
                         Log.d("ErrorCheck","Swing-Stance Ratio Right: ${calculateSwingStanceRatio(avgSwingTimeR,avgStanceTimeR)}")
 
-                        var sum = calcStrideLength(participantHeight.toFloat()) // Change height here to ur height in inches
+                        var sum = calcStrideLength(participantHeight.toFloat())
                         var strideSpeedAvg = sum / (videoLength * 0.000001)
 
-                        Log.d("ErrorCheck", "Stride Speed AVG(In/s): ${strideSpeedAvg}")
-                        Log.d("ErrorCheck", "Stride Length AVG(In): ${calcStrideLengthAvg(participantHeight.toFloat())}") // Change height here to ur height in inches
+                        Log.d("ErrorCheck", "Stride Speed AVG(m/s): ${strideSpeedAvg}")
+                        Log.d("ErrorCheck", "Stride Length AVG(m): ${calcStrideLengthAvg(participantHeight.toFloat())}")
                         Log.d("ErrorCheck","---------------")
                         Log.d("ErrorCheck","Stride Angles: ${FindLocalMax(strideAngles)}")
                         Log.d("ErrorCheck","Lowest Ankle Left Placements: ${minLeftAnkleY.max()}")
@@ -365,14 +366,16 @@ class SecondActivity : ComponentActivity()
                                     mBinding.TorsoAngle.visibility = GONE
                                     var string = ""
                                     if (index < rightHipAngles.size) {
-                                        string += "Right Hip:\n" + rightHipAngles[index].toString()
+                                        //string += "Right Hip:\n" + rightHipAngles[index].toString()
+                                        string += "Right Hip:\n" + String.format("%.1f", rightHipAngles[index])
 
                                     } else {
                                         string+= "Right Hip:\nERROR"
 
                                     }
                                     if (index < leftHipAngles.size) {
-                                        string += "\nLeft Hip:\n" + leftHipAngles[index].toString()
+                                        //string += "\nLeft Hip:\n" + leftHipAngles[index].toString()
+                                        string += "\nLeft Hip:\n" + String.format("%.1f", leftHipAngles[index])
                                     } else {
                                         string += "\nLeft Hip:\nERROR"
                                     }
@@ -386,14 +389,16 @@ class SecondActivity : ComponentActivity()
                                     mBinding.TorsoAngle.visibility = GONE
                                     var string = ""
                                     if (index < rightKneeAngles.size) {
-                                        string += "Right Knee:\n" + rightKneeAngles[index].toString()
+                                        //string += "Right Knee:\n" + rightKneeAngles[index].toString()
+                                        string += "Right Knee:\n" + String.format("%.1f", rightKneeAngles[index])
 
                                     } else {
                                         string += "Right Knee:\nERROR"
 
                                     }
                                     if (index < leftKneeAngles.size) {
-                                        string += "\nLeft Knee:\n" + leftKneeAngles[index].toString()
+                                        //string += "\nLeft Knee:\n" + leftKneeAngles[index].toString()
+                                        string += "\nLeft Knee:\n" + String.format("%.1f", leftKneeAngles[index])
                                     } else {
                                         string += "\nLeft Knee:\nERROR"
                                     }
@@ -407,14 +412,16 @@ class SecondActivity : ComponentActivity()
                                     mBinding.TorsoAngle.visibility = GONE
                                     var string = ""
                                     if (index < rightAnkleAngles.size) {
-                                        string += "Right Ankle:\n" + rightAnkleAngles[index].toString()
+                                        //string += "Right Ankle:\n" + rightAnkleAngles[index].toString()
+                                        string += "Right Ankle:\n" + String.format("%.1f", rightAnkleAngles[index])
 
                                     } else {
                                         string += "Right Ankle:\nERROR"
 
                                     }
                                     if (index < leftAnkleAngles.size) {
-                                        string += "\nLeft Ankle:\n" + leftAnkleAngles[index].toString()
+                                        //string += "\nLeft Ankle:\n" + leftAnkleAngles[index].toString()
+                                        string += "\nLeft Ankle:\n" + String.format("%.1f", leftAnkleAngles[index])
                                     } else {
                                         string += "\nLeft Ankle:\nERROR"
                                     }
@@ -428,7 +435,8 @@ class SecondActivity : ComponentActivity()
                                     mBinding.TorsoAngle.visibility = VISIBLE
                                     var string = ""
                                     if (index < torsoAngles.size) {
-                                        string += "\nTorso:\n" + torsoAngles[index].toString()
+                                        //string += "\nTorso:\n" + torsoAngles[index].toString()
+                                        string += "\nTorso:\n" + String.format("%.1f", torsoAngles[index])
 
                                     } else {
                                         string += "\nTorso:\nERROR"
@@ -443,14 +451,16 @@ class SecondActivity : ComponentActivity()
                                     mBinding.TorsoAngle.visibility = VISIBLE
                                     var stringA = ""
                                     if (index < rightAnkleAngles.size) {
-                                        stringA += "Right Ankle:\n" + rightAnkleAngles[index].toString()
+                                        //string += "Right Ankle:\n" + rightAnkleAngles[index].toString()
+                                        stringA += "Right Ankle:\n" + String.format("%.1f", rightAnkleAngles[index])
 
                                     } else {
                                         stringA += "Right Ankle:\nERROR"
 
                                     }
                                     if (index < leftAnkleAngles.size) {
-                                        stringA += "\nLeft Ankle:\n" + leftAnkleAngles[index].toString()
+                                        //string += "\nLeft Ankle:\n" + leftAnkleAngles[index].toString()
+                                        stringA += "\nLeft Ankle:\n" + String.format("%.1f", leftAnkleAngles[index])
                                     } else {
                                         stringA += "\nLeft Ankle:\nERROR"
                                     }
@@ -458,14 +468,16 @@ class SecondActivity : ComponentActivity()
 
                                     var stringK = ""
                                     if (index < rightKneeAngles.size) {
-                                        stringK += "Right Knee:\n" + rightKneeAngles[index].toString()
+                                        //string += "Right Knee:\n" + rightKneeAngles[index].toString()
+                                        stringK += "Right Knee:\n" + String.format("%.1f", rightKneeAngles[index])
 
                                     } else {
                                         stringK += "Right Knee:\nERROR"
 
                                     }
                                     if (index < leftKneeAngles.size) {
-                                        stringK += "\nLeft Knee:\n" + leftKneeAngles[index].toString()
+                                        //string += "\nLeft Knee:\n" + leftKneeAngles[index].toString()
+                                        stringK += "\nLeft Knee:\n" + String.format("%.1f", leftKneeAngles[index])
                                     } else {
                                         stringK += "\nLeft Knee:\nERROR"
                                     }
@@ -473,14 +485,15 @@ class SecondActivity : ComponentActivity()
 
                                     var stringH = ""
                                     if (index < rightHipAngles.size) {
-                                        stringH += "Right Hip:\n" + rightHipAngles[index].toString()
-
+                                        //string += "Right Hip:\n" + rightHipAngles[index].toString()
+                                        stringH += "Right Hip:\n" + String.format("%.1f", rightHipAngles[index])
                                     } else {
                                         stringH += "Right Hip:\nERROR"
 
                                     }
                                     if (index < leftHipAngles.size) {
-                                        stringH += "\nLeft Hip:\n" + leftHipAngles[index].toString()
+                                        //string += "\nLeft Hip:\n" + leftHipAngles[index].toString()
+                                        stringH += "\nLeft Hip:\n" + String.format("%.1f", leftHipAngles[index])
                                     } else {
                                         stringH += "\nLeft Hip:\nERROR"
                                     }
@@ -488,7 +501,8 @@ class SecondActivity : ComponentActivity()
 
                                     var stringT = ""
                                     if (index < torsoAngles.size) {
-                                        stringT += "\nTorso:\n" + torsoAngles[index].toString()
+                                        //string += "\nTorso:\n" + torsoAngles[index].toString()
+                                        stringT += "\nTorso:\n" + String.format("%.1f", torsoAngles[index])
 
                                     } else {
                                         stringT += "\nTorso:\nERROR"
