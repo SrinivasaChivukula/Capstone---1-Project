@@ -21,6 +21,7 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.VideoView
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -40,12 +41,21 @@ class SecondActivity : ComponentActivity()
     private val handler = Handler(Looper.getMainLooper())
     private var updateRunnable : Runnable? = null
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         mBinding = ActivitySecondBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
+
+        onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true){
+            override fun handleOnBackPressed() {
+                updateRunnable?.let {
+                    handler.removeCallbacks(it)
+                }
+                finish()
+            }
+        })
+
         mBinding.calAngleBtn.setOnClickListener{
             updateRunnable?.let{
                 handler.removeCallbacks(it)
