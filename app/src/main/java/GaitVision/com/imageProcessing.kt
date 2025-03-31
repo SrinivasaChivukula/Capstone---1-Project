@@ -67,14 +67,19 @@ fun plotLineGraph(
     val leftDataSet = LineDataSet(leftEntries, labelLeft)
     leftDataSet.color = Color.BLUE
     leftDataSet.valueTextSize = 12f
+    leftDataSet.setDrawCircles(false) // Disable highlighted points on zoom in
+    leftDataSet.setDrawValues(false)
 
     val rightDataSet = LineDataSet(rightEntries, labelRight)
     rightDataSet.color = Color.RED
     rightDataSet.valueTextSize = 12f
+    rightDataSet.setDrawCircles(false) // Disable highlighted points on zoom in
+    rightDataSet.setDrawValues(false)
 
     val lineData = LineData(leftDataSet, rightDataSet)
 
     lineChart.data = lineData
+    lineChart.description.isEnabled = false
     lineChart.invalidate() // Refresh chart
 }
 
