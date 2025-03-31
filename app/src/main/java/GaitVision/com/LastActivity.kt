@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.content.Intent
 import android.os.Environment
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.PopupMenu
@@ -17,16 +18,36 @@ import androidx.activity.ComponentActivity
 import java.io.File
 import java.io.FileOutputStream
 import android.widget.TextView
+import com.chaquo.python.Python
+import com.chaquo.python.android.AndroidPlatform
 
 class LastActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_last)
 
+        if(!com.chaquo.python.Python.isStarted())
+        {
+            Python.start(AndroidPlatform(this))
+        }
+
+        val py = Python.getInstance()
+        val pyModule = py.getModule("scoreScript")
+        val data = mapOf(
+            "leftKneeMinAngles" to leftKneeMinAngles,
+            "leftKneeMaxAngles" to leftKneeMaxAngles,
+            "rightKneeMinAngles" to rightKneeMinAngles,
+            "rightKneeMaxAngles" to rightKneeMaxAngles,
+            "torsoMinAngles" to torsoMinAngles,
+            "torsoMaxAngles" to torsoMaxAngles
+        )
+        Log.d("PythonData", "Sending: $data")
+        val result = pyModule.callAttr("getScore", data)
+
         // temp random number generator for activity_last
         val scoreTextView = findViewById<TextView>(R.id.score_textview)
         val randomScore = (50..70).random()
-        scoreTextView.text = randomScore.toString()
+        scoreTextView.text = result.toString()
 
         val chooseGraphBtn = findViewById<Button>(R.id.select_graph_btn)
         val popupMenu = PopupMenu(this, chooseGraphBtn)

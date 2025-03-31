@@ -3,6 +3,18 @@ plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.compose) apply false
+
+    id("com.chaquo.python") version "16.0.0" apply false
+}
+
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        maven(url="https://chaquo.com/maven")
+    }
+    dependencies {
+    }
 }
 //Might be needed, but can stay commented out for now (10/8/24 Trevor Spencer)
 /*
