@@ -20,12 +20,12 @@
         app:layout_constraintHorizontal_bias="0.500"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.190"
+        app:layout_constraintVertical_bias="0.170"
         tools:ignore="HardcodedText" />
 
     <ImageView
-        android:layout_width="125dp"
-        android:layout_height="125dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:src="@drawable/round_shape"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -39,7 +39,7 @@
         android:id="@+id/score_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="75sp"
+        android:textSize="55sp"
         android:text="66"
         android:textColor="@color/black"
         android:textStyle="bold"
@@ -52,7 +52,7 @@
 
     <Button
         android:id="@+id/select_graph_btn"
-        android:layout_width="175dp"
+        android:layout_width="155dp"
         android:layout_height="wrap_content"
         android:text="SELECT GRAPH"
         android:textColor="@color/white"
@@ -105,7 +105,7 @@
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/lineChartTorso"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="375dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -116,7 +116,7 @@
 
     <Button
         android:id="@+id/submit_id_btn"
-        android:layout_width="175dp"
+        android:layout_width="145dp"
         android:layout_height="wrap_content"
         android:text="Export CSV"
         android:textColor="@color/white"
@@ -132,7 +132,7 @@
 
     <Button
         android:id="@+id/main_mnu_btn"
-        android:layout_width="175dp"
+        android:layout_width="145dp"
         android:layout_height="wrap_content"
         android:text="Main Menu"
         android:textColor="@color/white"
