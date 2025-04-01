@@ -8,6 +8,8 @@
     <string name="about">About</string>
     <string name="logout">Logout</string>
     <string name="plus">Plus</string>
+    <string name="title_activity_camera">CameraActivity</string>
+    <string name="title_activity_main2">MainActivity2</string>
     <string name="label_feet">ft</string>
     <string name="label_inches">in</string>
 
