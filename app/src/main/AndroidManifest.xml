@@ -27,6 +27,7 @@
             android:name=".CameraActivity"
             android:exported="false"
             android:label="@string/title_activity_camera"
+            android:parentActivityName=".MainActivity"
             android:theme="@style/Theme.GaitVision" />
         <activity
             android:name=".LastActivity"
@@ -55,4 +56,9 @@
         </activity>
     </application>
 
+    <queries>
+        <intent>
+            <action android:name="android.media.action.VIDEO_CAPTURE" />
+        </intent>
+    </queries>
 </manifest>

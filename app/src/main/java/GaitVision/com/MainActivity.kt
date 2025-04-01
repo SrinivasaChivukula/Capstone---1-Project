@@ -179,6 +179,10 @@ class MainActivity : ComponentActivity() {
             }
         }
 
+    private fun isCameraAvailable(): Boolean {
+        return packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)
+    }
+
     private fun openCamera() {
         try {
             val videoIntent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
@@ -189,7 +193,12 @@ class MainActivity : ComponentActivity() {
             val activities = packageManager.queryIntentActivities(videoIntent, PackageManager.MATCH_DEFAULT_ONLY)
 
             if (activities.isNotEmpty()) {
-                recordVideoLauncher.launch(videoIntent)
+                if (isCameraAvailable()) {
+                    recordVideoLauncher.launch(videoIntent)
+                } else {
+                    Toast.makeText(this, "No camera available", Toast.LENGTH_SHORT).show()
+                }
+
             } else {
                 Toast.makeText(this, "No video recording app found. Available activities: ${activities.size}", Toast.LENGTH_LONG).show()
                 if (!packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
