@@ -8,4 +8,6 @@
     <string name="about">About</string>
     <string name="logout">Logout</string>
     <string name="plus">Plus</string>
+    <string name="title_activity_camera">CameraActivity</string>
+    <string name="title_activity_main2">MainActivity2</string>
 </resources>

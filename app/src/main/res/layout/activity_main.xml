@@ -7,6 +7,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <Button
+        android:id="@+id/camera_btn"
+        android:layout_width="175dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/custom_button"
+        android:text="OPEN CAMERA"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.067"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.535"
+        tools:ignore="HardcodedText" />
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="175dp"
@@ -75,16 +91,16 @@
         android:id="@+id/open_gal_btn"
         android:layout_width="175dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/custom_button"
         android:text="SELECT VIDEO"
         android:textColor="@color/white"
         android:textSize="20sp"
-        android:background="@drawable/custom_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.500"
+        app:layout_constraintHorizontal_bias="0.927"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.540"
+        app:layout_constraintVertical_bias="0.535"
         tools:ignore="HardcodedText" />
 
     <Button
