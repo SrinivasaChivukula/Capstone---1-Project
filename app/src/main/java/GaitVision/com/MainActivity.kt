@@ -57,7 +57,8 @@ class MainActivity : ComponentActivity() {
             android.Manifest.permission.READ_MEDIA_IMAGES,
             android.Manifest.permission.READ_MEDIA_VIDEO,
             android.Manifest.permission.READ_MEDIA_AUDIO,
-            android.Manifest.permission.CAMERA // Add camera permission
+            android.Manifest.permission.CAMERA,
+            android.Manifest.permission.RECORD_AUDIO
         )
 
         if (!hasPermissions(*permissions)) {
@@ -158,12 +159,45 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private val recordVideoLauncher: ActivityResultLauncher<Intent> =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                // Handle the recorded video
+                val videoUri = result.data?.data
+                videoUri?.let {
+                    // You can use this URI to display or process the video
+                    galleryUri = it  // Assuming you want to store it in your existing variable
+                    val retriever = MediaMetadataRetriever()
+                    retriever.setDataSource(this, it)
+                    val frame = retriever.getFrameAtTime(0, MediaMetadataRetriever.OPTION_CLOSEST)
+                    mBinding.imageView5.setImageBitmap(frame)  // Show first frame as preview
+                    retriever.release()
+                    Toast.makeText(this, "Video recorded successfully", Toast.LENGTH_SHORT).show()
+                }
+            } else {
+                Toast.makeText(this, "Video recording cancelled", Toast.LENGTH_SHORT).show()
+            }
+        }
+
     private fun openCamera() {
-        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if (cameraIntent.resolveActivity(packageManager) != null) {
-            takePictureLauncher.launch(cameraIntent)
-        } else {
-            Toast.makeText(this, "No camera app available", Toast.LENGTH_SHORT).show()
+        try {
+            val videoIntent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
+            videoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1)
+            videoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 30) // 30 seconds max
+            videoIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 50 * 1024 * 1024) // 50MB max
+
+            val activities = packageManager.queryIntentActivities(videoIntent, PackageManager.MATCH_DEFAULT_ONLY)
+
+            if (activities.isNotEmpty()) {
+                recordVideoLauncher.launch(videoIntent)
+            } else {
+                Toast.makeText(this, "No video recording app found. Available activities: ${activities.size}", Toast.LENGTH_LONG).show()
+                if (!packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
+                    Toast.makeText(this, "Device has no camera hardware", Toast.LENGTH_LONG).show()
+                }
+            }
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error opening camera: ${e.message}", Toast.LENGTH_LONG).show()
         }
     }
 
