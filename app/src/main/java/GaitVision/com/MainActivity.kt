@@ -11,6 +11,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.media.MediaMetadataRetriever
 import android.net.Uri
+import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -19,6 +20,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import android.widget.EditText
+import android.widget.Spinner
 
 
 class MainActivity : ComponentActivity() {
@@ -113,13 +115,35 @@ class MainActivity : ComponentActivity() {
 
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
+
+        //Initialize spinner Values
+        val feetSpinner = findViewById<Spinner>(R.id.feet_spinner)
+        val inchesSpinner = findViewById<Spinner>(R.id.inches_spinner)
+
+        //Spinner Adapter for feet variable
+        val feetAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.feet_array))
+        feetAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        feetSpinner.adapter = feetAdapter
+
+        //Spinner adapter for inches variable
+        val inchesAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.inches_array))
+        inchesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        inchesSpinner.adapter = inchesAdapter
+
+        //Default Selection is 5 feet 9 inches
+        feetSpinner.setSelection(1)
+        inchesSpinner.setSelection(9)
+
         //mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         mBinding.confirmVidBtn.setOnClickListener{
             val inputId = findViewById<EditText>(R.id.participant_id)
             participantId = inputId.text.toString()
-            val heightId = findViewById<EditText>(R.id.height_id)
-            var heightText = heightId.text.toString()
-            participantHeight = heightText.toIntOrNull() ?: 0
+
+            //feet and inches values are gathered from the spinners
+            val feet = feetSpinner.selectedItem.toString().toIntOrNull() ?: 0
+            val inches = inchesSpinner.selectedItem.toString().toIntOrNull() ?: 0
+            participantHeight = (feet * 12) + inches
+
             startActivity(Intent(this,SecondActivity::class.java))}
         mBinding.openGalBtn.setOnClickListener{startIntentFromGallary()}
 
