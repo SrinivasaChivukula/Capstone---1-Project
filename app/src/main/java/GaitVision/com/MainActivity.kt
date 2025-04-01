@@ -30,9 +30,9 @@ import android.util.Log
 
 class MainActivity : ComponentActivity() {
     private lateinit var mBinding: ActivityMainBinding
-    private var videoUri: Uri?=null
-    private val REQUESTCODE_CAMERA=1
-    private val REQUESTCODE_GALLERY=2
+    private var videoUri: Uri? = null
+    private val REQUESTCODE_CAMERA = 1
+    private val REQUESTCODE_GALLERY = 2
     private val REQUEST_CODE_PERMISSIONS = 101
 
     private lateinit var recordVideoLauncher: ActivityResultLauncher<Intent>
@@ -48,7 +48,10 @@ class MainActivity : ComponentActivity() {
                 mBinding.imageView5.setImageBitmap(frame)
                 retriever.release()
 
-                Log.d("ErrorChecking", "galleryUri(RFAR): $galleryUri, galleryPath(RFAR): ${galleryUri?.path}")
+                Log.d(
+                    "ErrorChecking",
+                    "galleryUri(RFAR): $galleryUri, galleryPath(RFAR): ${galleryUri?.path}"
+                )
             }
         }
 
@@ -78,7 +81,11 @@ class MainActivity : ComponentActivity() {
 
     private fun hasPermissions(vararg permissions: String): Boolean {
         for (permission in permissions) {
-            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+            if (ContextCompat.checkSelfPermission(
+                    this,
+                    permission
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
                 return false
             }
         }
@@ -89,17 +96,24 @@ class MainActivity : ComponentActivity() {
         startIntentFromGallary()
     }
 
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == REQUEST_CODE_PERMISSIONS) {
             if (grantResults.isNotEmpty() && grantResults.all { it == PackageManager.PERMISSION_GRANTED }) {
                 proceedWithMediaAccess()
             } else {
-                Toast.makeText(this, "Permissions are required to access media files and camera.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    "Permissions are required to access media files and camera.",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -129,12 +143,20 @@ class MainActivity : ComponentActivity() {
         val inchesSpinner = findViewById<Spinner>(R.id.inches_spinner)
 
         //Spinner Adapter for feet variable
-        val feetAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.feet_array))
+        val feetAdapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            resources.getStringArray(R.array.feet_array)
+        )
         feetAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         feetSpinner.adapter = feetAdapter
 
         //Spinner adapter for inches variable
-        val inchesAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.inches_array))
+        val inchesAdapter = ArrayAdapter(
+            this,
+            android.R.layout.simple_spinner_item,
+            resources.getStringArray(R.array.inches_array)
+        )
         inchesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         inchesSpinner.adapter = inchesAdapter
 
@@ -143,95 +165,104 @@ class MainActivity : ComponentActivity() {
         inchesSpinner.setSelection(9)
 
         //mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        mBinding.confirmVidBtn.setOnClickListener{
-
-        recordVideoLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_OK) {
-                Toast.makeText(this, "Video saved at: $videoUri", Toast.LENGTH_LONG).show()
-                Log.d("ErrorChecking", "VideoUri(SAFR): $videoUri, VideoPath(SAFR): ${videoUri?.path}")
-
-                val retriever = MediaMetadataRetriever()
-                retriever.setDataSource(this, videoUri)
-                val frame = retriever.getFrameAtTime(0, MediaMetadataRetriever.OPTION_CLOSEST)
-                mBinding.imageView5.setImageBitmap(frame)  // Show first frame as preview
-                retriever.release()
-                galleryUri = videoUri
-                Log.d("ErrorChecking", "galleryUri(SAFR): $galleryUri, galleryPath(SAFR): ${galleryUri?.path}")
-
-            } else {
-                Toast.makeText(this, "Video recording canceled", Toast.LENGTH_SHORT).show()
-            }
-        }
-
         mBinding.confirmVidBtn.setOnClickListener {
-            val inputId = findViewById<EditText>(R.id.participant_id)
-            participantId = inputId.text.toString()
 
-            //feet and inches values are gathered from the spinners
-            val feet = feetSpinner.selectedItem.toString().toIntOrNull() ?: 0
-            val inches = inchesSpinner.selectedItem.toString().toIntOrNull() ?: 0
-            participantHeight = (feet * 12) + inches
+            recordVideoLauncher =
+                registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                    if (result.resultCode == Activity.RESULT_OK) {
+                        Toast.makeText(this, "Video saved at: $videoUri", Toast.LENGTH_LONG).show()
+                        Log.d(
+                            "ErrorChecking",
+                            "VideoUri(SAFR): $videoUri, VideoPath(SAFR): ${videoUri?.path}"
+                        )
 
-            startActivity(Intent(this,SecondActivity::class.java))}
-        mBinding.openGalBtn.setOnClickListener{startIntentFromGallary()}
+                        val retriever = MediaMetadataRetriever()
+                        retriever.setDataSource(this, videoUri)
+                        val frame =
+                            retriever.getFrameAtTime(0, MediaMetadataRetriever.OPTION_CLOSEST)
+                        mBinding.imageView5.setImageBitmap(frame)  // Show first frame as preview
+                        retriever.release()
+                        galleryUri = videoUri
+                        Log.d(
+                            "ErrorChecking",
+                            "galleryUri(SAFR): $galleryUri, galleryPath(SAFR): ${galleryUri?.path}"
+                        )
 
-        //Creating typing animation
-        val textView = findViewById<TextView>(R.id.textView1)
-        val label   = " GaitVision"
-        val stringBuilder = StringBuilder()
-
-        Thread{
-            for(letter in label){
-                stringBuilder.append(letter)
-                Thread.sleep(150    )
-                runOnUiThread{
-                    textView.text = stringBuilder.toString()
+                    } else {
+                        Toast.makeText(this, "Video recording canceled", Toast.LENGTH_SHORT).show()
+                    }
                 }
+
+            mBinding.confirmVidBtn.setOnClickListener {
+                val inputId = findViewById<EditText>(R.id.participant_id)
+                participantId = inputId.text.toString()
+
+                //feet and inches values are gathered from the spinners
+                val feet = feetSpinner.selectedItem.toString().toIntOrNull() ?: 0
+                val inches = inchesSpinner.selectedItem.toString().toIntOrNull() ?: 0
+                participantHeight = (feet * 12) + inches
+
+                startActivity(Intent(this, SecondActivity::class.java))
             }
-        }.start()
+            mBinding.openGalBtn.setOnClickListener { startIntentFromGallary() }
 
-        val sharedPref = getSharedPreferences("HelpPrefs", Context.MODE_PRIVATE)
-        val isHelpShown = sharedPref.getBoolean("Help01Shown", false)
+            //Creating typing animation
+            val textView = findViewById<TextView>(R.id.textView1)
+            val label = " GaitVision"
+            val stringBuilder = StringBuilder()
 
-        if (!isHelpShown) {
-            showHelpDialog()
+            Thread {
+                for (letter in label) {
+                    stringBuilder.append(letter)
+                    Thread.sleep(150)
+                    runOnUiThread {
+                        textView.text = stringBuilder.toString()
+                    }
+                }
+            }.start()
 
-            val editor = sharedPref.edit()
-            editor.putBoolean("Help01Shown", true)
-            editor.apply()
-        }
+            val sharedPref = getSharedPreferences("HelpPrefs", Context.MODE_PRIVATE)
+            val isHelpShown = sharedPref.getBoolean("Help01Shown", false)
 
-        val help01Btn = findViewById<Button>(R.id.help01_btn)
-        help01Btn.setOnClickListener {
-            showHelpDialog()
-        }
+            if (!isHelpShown) {
+                showHelpDialog()
 
-    }
+                val editor = sharedPref.edit()
+                editor.putBoolean("Help01Shown", true)
+                editor.apply()
+            }
 
-    private fun showHelpDialog() {
-        val dialogBinding = layoutInflater.inflate(R.layout.help01_dialog, null)
+            val help01Btn = findViewById<Button>(R.id.help01_btn)
+            help01Btn.setOnClickListener {
+                showHelpDialog()
+            }
 
-        val myDialog = Dialog(this)
-        myDialog.setContentView(dialogBinding)
-
-        myDialog.setCancelable(false)
-        myDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        myDialog.show()
-
-        val yes01Btn = dialogBinding.findViewById<Button>(R.id.help01_yes)
-        yes01Btn.setOnClickListener {
-            myDialog.dismiss()
-        }
-    }
-
-    private fun initClicks()
-    {
-        mBinding.openGalBtn.setOnClickListener{
-            startIntentFromGallary()
         }
     }
 
-    private fun startIntentFromGallary() {
-       getResult.launch("video/*")
+        private fun showHelpDialog() {
+            val dialogBinding = layoutInflater.inflate(R.layout.help01_dialog, null)
+
+            val myDialog = Dialog(this)
+            myDialog.setContentView(dialogBinding)
+
+            myDialog.setCancelable(false)
+            myDialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            myDialog.show()
+
+            val yes01Btn = dialogBinding.findViewById<Button>(R.id.help01_yes)
+            yes01Btn.setOnClickListener {
+                myDialog.dismiss()
+            }
+        }
+
+        private fun initClicks() {
+            mBinding.openGalBtn.setOnClickListener {
+                startIntentFromGallary()
+            }
+        }
+
+        private fun startIntentFromGallary() {
+            getResult.launch("video/*")
+        }
     }
-}
