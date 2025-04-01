@@ -138,6 +138,32 @@ class MainActivity : ComponentActivity() {
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
 
+        recordVideoLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                if (result.resultCode == Activity.RESULT_OK) {
+                    Toast.makeText(this, "Video saved at: $videoUri", Toast.LENGTH_LONG).show()
+                    Log.d(
+                        "ErrorChecking",
+                        "VideoUri(SAFR): $videoUri, VideoPath(SAFR): ${videoUri?.path}"
+                    )
+
+                    val retriever = MediaMetadataRetriever()
+                    retriever.setDataSource(this, videoUri)
+                    val frame =
+                        retriever.getFrameAtTime(0, MediaMetadataRetriever.OPTION_CLOSEST)
+                    mBinding.imageView5.setImageBitmap(frame)  // Show first frame as preview
+                    retriever.release()
+                    galleryUri = videoUri
+                    Log.d(
+                        "ErrorChecking",
+                        "galleryUri(SAFR): $galleryUri, galleryPath(SAFR): ${galleryUri?.path}"
+                    )
+
+                } else {
+                    Toast.makeText(this, "Video recording canceled", Toast.LENGTH_SHORT).show()
+                }
+            }
+
         //Initialize spinner Values
         val feetSpinner = findViewById<Spinner>(R.id.feet_spinner)
         val inchesSpinner = findViewById<Spinner>(R.id.inches_spinner)
@@ -166,45 +192,21 @@ class MainActivity : ComponentActivity() {
 
         //mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         mBinding.confirmVidBtn.setOnClickListener {
+            val inputId = findViewById<EditText>(R.id.participant_id)
+            participantId = inputId.text.toString()
 
-            recordVideoLauncher =
-                registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                    if (result.resultCode == Activity.RESULT_OK) {
-                        Toast.makeText(this, "Video saved at: $videoUri", Toast.LENGTH_LONG).show()
-                        Log.d(
-                            "ErrorChecking",
-                            "VideoUri(SAFR): $videoUri, VideoPath(SAFR): ${videoUri?.path}"
-                        )
+            //feet and inches values are gathered from the spinners
+            val feet = feetSpinner.selectedItem.toString().toIntOrNull() ?: 0
+            val inches = inchesSpinner.selectedItem.toString().toIntOrNull() ?: 0
+            participantHeight = (feet * 12) + inches
 
-                        val retriever = MediaMetadataRetriever()
-                        retriever.setDataSource(this, videoUri)
-                        val frame =
-                            retriever.getFrameAtTime(0, MediaMetadataRetriever.OPTION_CLOSEST)
-                        mBinding.imageView5.setImageBitmap(frame)  // Show first frame as preview
-                        retriever.release()
-                        galleryUri = videoUri
-                        Log.d(
-                            "ErrorChecking",
-                            "galleryUri(SAFR): $galleryUri, galleryPath(SAFR): ${galleryUri?.path}"
-                        )
-
-                    } else {
-                        Toast.makeText(this, "Video recording canceled", Toast.LENGTH_SHORT).show()
-                    }
-                }
-
-            mBinding.confirmVidBtn.setOnClickListener {
-                val inputId = findViewById<EditText>(R.id.participant_id)
-                participantId = inputId.text.toString()
-
-                //feet and inches values are gathered from the spinners
-                val feet = feetSpinner.selectedItem.toString().toIntOrNull() ?: 0
-                val inches = inchesSpinner.selectedItem.toString().toIntOrNull() ?: 0
-                participantHeight = (feet * 12) + inches
-
-                startActivity(Intent(this, SecondActivity::class.java))
-            }
+            startActivity(Intent(this, SecondActivity::class.java))
+        }
             mBinding.openGalBtn.setOnClickListener { startIntentFromGallary() }
+
+        mBinding.cameraBtn.setOnClickListener{
+            openCameraForVideo()
+        }
 
             //Creating typing animation
             val textView = findViewById<TextView>(R.id.textView1)
@@ -238,7 +240,7 @@ class MainActivity : ComponentActivity() {
             }
 
         }
-    }
+
 
         private fun showHelpDialog() {
             val dialogBinding = layoutInflater.inflate(R.layout.help01_dialog, null)
@@ -265,4 +267,24 @@ class MainActivity : ComponentActivity() {
         private fun startIntentFromGallary() {
             getResult.launch("video/*")
         }
+
+    private fun openCameraForVideo() {
+        videoUri = createVideoUri()
+        Log.d("ErrorChecking", "VideoUri(OCFV): $videoUri, VideoPath(OCFV): ${videoUri?.path}")
+        val intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE).apply {
+            putExtra(MediaStore.EXTRA_OUTPUT, videoUri)
+            putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1) // High-quality video
+        }
+        recordVideoLauncher.launch(intent)
+    }
+
+    private fun createVideoUri(): Uri? {
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Video.Media.DISPLAY_NAME, "recordedvideo${System.currentTimeMillis()}.mp4")
+            put(MediaStore.Video.Media.MIME_TYPE, "video/mp4")
+            put(MediaStore.Video.Media.RELATIVE_PATH, "Movies/GaitVision")
+        }
+        return contentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentValues)
+    }
+
     }

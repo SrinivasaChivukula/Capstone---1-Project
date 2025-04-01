@@ -31,12 +31,12 @@ class LastActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_last)
-        lifecycleScope.launch{
+
             if(!com.chaquo.python.Python.isStarted())
             {
                 Python.start(AndroidPlatform(this@LastActivity))
             }
-
+            lifecycleScope.launch{
             val py = Python.getInstance()
             val pyModule = py.getModule("scoreScript")
 
@@ -54,9 +54,11 @@ class LastActivity : ComponentActivity() {
             }
 
             // temp random number generator for activity_last
-            val scoreTextView = findViewById<TextView>(R.id.score_textview)
-            Log.d("PythonData","Receiving: $result")
-            scoreTextView.text = (result*100).roundToLong().toString()
+                withContext(Dispatchers.Main) {
+                    val scoreTextView = findViewById<TextView>(R.id.score_textview)
+                    Log.d("PythonData", "Receiving: $result")
+                    scoreTextView.text = (result * 100).roundToLong().toString()
+                }
         }
 
         val randomScore = (50..70).random()
