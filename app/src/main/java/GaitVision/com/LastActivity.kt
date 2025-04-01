@@ -10,6 +10,7 @@ import android.os.Bundle
 import android.widget.Button
 import android.content.Intent
 import android.os.Environment
+import android.util.Log
 import android.view.View
 import android.widget.EditText
 import android.widget.PopupMenu
@@ -17,16 +18,50 @@ import androidx.activity.ComponentActivity
 import java.io.File
 import java.io.FileOutputStream
 import android.widget.TextView
+import androidx.lifecycle.lifecycleScope
+import com.chaquo.python.Python
+import com.chaquo.python.android.AndroidPlatform
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import okhttp3.Dispatcher
+import kotlin.math.roundToLong
 
 class LastActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_last)
+        lifecycleScope.launch{
+            if(!com.chaquo.python.Python.isStarted())
+            {
+                Python.start(AndroidPlatform(this@LastActivity))
+            }
 
-        // temp random number generator for activity_last
-        val scoreTextView = findViewById<TextView>(R.id.score_textview)
+            val py = Python.getInstance()
+            val pyModule = py.getModule("scoreScript")
+
+
+            var result : Double
+            result = withContext(Dispatchers.IO)
+            {
+                pyModule.callAttr("getScore",
+                    "rightKneeMinAngles", rightKneeMinAngles.toTypedArray(),
+                    "rightKneeMaxAngles", rightKneeMaxAngles.toTypedArray(),
+                    "leftKneeMinAngles", leftKneeMinAngles.toTypedArray(),
+                    "leftKneeMaxAngles", leftKneeMaxAngles.toTypedArray(),
+                    "torsoAnglesMin", torsoMinAngles.toTypedArray(),
+                    "torsoAnglesMax", torsoMaxAngles.toTypedArray()).toDouble()
+            }
+
+            // temp random number generator for activity_last
+            val scoreTextView = findViewById<TextView>(R.id.score_textview)
+            Log.d("PythonData","Receiving: $result")
+            scoreTextView.text = (result*100).roundToLong().toString()
+        }
+
         val randomScore = (50..70).random()
-        scoreTextView.text = randomScore.toString()
+        //scoreTextView.text = result.toString()
+
 
         val chooseGraphBtn = findViewById<Button>(R.id.select_graph_btn)
         val popupMenu = PopupMenu(this, chooseGraphBtn)
