@@ -46,7 +46,7 @@
                     android:layout_margin="10dp"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="SELECT ANGLE then play video. VIEW ANALYSIS to view patient score and graphs."
+                    android:text="SELECT ANGLE then play video. Video can be paused at any time to view angles. VIEW ANALYSIS to view patient gait score and graphs."
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
 
