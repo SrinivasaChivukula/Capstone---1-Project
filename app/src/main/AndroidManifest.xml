@@ -54,6 +54,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="GaitVision.com.provider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths"/>
+        </provider>
+
     </application>
 
     <queries>
@@ -61,4 +72,6 @@
             <action android:name="android.media.action.VIDEO_CAPTURE" />
         </intent>
     </queries>
+
+
 </manifest>

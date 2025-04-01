@@ -1,9 +1,11 @@
 package GaitVision.com
 
 import GaitVision.com.databinding.ActivityMainBinding
+import android.app.Activity
 import android.os.Bundle
 import android.widget.Button
 import android.app.Dialog
+import android.content.ContentValues
 import android.content.Context
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -21,6 +23,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import android.widget.EditText
 import android.graphics.Bitmap
+import android.util.Log
 
 class MainActivity : ComponentActivity() {
     private lateinit var mBinding: ActivityMainBinding
@@ -28,6 +31,8 @@ class MainActivity : ComponentActivity() {
     private val REQUESTCODE_CAMERA=1
     private val REQUESTCODE_GALLERY=2
     private val REQUEST_CODE_PERMISSIONS = 101
+
+    private lateinit var recordVideoLauncher: ActivityResultLauncher<Intent>
 
     private val getResult: ActivityResultLauncher<String> =
         registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
@@ -39,6 +44,8 @@ class MainActivity : ComponentActivity() {
                 val frame = retriever.getFrameAtTime(0, OPTION_CLOSEST)
                 mBinding.imageView5.setImageBitmap(frame)
                 retriever.release()
+
+                Log.d("ErrorChecking", "galleryUri(RFAR): $galleryUri, galleryPath(RFAR): ${galleryUri?.path}")
             }
         }
 
@@ -112,6 +119,24 @@ class MainActivity : ComponentActivity() {
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
 
+        recordVideoLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                Toast.makeText(this, "Video saved at: $videoUri", Toast.LENGTH_LONG).show()
+                Log.d("ErrorChecking", "VideoUri(SAFR): $videoUri, VideoPath(SAFR): ${videoUri?.path}")
+
+                val retriever = MediaMetadataRetriever()
+                retriever.setDataSource(this, videoUri)
+                val frame = retriever.getFrameAtTime(0, MediaMetadataRetriever.OPTION_CLOSEST)
+                mBinding.imageView5.setImageBitmap(frame)  // Show first frame as preview
+                retriever.release()
+                galleryUri = videoUri
+                Log.d("ErrorChecking", "galleryUri(SAFR): $galleryUri, galleryPath(SAFR): ${galleryUri?.path}")
+
+            } else {
+                Toast.makeText(this, "Video recording canceled", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         mBinding.confirmVidBtn.setOnClickListener {
             val inputId = findViewById<EditText>(R.id.participant_id)
             participantId = inputId.text.toString()
@@ -125,7 +150,8 @@ class MainActivity : ComponentActivity() {
 
         // Add camera button listener
         mBinding.cameraBtn.setOnClickListener { // Make sure you have a camera_btn in your layout
-            openCamera()
+            //openCamera()
+            openCameraForVideo()
         }
 
         // Typing animation
@@ -159,56 +185,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    private val recordVideoLauncher: ActivityResultLauncher<Intent> =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                // Handle the recorded video
-                val videoUri = result.data?.data
-                videoUri?.let {
-                    // You can use this URI to display or process the video
-                    galleryUri = it  // Assuming you want to store it in your existing variable
-                    val retriever = MediaMetadataRetriever()
-                    retriever.setDataSource(this, it)
-                    val frame = retriever.getFrameAtTime(0, MediaMetadataRetriever.OPTION_CLOSEST)
-                    mBinding.imageView5.setImageBitmap(frame)  // Show first frame as preview
-                    retriever.release()
-                    Toast.makeText(this, "Video recorded successfully", Toast.LENGTH_SHORT).show()
-                }
-            } else {
-                Toast.makeText(this, "Video recording cancelled", Toast.LENGTH_SHORT).show()
-            }
-        }
 
-    private fun isCameraAvailable(): Boolean {
-        return packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)
-    }
-
-    private fun openCamera() {
-        try {
-            val videoIntent = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
-            videoIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1)
-            videoIntent.putExtra(MediaStore.EXTRA_DURATION_LIMIT, 30) // 30 seconds max
-            videoIntent.putExtra(MediaStore.EXTRA_SIZE_LIMIT, 50 * 1024 * 1024) // 50MB max
-
-            val activities = packageManager.queryIntentActivities(videoIntent, PackageManager.MATCH_DEFAULT_ONLY)
-
-            if (activities.isNotEmpty()) {
-                if (isCameraAvailable()) {
-                    recordVideoLauncher.launch(videoIntent)
-                } else {
-                    Toast.makeText(this, "No camera available", Toast.LENGTH_SHORT).show()
-                }
-
-            } else {
-                Toast.makeText(this, "No video recording app found. Available activities: ${activities.size}", Toast.LENGTH_LONG).show()
-                if (!packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)) {
-                    Toast.makeText(this, "Device has no camera hardware", Toast.LENGTH_LONG).show()
-                }
-            }
-        } catch (e: Exception) {
-            Toast.makeText(this, "Error opening camera: ${e.message}", Toast.LENGTH_LONG).show()
-        }
-    }
 
     private fun showHelpDialog() {
         val dialogBinding = layoutInflater.inflate(R.layout.help01_dialog, null)
@@ -226,5 +203,26 @@ class MainActivity : ComponentActivity() {
 
     private fun startIntentFromGallary() {
         getResult.launch("video/*")
+    }
+
+
+
+    private fun openCameraForVideo() {
+        videoUri = createVideoUri()
+        Log.d("ErrorChecking", "VideoUri(OCFV): $videoUri, VideoPath(OCFV): ${videoUri?.path}")
+        val intent = Intent(MediaStore.ACTION_VIDEO_CAPTURE).apply {
+            putExtra(MediaStore.EXTRA_OUTPUT, videoUri)
+            putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1) // High-quality video
+        }
+        recordVideoLauncher.launch(intent)
+    }
+
+    private fun createVideoUri(): Uri? {
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Video.Media.DISPLAY_NAME, "recorded_video_${System.currentTimeMillis()}.mp4")
+            put(MediaStore.Video.Media.MIME_TYPE, "video/mp4")
+            put(MediaStore.Video.Media.RELATIVE_PATH, "Movies/GaitVision")
+        }
+        return contentResolver.insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, contentValues)
     }
 }
