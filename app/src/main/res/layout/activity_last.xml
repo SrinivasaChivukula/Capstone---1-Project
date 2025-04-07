@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?> 
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     tools:context=".LastActivity"
     android:layout_width="match_parent"
@@ -20,26 +20,26 @@
         app:layout_constraintHorizontal_bias="0.500"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.190"
+        app:layout_constraintVertical_bias="0.170"
         tools:ignore="HardcodedText" />
 
     <ImageView
-        android:layout_width="125dp"
-        android:layout_height="125dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:src="@drawable/round_shape"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.500"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.025"
+        app:layout_constraintVertical_bias="0.015"
         android:visibility="visible"/>
 
     <TextView
         android:id="@+id/score_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="75sp"
+        android:textSize="55sp"
         android:text="66"
         android:textColor="@color/black"
         android:textStyle="bold"
@@ -48,11 +48,11 @@
         app:layout_constraintHorizontal_bias="0.500"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.040"/>
+        app:layout_constraintVertical_bias="0.030"/>
 
     <Button
         android:id="@+id/select_graph_btn"
-        android:layout_width="175dp"
+        android:layout_width="155dp"
         android:layout_height="wrap_content"
         android:text="SELECT GRAPH"
         android:textColor="@color/white"
@@ -63,60 +63,60 @@
         app:layout_constraintHorizontal_bias="0.500"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.260"
+        app:layout_constraintVertical_bias="0.245"
         tools:ignore="HardcodedText" />
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/lineChartHip"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="300dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.500"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.650" />
+        app:layout_constraintVertical_bias="0.600" />
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/lineChartKnee"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="300dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.500"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.650" />
+        app:layout_constraintVertical_bias="0.600" />
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/lineChartAnkle"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="300dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.500"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.650" />
+        app:layout_constraintVertical_bias="0.600" />
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/lineChartTorso"
         android:layout_width="match_parent"
-        android:layout_height="400dp"
+        android:layout_height="300dp"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.500"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.650" />
+        app:layout_constraintVertical_bias="0.600" />
 
     <Button
         android:id="@+id/submit_id_btn"
-        android:layout_width="175dp"
+        android:layout_width="145dp"
         android:layout_height="wrap_content"
         android:text="Export CSV"
         android:textColor="@color/white"
@@ -132,7 +132,7 @@
 
     <Button
         android:id="@+id/main_mnu_btn"
-        android:layout_width="175dp"
+        android:layout_width="145dp"
         android:layout_height="wrap_content"
         android:text="Main Menu"
         android:textColor="@color/white"

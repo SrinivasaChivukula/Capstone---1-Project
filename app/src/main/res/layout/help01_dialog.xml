@@ -46,7 +46,7 @@
                     android:layout_margin="10dp"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="    Enter patient details. SELECT VIDEO then START GAIT."
+                    android:text="Enter patient details. RECORD or SELECT VIDEO then PERFORM ANALYSIS. For optimal analysis, video should be no longer than 10 seconds."
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
 

@@ -24,4 +24,11 @@ var centerOfMasses: MutableList<Pair<Float, Float>> = mutableListOf()
 var minLeftAnkleY: MutableList<Float> = mutableListOf()
 var minRightAnkleY: MutableList<Float> = mutableListOf()
 
+var leftKneeMinAngles : MutableList<Float> = mutableListOf()
+var leftKneeMaxAngles : MutableList<Float> = mutableListOf()
+var rightKneeMinAngles : MutableList<Float> = mutableListOf()
+var rightKneeMaxAngles : MutableList<Float> = mutableListOf()
+var torsoMinAngles : MutableList<Float> = mutableListOf()
+var torsoMaxAngles : MutableList<Float> = mutableListOf()
+
 var videoLength: Long = 0

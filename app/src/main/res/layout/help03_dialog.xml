@@ -46,7 +46,7 @@
                     android:layout_margin="10dp"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="SELECT GRAPH to choose angle graph. EXPORT CSV to saved patient analysis information to file manager."
+                    android:text="SELECT GRAPH to choose angle graph. Use fingers to zoom in and out. EXPORT CSV to saved patient analysis information to file manager."
                     android:textStyle="bold"
                     tools:ignore="HardcodedText" />
 

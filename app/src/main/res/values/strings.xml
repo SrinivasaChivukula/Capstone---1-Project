@@ -8,4 +8,30 @@
     <string name="about">About</string>
     <string name="logout">Logout</string>
     <string name="plus">Plus</string>
+    <string name="title_activity_camera">CameraActivity</string>
+    <string name="title_activity_main2">MainActivity2</string>
+    <string name="label_feet">ft</string>
+    <string name="label_inches">in</string>
+
+    <string-array name="feet_array">
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+    </string-array>
+
+    <string-array name="inches_array">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+        <item>10</item>
+        <item>11</item>
+    </string-array>
 </resources>

@@ -1,12 +1,15 @@
-plugins {//
+plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
+
+    id("com.chaquo.python")
 }
 
 android {
     namespace = "GaitVision.com"
     compileSdk = 34
+
 
     defaultConfig {
         applicationId = "GaitVision.com"
@@ -15,6 +18,9 @@ android {
         versionCode = 1
         versionName = "1.0"
 
+        ndk {
+            abiFilters += listOf("arm64-v8a","x86_64")
+        }
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -42,6 +48,31 @@ android {
     }
     dataBinding{
         enable = true
+    }
+
+    flavorDimensions += "pyVersion"
+    productFlavors{
+        create("py39") { dimension = "pyVersion" }
+    }
+}
+
+chaquopy {
+    productFlavors {
+        getByName("py39") { version = "3.9" }
+    }
+    defaultConfig {
+        version = "3.9"
+        buildPython("C:\\Users\\tspen\\AppData\\Local\\Programs\\Python\\Python39\\python.exe")
+
+        pip {
+            install("pandas==1.5.0")
+            install("numpy==1.23.3")
+            install("scikit-learn")
+            install("scipy==1.8.1")
+            install("threadpoolctl==2.1.0")
+
+            options("--only-binary=:all:")
+        }
     }
 }
 
@@ -99,5 +130,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation ("com.google.android.material:material:1.9.0")
+
+    implementation("com.chaquo.python:gradle:14.0.2")
 
 }

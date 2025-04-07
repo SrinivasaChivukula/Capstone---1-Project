@@ -532,13 +532,14 @@ class GraphActivity : ComponentActivity() {
 }
 
 fun ensureLandscapeOrientation(bitmap: Bitmap, orientation: Int?): Bitmap {
-    return if (orientation != 0) {
-        // Rotate the bitmap 90 degrees to landscape
-        val matrix = Matrix()
-        matrix.postRotate(90f)
-        Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
-    } else {
-        bitmap // Already landscape
+    return when (orientation) {
+        90, 270 -> {
+            // Rotate 90 degrees if portrait (0°) or upside down (180°)
+            val matrix = Matrix().apply { postRotate(90f) }
+            Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+        }
+        0, 180 -> bitmap // Already landscape
+        else -> bitmap // If orientation is null or unknown, return as-is
     }
 }
 
@@ -714,7 +715,10 @@ suspend fun ProcVidEmpty(context: Context, outputPath: String, mBinding: Activit
 //    smoothDataUsingGaussianFilter(torsoAngles, 1.0)
 
 
-    return Uri.fromFile(File(outputPath))
+    val outputFile = File(outputPath)
+    val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", outputFile)
+    Log.d("ErrorChecking", "Generated URI: $uri")
+    return uri
 }
 
 suspend fun ProcVidCon(context: Context, outputPath: String, mBinding: ActivitySecondBinding, angle : String): Uri?
@@ -857,6 +861,9 @@ suspend fun ProcVidCon(context: Context, outputPath: String, mBinding: ActivityS
     withContext(Dispatchers.Main){mBinding.CreatingProgressValue.visibility = GONE}
 
 
-    return Uri.fromFile(File(outputPath))
+    val outputFile = File(outputPath)
+    val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", outputFile)
+    Log.d("ErrorChecking", "Generated URI: $uri")
+    return uri
 }
 

@@ -147,7 +147,8 @@ class SecondActivity : ComponentActivity()
         galleryUri?.let{
             lifecycleScope.launch{
                 try{
-                    Log.d("ErrorChecking", "Gallery URI: ${galleryUri}")
+                    Log.d("ErrorChecking", "VideoUri is now galleryUri")
+                    Log.d("ErrorChecking", "galleryUri(RFAR): $galleryUri, galleryPath(RFAR): ${galleryUri?.path}")
                     val outputPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).absolutePath + "/edited_video.mp4"
                     val outputFilePath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)}/edited_video.mp4"
                     val outputFile = File(outputFilePath)
@@ -181,6 +182,7 @@ class SecondActivity : ComponentActivity()
                                 name
                             )
                         }
+                        Log.d("ErrorCheck", "RecordVideo edited URI: $editedUri")
                         Log.d("ErrorCheck","VideoSize: ${frameList.size}")
                         Log.d("ErrorCheck","LeftKneeListSize: ${leftKneeAngles.size}")
                         Log.d("ErrorCheck","RightKneeListSize: ${rightKneeAngles.size}")
@@ -214,15 +216,21 @@ class SecondActivity : ComponentActivity()
                         Log.d("ErrorCheck", "Right Ankle Min: $RightAnkleMin, Max: $RightAnkleMax")
                         // Log check to see Local Min/Max
                         val LeftKneeMin = FindLocalMin(leftKneeAngles)
+                        leftKneeMinAngles = LeftKneeMin.toMutableList()
                         val LeftKneeMax = FindLocalMax(leftKneeAngles)
+                        leftKneeMaxAngles = LeftKneeMax.toMutableList()
                         Log.d("ErrorCheck", "Left Knee Min: $LeftKneeMin, Max: $LeftKneeMax")
 
                         val RightKneeMin = FindLocalMin(rightKneeAngles)
+                        rightKneeMinAngles = RightKneeMin.toMutableList()
                         val RightKneeMax = FindLocalMax(rightKneeAngles)
+                        rightKneeMaxAngles = RightKneeMax.toMutableList()
                         Log.d("ErrorCheck", "Right Knee Min: $RightKneeMin, Max: $RightKneeMax")
 
                         val TorsoMin = FindLocalMin(torsoAngles)
+                        torsoMinAngles = TorsoMin.toMutableList()
                         val TorsoMax = FindLocalMax(torsoAngles)
+                        torsoMaxAngles = TorsoMax.toMutableList()
                         Log.d("ErrorCheck", "Torso Min: $TorsoMin, Max: $TorsoMax")
                         val stanceTimesL = calculateStanceTimes(leftAnkleAngles)
                         val avgStanceTimeL = averageStanceTime(stanceTimesL)
@@ -247,8 +255,8 @@ class SecondActivity : ComponentActivity()
                         Log.d("ErrorCheck", "Stride Length AVG(m): ${calcStrideLengthAvg(participantHeight.toFloat())}")
                         Log.d("ErrorCheck","---------------")
                         Log.d("ErrorCheck","Stride Angles: ${FindLocalMax(strideAngles)}")
-                        Log.d("ErrorCheck","Lowest Ankle Left Placements: ${minLeftAnkleY.max()}")
-                        Log.d("ErrorCheck","Lowest Ankle Right Placements: ${minRightAnkleY.max()}")
+                        Log.d("ErrorCheck","Lowest Ankle Left Placements: ${minLeftAnkleY.maxOrNull()}")
+                        Log.d("ErrorCheck","Lowest Ankle Right Placements: ${minRightAnkleY.maxOrNull()}")
 
                         Log.d("ErrorCheck","Stance Times Left(s): ${calculateStanceTimes(leftAnkleAngles)}")
                         Log.d("ErrorCheck","Stance Times Right(s): ${calculateStanceTimes(rightAnkleAngles)}")
@@ -265,6 +273,7 @@ class SecondActivity : ComponentActivity()
                                 name
                             )
                         }
+                        Log.d("ErrorCheck", "RecordVideo edited URI: $editedUri")
                         Log.d("ErrorCheck","VideoSize: ${frameList.size}")
                         Log.d("ErrorCheck","LeftKneeListSize: ${leftKneeAngles.size}")
                         Log.d("ErrorCheck","RightKneeListSize: ${rightKneeAngles.size}")
@@ -331,8 +340,8 @@ class SecondActivity : ComponentActivity()
                         Log.d("ErrorCheck", "Stride Length AVG(m): ${calcStrideLengthAvg(participantHeight.toFloat())}")
                         Log.d("ErrorCheck","---------------")
                         Log.d("ErrorCheck","Stride Angles: ${FindLocalMax(strideAngles)}")
-                        Log.d("ErrorCheck","Lowest Ankle Left Placements: ${minLeftAnkleY.max()}")
-                        Log.d("ErrorCheck","Lowest Ankle Right Placements: ${minRightAnkleY.max()}")
+                        Log.d("ErrorCheck","Lowest Ankle Left Placements: ${minLeftAnkleY.maxOrNull()}")
+                        Log.d("ErrorCheck","Lowest Ankle Right Placements: ${minRightAnkleY.maxOrNull()}")
 
                         Log.d("ErrorCheck","Stance Times Left(s): ${calculateStanceTimes(leftAnkleAngles)}")
                         Log.d("ErrorCheck","Stance Times Right(s): ${calculateStanceTimes(rightAnkleAngles)}")
@@ -349,12 +358,13 @@ class SecondActivity : ComponentActivity()
                     mBinding.calAngleBtn.visibility = VISIBLE
                     mBinding.chooseAglBtn.isClickable = TRUE
 
+                    Log.d("ErrorChecking", "URI PATH: ${editedUri?.path}, URI: $editedUri")
                     MediaScannerConnection.scanFile(
                         this@SecondActivity,
                         arrayOf(editedUri?.path),
                         null
                     ) { path, uri ->
-                        Log.d("GalleryUpdate", "File $path was scanned successfully with URI: $uri")
+                        Log.d("ErrorChecking", "File $path was scanned successfully with URI: $editedUri")
                     }
                     Log.d("ErrorChecking", "Function URI: ${editedUri}")
                     videoView.setVideoURI(editedUri)
@@ -530,14 +540,16 @@ class SecondActivity : ComponentActivity()
                     }
                     videoView.setOnCompletionListener {
 //                                handler.removeCallbacks(updateRunnable)
-                        Log.d("ErrorCheck", "Right Ankle Angles: ${rightAnkleAngles}")
-                        Log.d("ErrorCheck", "Left Ankle Angles: ${leftAnkleAngles}")
-                        Log.d("ErrorCheck", "Last Right Ankle: ${rightAnkleAngles[rightAnkleAngles.size-1]}\n")
-                        Log.d("ErrorCheck", "Last Left Ankle: ${leftAnkleAngles[leftAnkleAngles.size-1]}\n")
+//                        Log.d("ErrorCheck", "Right Ankle Angles: ${rightAnkleAngles}")
+//                        Log.d("ErrorCheck", "Left Ankle Angles: ${leftAnkleAngles}")
+//                        Log.d("ErrorCheck", "Last Right Ankle: ${rightAnkleAngles[rightAnkleAngles.size-1]}\n")
+//                        Log.d("ErrorCheck", "Last Left Ankle: ${leftAnkleAngles[leftAnkleAngles.size-1]}\n")
                     }
                 } catch(e:Exception){
-                    Log.e("ErrorChecking","Error processing video: ${e.message}")
-                }
+                    Log.e("ErrorChecking", "Error processing video: ${e.message}", e)
+                    //Log.e("ErrorChecking", "Output Path: $outputPath")
+                    Log.e("ErrorChecking", "Generated URI: ${editedUri}")
+                    e.printStackTrace()                }
             }
         } ?:run{
             Log.e("ErrorChecking", "Gallery URI is NULL")

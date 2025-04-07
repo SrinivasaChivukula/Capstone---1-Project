@@ -7,6 +7,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <Button
+        android:id="@+id/camera_btn"
+        android:layout_width="155dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/custom_button"
+        android:text="RECORD VIDEO"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.075"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.535"
+        tools:ignore="HardcodedText" />
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="175dp"
@@ -54,44 +70,69 @@
         app:layout_constraintHorizontal_bias="0.500"
         tools:ignore="HardcodedText" />
 
-    <EditText
-        android:id="@+id/height_id"
+    <LinearLayout
+        android:id="@+id/height_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:autofillHints="ParticipantID"
-        android:hint=" ENTER HEIGHT (INCHES) "
-        android:inputType="text"
-        android:textSize="20sp"
-        android:textAlignment="center"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.465"
-        app:layout_constraintHorizontal_bias="0.500"
-        tools:ignore="HardcodedText,TextFields" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.465">
+
+        <Spinner
+            android:id="@+id/feet_spinner"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:spinnerMode="dropdown"
+            android:padding="0dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_feet"
+            android:textSize="20sp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="12dp" />
+
+        <Spinner
+            android:id="@+id/inches_spinner"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:spinnerMode="dropdown"
+            android:padding="0dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/label_inches"
+            android:textSize="20sp"
+            android:layout_marginStart="4dp" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/open_gal_btn"
-        android:layout_width="175dp"
+        android:layout_width="155dp"
         android:layout_height="wrap_content"
+        android:background="@drawable/custom_button"
         android:text="SELECT VIDEO"
         android:textColor="@color/white"
         android:textSize="20sp"
-        android:background="@drawable/custom_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.500"
+        app:layout_constraintHorizontal_bias="0.925"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.540"
+        app:layout_constraintVertical_bias="0.535"
         tools:ignore="HardcodedText" />
 
     <Button
         android:id="@+id/confirm_vid_btn"
-        android:layout_width="175dp"
+        android:layout_width="225dp"
         android:layout_height="wrap_content"
-        android:text="START GAIT"
+        android:text="PERFORM ANALYSIS"
         android:background="@drawable/custom_button"
         android:textColor="@color/white"
         android:textSize="20sp"
