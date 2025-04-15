@@ -152,17 +152,18 @@
         android:layout_height="wrap_content"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/cal_angle_btn"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/HipAngle">
 
         <VideoView
             android:id="@+id/video_viewer"
             android:layout_width="fill_parent"
-            android:layout_height="400dp"
+            android:layout_height="fill_parent"
             android:layout_gravity="center"
-            android:visibility="invisible" />
+            android:visibility="invisible"
+            />
 
     </FrameLayout>
 
