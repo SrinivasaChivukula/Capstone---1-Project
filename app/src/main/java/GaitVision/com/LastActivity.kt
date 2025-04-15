@@ -25,41 +25,166 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.Dispatcher
+import org.tensorflow.lite.Interpreter
+import org.tensorflow.lite.support.common.FileUtil
+import java.nio.ByteBuffer
+import java.nio.ByteOrder
 import kotlin.math.roundToLong
 
+import java.io.InputStream
+import kotlin.math.pow
+import kotlin.math.sqrt
+
 class LastActivity : ComponentActivity() {
+
+    fun loadFloatBinFile(context: Context, filename: String): FloatArray {
+        val inputStream = context.assets.open(filename)
+        val bytes = inputStream.readBytes()
+        inputStream.close()
+
+        val buffer = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN)
+        val numFloats = bytes.size / 4
+
+        val result = FloatArray(numFloats)
+        for (i in 0 until numFloats) {
+            result[i] = buffer.float
+        }
+
+        return result
+    }
+
+    fun loadNpyFloatArray(assetStream: InputStream): FloatArray {
+        val header = ByteArray(128)
+        assetStream.read(header)
+
+        // Skip to data
+        val data = assetStream.readBytes()
+        val buffer = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN)
+
+        val floatList = mutableListOf<Float>()
+        while (buffer.hasRemaining()) {
+            floatList.add(buffer.float)
+        }
+
+        return floatList.toFloatArray()
+    }
+
+    fun euclideanDistance(a: FloatArray, b: FloatArray): Float {
+        var sum = 0f  // Initialize a sum variable for the squared differences
+
+        // Loop through each pair of elements from a and b
+        for (i in a.indices) {
+            val diff = a[i] - b[i]  // Calculate the difference between corresponding elements
+            sum += diff * diff       // Square the difference and add to the sum
+        }
+
+        return sqrt(sum)  // Return the square root of the sum
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_last)
 
-            if(!com.chaquo.python.Python.isStarted())
-            {
-                Python.start(AndroidPlatform(this@LastActivity))
-            }
-            lifecycleScope.launch{
-            val py = Python.getInstance()
-            val pyModule = py.getModule("scoreScript")
+//            if(!com.chaquo.python.Python.isStarted())
+//            {
+//                Python.start(AndroidPlatform(this@LastActivity))
+//            }
+//            lifecycleScope.launch{
+//            val py = Python.getInstance()
+//            val pyModule = py.getModule("scoreScript")
+//
+//
+//            var result : Double
+//            result = withContext(Dispatchers.IO)
+//            {
+//                pyModule.callAttr("getScore",
+//                    "rightKneeMinAngles", rightKneeMinAngles.toTypedArray(),
+//                    "rightKneeMaxAngles", rightKneeMaxAngles.toTypedArray(),
+//                    "leftKneeMinAngles", leftKneeMinAngles.toTypedArray(),
+//                    "leftKneeMaxAngles", leftKneeMaxAngles.toTypedArray(),
+//                    "torsoAnglesMin", torsoMinAngles.toTypedArray(),
+//                    "torsoAnglesMax", torsoMaxAngles.toTypedArray()).toDouble()
+//            }
 
+//            // temp random number generator for activity_last
+//                withContext(Dispatchers.Main) {
+//                    val scoreTextView = findViewById<TextView>(R.id.score_textview)
+//                    Log.d("PythonData", "Receiving: $result")
+//                    scoreTextView.text = (result * 100).roundToLong().toString()
+//                }
+//        }
 
-            var result : Double
-            result = withContext(Dispatchers.IO)
-            {
-                pyModule.callAttr("getScore",
-                    "rightKneeMinAngles", rightKneeMinAngles.toTypedArray(),
-                    "rightKneeMaxAngles", rightKneeMaxAngles.toTypedArray(),
-                    "leftKneeMinAngles", leftKneeMinAngles.toTypedArray(),
-                    "leftKneeMaxAngles", leftKneeMaxAngles.toTypedArray(),
-                    "torsoAnglesMin", torsoMinAngles.toTypedArray(),
-                    "torsoAnglesMax", torsoMaxAngles.toTypedArray()).toDouble()
-            }
+        val inputData = floatArrayOf(
+            leftKneeMinAngles.average().toFloat(),
+            leftKneeMaxAngles.average().toFloat(),
+            rightKneeMinAngles.average().toFloat(),
+            rightKneeMaxAngles.average().toFloat(),
+            torsoMinAngles.average().toFloat(),
+            torsoMaxAngles.average().toFloat(),
+            calcStrideLengthAvg(participantHeight.toFloat()*39.37F),
+            leftKneeMaxAngles.average().toFloat() - leftKneeMinAngles.average().toFloat(),
+            rightKneeMaxAngles.average().toFloat() - rightKneeMinAngles.average().toFloat()
+        )
+        val tfliteModel = FileUtil.loadMappedFile(this, "encoder_model.tflite")
+        val interpreter = Interpreter(tfliteModel)
 
-            // temp random number generator for activity_last
-                withContext(Dispatchers.Main) {
-                    val scoreTextView = findViewById<TextView>(R.id.score_textview)
-                    Log.d("PythonData", "Receiving: $result")
-                    scoreTextView.text = (result * 100).roundToLong().toString()
-                }
+        val scalerMean = loadFloatBinFile(this, "scaler_mean.bin")
+        val scalerScale = loadFloatBinFile(this, "scaler_scale.bin")
+
+        val minScaleValue = 1e-15f // Define a small threshold for scaler values
+        val safeScalerScale = scalerScale.map {
+            if (it < minScaleValue) minScaleValue else it
+        }.toFloatArray()
+
+        val scaledInput = FloatArray(inputData.size) { i ->
+            (inputData[i] - scalerMean[i]) / safeScalerScale[i]
         }
+
+        val output = Array(1){FloatArray(2)}
+        val input = arrayOf(scaledInput)
+
+        interpreter.run(input, output)
+
+        val cleanCentroidStream = assets.open("clean_centroid.npy")
+        val impairedCentroidStream = assets.open("impaired_centroid.npy")
+
+
+        val cleanCentroid = loadNpyFloatArray(cleanCentroidStream)
+        val impairedCentroid = loadNpyFloatArray(impairedCentroidStream)
+
+
+        Log.d("ErrorCheck", "ScalerMean: ${scalerMean.contentToString()}")
+        Log.d("ErrorCheck", "ScalerScale: ${scalerScale.contentToString()}")
+        Log.d("ErrorCheck", "InputData: ${inputData.contentToString()}")
+        Log.d("ErrorCheck", "ScaledInputData: ${input[0].joinToString(", ")}")
+        Log.d("ErrorCheck", "Output: ${output[0].contentToString()} Length: ${output[0].size}")
+        Log.d("ErrorCheck", "Clean Centroid: ${cleanCentroid.contentToString()} Length: ${cleanCentroid.size}")
+        Log.d("ErrorCheck", "Impaired Centroid: ${impairedCentroid.contentToString()} Length: ${impairedCentroid.size}")
+
+        // Calculate the Euclidean distance between the encoded output and the centroids
+        val distClean = euclideanDistance(output[0], cleanCentroid)
+        val distImpaired = euclideanDistance(output[0], impairedCentroid)
+        Log.d("ErrorCheck", "DistClean: $distClean")
+        Log.d("ErrorCheck", "DistImpaired: $distImpaired")
+
+
+        // Calculate the gait index
+        val gaitIndexUnscaled = 1 - (distClean / (distClean + distImpaired))
+        val gaitIndexScaled = gaitIndexUnscaled * 100  // Scale it from 0 to 100
+
+        // Print or use the gait index
+        Log.d("ErrorCheck", "Gait Index (Unscaled): $gaitIndexUnscaled")
+        Log.d("ErrorCheck", "Gait Index (Scaled): $gaitIndexScaled")
+
+        println("Gait Index (Unscaled): $gaitIndexUnscaled")
+        println("Gait Index (Scaled): $gaitIndexScaled")
+
+
+        var scoreTextView = findViewById<TextView>(R.id.score_textview)
+        //scoreTextView.textSize = 30F
+        //scoreTextView.text = String.format("%.2f", gaitIndexScaled)
+        scoreTextView.text = gaitIndexScaled.roundToLong().toString()
+
 
         val randomScore = (50..70).random()
         //scoreTextView.text = result.toString()

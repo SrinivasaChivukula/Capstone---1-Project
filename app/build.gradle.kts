@@ -65,11 +65,8 @@ chaquopy {
         buildPython("C:\\Users\\tspen\\AppData\\Local\\Programs\\Python\\Python39\\python.exe")
 
         pip {
-            install("pandas==1.5.0")
             install("numpy==1.23.3")
-            install("scikit-learn")
-            install("scipy==1.8.1")
-            install("threadpoolctl==2.1.0")
+            install("joblib")
 
             options("--only-binary=:all:")
         }
@@ -132,5 +129,8 @@ dependencies {
     implementation ("com.google.android.material:material:1.9.0")
 
     implementation("com.chaquo.python:gradle:14.0.2")
+
+    implementation("org.tensorflow:tensorflow-lite:2.13.0")
+    implementation("org.tensorflow:tensorflow-lite-support:0.4.4")
 
 }
