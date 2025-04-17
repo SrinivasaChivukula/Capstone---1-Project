@@ -532,15 +532,16 @@ class GraphActivity : ComponentActivity() {
 }
 
 fun ensureLandscapeOrientation(bitmap: Bitmap, orientation: Int?): Bitmap {
-    return when (orientation) {
-        90, 270 -> {
-            // Rotate 90 degrees if portrait (0°) or upside down (180°)
-            val matrix = Matrix().apply { postRotate(90f) }
-            Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
-        }
-        0, 180 -> bitmap // Already landscape
-        else -> bitmap // If orientation is null or unknown, return as-is
-    }
+//    return when (orientation) {
+//        90, 270 -> {
+//            // Rotate 90 degrees if portrait (0°) or upside down (180°)
+//            val matrix = Matrix().apply { postRotate(90f) }
+//            Bitmap.createBitmap(bitmap, 0, 0, bitmap.width, bitmap.height, matrix, true)
+//        }
+//        0, 180 -> bitmap // Already landscape
+//        else -> bitmap // If orientation is null or unknown, return as-is
+//    }
+    return bitmap
 }
 
 /*
