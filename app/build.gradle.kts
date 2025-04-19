@@ -3,7 +3,6 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
 
-    id("com.chaquo.python")
 }
 
 android {
@@ -50,28 +49,8 @@ android {
         enable = true
     }
 
-    flavorDimensions += "pyVersion"
-    productFlavors{
-        create("py39") { dimension = "pyVersion" }
-    }
 }
 
-chaquopy {
-    productFlavors {
-        getByName("py39") { version = "3.9" }
-    }
-    defaultConfig {
-        version = "3.9"
-        buildPython("C:\\Users\\tspen\\AppData\\Local\\Programs\\Python\\Python39\\python.exe")
-
-        pip {
-            install("numpy==1.23.3")
-            install("joblib")
-
-            options("--only-binary=:all:")
-        }
-    }
-}
 
 dependencies {
 
@@ -128,7 +107,6 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
     implementation ("com.google.android.material:material:1.9.0")
 
-    implementation("com.chaquo.python:gradle:14.0.2")
 
     implementation("org.tensorflow:tensorflow-lite:2.13.0")
     implementation("org.tensorflow:tensorflow-lite-support:0.4.4")

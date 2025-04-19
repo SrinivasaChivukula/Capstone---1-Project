@@ -12,19 +12,11 @@ import android.content.Intent
 import android.os.Environment
 import android.util.Log
 import android.view.View
-import android.widget.EditText
 import android.widget.PopupMenu
 import androidx.activity.ComponentActivity
 import java.io.File
 import java.io.FileOutputStream
 import android.widget.TextView
-import androidx.lifecycle.lifecycleScope
-import com.chaquo.python.Python
-import com.chaquo.python.android.AndroidPlatform
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import okhttp3.Dispatcher
 import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.support.common.FileUtil
 import java.nio.ByteBuffer
@@ -32,7 +24,6 @@ import java.nio.ByteOrder
 import kotlin.math.roundToLong
 
 import java.io.InputStream
-import kotlin.math.pow
 import kotlin.math.sqrt
 
 class LastActivity : ComponentActivity() {
@@ -85,34 +76,6 @@ class LastActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_last)
 
-//            if(!com.chaquo.python.Python.isStarted())
-//            {
-//                Python.start(AndroidPlatform(this@LastActivity))
-//            }
-//            lifecycleScope.launch{
-//            val py = Python.getInstance()
-//            val pyModule = py.getModule("scoreScript")
-//
-//
-//            var result : Double
-//            result = withContext(Dispatchers.IO)
-//            {
-//                pyModule.callAttr("getScore",
-//                    "rightKneeMinAngles", rightKneeMinAngles.toTypedArray(),
-//                    "rightKneeMaxAngles", rightKneeMaxAngles.toTypedArray(),
-//                    "leftKneeMinAngles", leftKneeMinAngles.toTypedArray(),
-//                    "leftKneeMaxAngles", leftKneeMaxAngles.toTypedArray(),
-//                    "torsoAnglesMin", torsoMinAngles.toTypedArray(),
-//                    "torsoAnglesMax", torsoMaxAngles.toTypedArray()).toDouble()
-//            }
-
-//            // temp random number generator for activity_last
-//                withContext(Dispatchers.Main) {
-//                    val scoreTextView = findViewById<TextView>(R.id.score_textview)
-//                    Log.d("PythonData", "Receiving: $result")
-//                    scoreTextView.text = (result * 100).roundToLong().toString()
-//                }
-//        }
 
         val inputData = floatArrayOf(
             leftKneeMinAngles.average().toFloat(),
