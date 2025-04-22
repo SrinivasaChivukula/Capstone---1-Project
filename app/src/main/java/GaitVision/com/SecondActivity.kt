@@ -36,12 +36,14 @@ class SecondActivity : ComponentActivity()
     private val handler = Handler(Looper.getMainLooper())
     private var updateRunnable : Runnable? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?)
     {
         super.onCreate(savedInstanceState)
 
         mBinding = ActivitySecondBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
+
 
         //Stop runnable if user wants to go back to first page
         onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true)
@@ -109,6 +111,8 @@ class SecondActivity : ComponentActivity()
             false
         }
 
+        processAngle("ALL ANGLES")
+
         //Display popup menu when user clicks select angle
         chooseAngleBtn.setOnClickListener {
             popupMenu.show()
@@ -132,341 +136,388 @@ class SecondActivity : ComponentActivity()
 
     }
 
-    fun processAngle(angle: String)
-    {
+    fun processAngle(angle: String) {
+
+
         val angleChoice = findViewById<TextView>(R.id.choose_agl_btn)
         val name = angle
         angleChoice.text = name
-
-        count = 0
 
         val videoView = findViewById<VideoView>(R.id.video_viewer)
 
         val mediaController = MediaController(this)
         videoView.setMediaController(mediaController)
+        //Runnable for updating angles above video with angle for current frame
+        updateRunnable = object : Runnable {
+            override fun run() {
+                if (videoView.isPlaying) {
+                    var currentPos = videoView.currentPosition
+                    var interval = 33
+                    var index = currentPos / interval
+                    if (name == "HIP ANGLES") {
+                        mBinding.AnkleAngle.visibility = GONE
+                        mBinding.KneeAngle.visibility = GONE
+                        mBinding.HipAngle.visibility = VISIBLE
+                        mBinding.TorsoAngle.visibility = GONE
+                        var string = ""
+                        if (index < rightHipAngles.size) {
+                            string += "Right Hip:\n" + String.format("%.1f", rightHipAngles[index])
 
-        galleryUri?.let{
-            lifecycleScope.launch{
-                try{
-                    Log.d("ErrorChecking", "VideoUri is now galleryUri")
-                    Log.d("ErrorChecking", "galleryUri(RFAR): $galleryUri, galleryPath(RFAR): ${galleryUri?.path}")
-                    val outputFilePath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)}/edited_video.mp4"
-                    val outputFile = File(outputFilePath)
-                    if(outputFile.exists())
-                    {
-                        Log.d("ErrorChecking", "Video Exists")
-                        outputFile.delete()
+                        } else {
+                            string += "Right Hip:\nERROR"
+
+                        }
+                        if (index < leftHipAngles.size) {
+                            string += "\nLeft Hip:\n" + String.format("%.1f", leftHipAngles[index])
+                        } else {
+                            string += "\nLeft Hip:\nERROR"
+                        }
+                        mBinding.HipAngle.text = string
+                    } else if (name == "KNEE ANGLES") {
+                        mBinding.AnkleAngle.visibility = GONE
+                        mBinding.KneeAngle.visibility = VISIBLE
+                        mBinding.HipAngle.visibility = GONE
+                        mBinding.TorsoAngle.visibility = GONE
+                        var string = ""
+                        if (index < rightKneeAngles.size) {
+                            string += "Right Knee:\n" + String.format(
+                                "%.1f",
+                                rightKneeAngles[index]
+                            )
+
+                        } else {
+                            string += "Right Knee:\nERROR"
+
+                        }
+                        if (index < leftKneeAngles.size) {
+                            string += "\nLeft Knee:\n" + String.format(
+                                "%.1f",
+                                leftKneeAngles[index]
+                            )
+                        } else {
+                            string += "\nLeft Knee:\nERROR"
+                        }
+                        mBinding.KneeAngle.text = string
+                    } else if (name == "ANKLE ANGLES") {
+                        mBinding.AnkleAngle.visibility = VISIBLE
+                        mBinding.KneeAngle.visibility = GONE
+                        mBinding.HipAngle.visibility = GONE
+                        mBinding.TorsoAngle.visibility = GONE
+                        var string = ""
+                        if (index < rightAnkleAngles.size) {
+                            string += "Right Ankle:\n" + String.format(
+                                "%.1f",
+                                rightAnkleAngles[index]
+                            )
+
+                        } else {
+                            string += "Right Ankle:\nERROR"
+
+                        }
+                        if (index < leftAnkleAngles.size) {
+                            string += "\nLeft Ankle:\n" + String.format(
+                                "%.1f",
+                                leftAnkleAngles[index]
+                            )
+                        } else {
+                            string += "\nLeft Ankle:\nERROR"
+                        }
+                        mBinding.AnkleAngle.text = string
+                    } else if (name == "TORSO ANGLE") {
+                        mBinding.AnkleAngle.visibility = GONE
+                        mBinding.KneeAngle.visibility = GONE
+                        mBinding.HipAngle.visibility = GONE
+                        mBinding.TorsoAngle.visibility = VISIBLE
+                        var string = ""
+                        if (index < torsoAngles.size) {
+                            string += "\nTorso:\n" + String.format("%.1f", torsoAngles[index])
+
+                        } else {
+                            string += "\nTorso:\nERROR"
+                        }
+                        mBinding.TorsoAngle.text = string
+                    } else if (name == "ALL ANGLES") {
+                        mBinding.AnkleAngle.visibility = VISIBLE
+                        mBinding.KneeAngle.visibility = VISIBLE
+                        mBinding.HipAngle.visibility = VISIBLE
+                        mBinding.TorsoAngle.visibility = VISIBLE
+                        var stringA = ""
+                        if (index < rightAnkleAngles.size) {
+                            stringA += "Right Ankle:\n" + String.format(
+                                "%.1f",
+                                rightAnkleAngles[index]
+                            )
+
+                        } else {
+                            stringA += "Right Ankle:\nERROR"
+
+                        }
+                        if (index < leftAnkleAngles.size) {
+                            stringA += "\nLeft Ankle:\n" + String.format(
+                                "%.1f",
+                                leftAnkleAngles[index]
+                            )
+                        } else {
+                            stringA += "\nLeft Ankle:\nERROR"
+                        }
+                        mBinding.AnkleAngle.text = stringA
+
+                        var stringK = ""
+                        if (index < rightKneeAngles.size) {
+                            stringK += "Right Knee:\n" + String.format(
+                                "%.1f",
+                                rightKneeAngles[index]
+                            )
+
+                        } else {
+                            stringK += "Right Knee:\nERROR"
+
+                        }
+                        if (index < leftKneeAngles.size) {
+                            stringK += "\nLeft Knee:\n" + String.format(
+                                "%.1f",
+                                leftKneeAngles[index]
+                            )
+                        } else {
+                            stringK += "\nLeft Knee:\nERROR"
+                        }
+                        mBinding.KneeAngle.text = stringK
+
+                        var stringH = ""
+                        if (index < rightHipAngles.size) {
+                            stringH += "Right Hip:\n" + String.format("%.1f", rightHipAngles[index])
+                        } else {
+                            stringH += "Right Hip:\nERROR"
+
+                        }
+                        if (index < leftHipAngles.size) {
+                            stringH += "\nLeft Hip:\n" + String.format("%.1f", leftHipAngles[index])
+                        } else {
+                            stringH += "\nLeft Hip:\nERROR"
+                        }
+                        mBinding.HipAngle.text = stringH
+
+                        var stringT = ""
+                        if (index < torsoAngles.size) {
+                            stringT += "\nTorso:\n" + String.format("%.1f", torsoAngles[index])
+
+                        } else {
+                            stringT += "\nTorso:\nERROR"
+                        }
+                        mBinding.TorsoAngle.text = stringT
                     }
-                    Log.d("ErrorChecking", "Before function")
+                }
 
-                    //Update UI to remove all progress bars and text from screen and make angle
-                    //selection button unclickable
-                    mBinding.videoViewer.visibility = GONE
-                    mBinding.SplittingText.visibility = GONE
-                    mBinding.CreationText.visibility = GONE
-                    mBinding.splittingBar.visibility = GONE
-                    mBinding.VideoCreation.visibility = GONE
-                    mBinding.splittingProgressValue.visibility = GONE
-                    mBinding.CreatingProgressValue.visibility = GONE
-                    mBinding.selectAngleText.visibility = GONE
-                    mBinding.AnkleAngle.visibility = GONE
-                    mBinding.KneeAngle.visibility = GONE
-                    mBinding.HipAngle.visibility = GONE
-                    mBinding.TorsoAngle.visibility = GONE
-                    mBinding.chooseAglBtn.isClickable = FALSE
-                    if(editedUri == null)
-                    {
-                        editedUri = withContext(Dispatchers.IO)
-                        {
-                            ProcVidEmpty(
-                                this@SecondActivity,
-                                outputFilePath,
-                                mBinding
+                handler.postDelayed(this, 33)
+            }
+        }
+
+        count = 0
+
+
+
+        if (editedUri != null) {
+            //Log check video size and list sizes
+            Log.d("ErrorCheck", "RecordVideo edited URI: $editedUri")
+            Log.d("ErrorCheck", "VideoSize: ${frameList.size}")
+            Log.d("ErrorCheck", "LeftKneeListSize: ${leftKneeAngles.size}")
+            Log.d("ErrorCheck", "RightKneeListSize: ${rightKneeAngles.size}")
+            Log.d("ErrorCheck", "LeftAnkleListSize: ${leftAnkleAngles.size}")
+            Log.d("ErrorCheck", "RightAnkleListSize: ${rightAnkleAngles.size}")
+            Log.d("ErrorCheck", "LeftHipListSize: ${leftHipAngles.size}")
+            Log.d("ErrorCheck", "RightHipListSize: ${rightHipAngles.size}")
+            Log.d("ErrorCheck", "TorsoListSize: ${torsoAngles.size}")
+            Log.d("ErrorCheck", "Count: $count")
+
+            // Log check to see Local Min/Max
+            val LeftHipMin = FindLocalMin(leftHipAngles)
+            val LeftHipMax = FindLocalMax(leftHipAngles)
+            val RightHipMin = FindLocalMin(rightHipAngles)
+            val RightHipMax = FindLocalMax(rightHipAngles)
+            val LeftAnkleMin = FindLocalMin(leftAnkleAngles)
+            val LeftAnkleMax = FindLocalMax(leftAnkleAngles)
+            val RightAnkleMin = FindLocalMin(rightAnkleAngles)
+            val RightAnkleMax = FindLocalMax(rightAnkleAngles)
+            val LeftKneeMin = FindLocalMin(leftKneeAngles)
+            leftKneeMinAngles = LeftKneeMin.toMutableList()
+            val LeftKneeMax = FindLocalMax(leftKneeAngles)
+            leftKneeMaxAngles = LeftKneeMax.toMutableList()
+            val RightKneeMin = FindLocalMin(rightKneeAngles)
+            rightKneeMinAngles = RightKneeMin.toMutableList()
+            val RightKneeMax = FindLocalMax(rightKneeAngles)
+            rightKneeMaxAngles = RightKneeMax.toMutableList()
+            val TorsoMin = FindLocalMin(torsoAngles)
+            torsoMinAngles = TorsoMin.toMutableList()
+            val TorsoMax = FindLocalMax(torsoAngles)
+            torsoMaxAngles = TorsoMax.toMutableList()
+            Log.d("ErrorCheck", "Left Hip Min: $LeftHipMin, Max: $LeftHipMax")
+            Log.d("ErrorCheck", "Right Hip Min: $RightHipMin, Max: $RightHipMax")
+            Log.d("ErrorCheck", "Left Ankle Min: $LeftAnkleMin, Max: $LeftAnkleMax")
+            Log.d("ErrorCheck", "Right Ankle Min: $RightAnkleMin, Max: $RightAnkleMax")
+            Log.d("ErrorCheck", "Left Knee Min: $LeftKneeMin, Max: $LeftKneeMax")
+            Log.d("ErrorCheck", "Right Knee Min: $RightKneeMin, Max: $RightKneeMax")
+            Log.d("ErrorCheck", "Torso Min: $TorsoMin, Max: $TorsoMax")
+            var sum = calcStrideLength(participantHeight.toFloat())
+            var strideSpeedAvg = sum / (videoLength * 0.000001)
+            Log.d("ErrorCheck", "Stride Speed AVG(m/s): ${strideSpeedAvg}")
+            Log.d(
+                "ErrorCheck",
+                "Stride Length AVG(m): ${calcStrideLengthAvg(participantHeight.toFloat())}"
+            )
+            Log.d("ErrorCheck", "Stride Angles: ${FindLocalMax(strideAngles)}")
+
+            mBinding.SplittingText.visibility = GONE
+            mBinding.CreationText.visibility = GONE
+            mBinding.splittingBar.visibility = GONE
+            mBinding.VideoCreation.visibility = GONE
+            mBinding.splittingProgressValue.visibility = GONE
+            mBinding.CreatingProgressValue.visibility = GONE
+            mBinding.videoViewer.visibility = VISIBLE
+            mBinding.calAngleBtn.visibility = VISIBLE
+            mBinding.chooseAglBtn.isClickable = TRUE
+
+            videoView.setVideoURI(editedUri)
+            videoView.setOnPreparedListener {
+                videoView.start()
+                handler.post(updateRunnable!!)
+            }
+        } else {
+            galleryUri?.let {
+                lifecycleScope.launch {
+                    try {
+                        Log.d("ErrorChecking", "VideoUri is now galleryUri")
+                        Log.d(
+                            "ErrorChecking",
+                            "galleryUri(RFAR): $galleryUri, galleryPath(RFAR): ${galleryUri?.path}"
+                        )
+                        val outputFilePath =
+                            "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)}/edited_video.mp4"
+                        val outputFile = File(outputFilePath)
+                        if (outputFile.exists()) {
+                            Log.d("ErrorChecking", "Video Exists")
+                            outputFile.delete()
+                        }
+                        Log.d("ErrorChecking", "Before function")
+
+                        //Update UI to remove all progress bars and text from screen and make angle
+                        //selection button unclickable
+                        mBinding.videoViewer.visibility = GONE
+                        mBinding.SplittingText.visibility = GONE
+                        mBinding.CreationText.visibility = GONE
+                        mBinding.splittingBar.visibility = GONE
+                        mBinding.VideoCreation.visibility = GONE
+                        mBinding.splittingProgressValue.visibility = GONE
+                        mBinding.CreatingProgressValue.visibility = GONE
+                        mBinding.selectAngleText.visibility = GONE
+                        mBinding.AnkleAngle.visibility = GONE
+                        mBinding.KneeAngle.visibility = GONE
+                        mBinding.HipAngle.visibility = GONE
+                        mBinding.TorsoAngle.visibility = GONE
+                        mBinding.chooseAglBtn.isClickable = FALSE
+                        if (editedUri == null) {
+                            editedUri = withContext(Dispatchers.IO)
+                            {
+                                ProcVidEmpty(
+                                    this@SecondActivity,
+                                    outputFilePath,
+                                    mBinding
+                                )
+                            }
+                            //Log check video size and list sizes
+                            Log.d("ErrorCheck", "RecordVideo edited URI: $editedUri")
+                            Log.d("ErrorCheck", "VideoSize: ${frameList.size}")
+                            Log.d("ErrorCheck", "LeftKneeListSize: ${leftKneeAngles.size}")
+                            Log.d("ErrorCheck", "RightKneeListSize: ${rightKneeAngles.size}")
+                            Log.d("ErrorCheck", "LeftAnkleListSize: ${leftAnkleAngles.size}")
+                            Log.d("ErrorCheck", "RightAnkleListSize: ${rightAnkleAngles.size}")
+                            Log.d("ErrorCheck", "LeftHipListSize: ${leftHipAngles.size}")
+                            Log.d("ErrorCheck", "RightHipListSize: ${rightHipAngles.size}")
+                            Log.d("ErrorCheck", "TorsoListSize: ${torsoAngles.size}")
+                            Log.d("ErrorCheck", "Count: $count")
+
+                            // Log check to see Local Min/Max
+                            val LeftHipMin = FindLocalMin(leftHipAngles)
+                            val LeftHipMax = FindLocalMax(leftHipAngles)
+                            val RightHipMin = FindLocalMin(rightHipAngles)
+                            val RightHipMax = FindLocalMax(rightHipAngles)
+                            val LeftAnkleMin = FindLocalMin(leftAnkleAngles)
+                            val LeftAnkleMax = FindLocalMax(leftAnkleAngles)
+                            val RightAnkleMin = FindLocalMin(rightAnkleAngles)
+                            val RightAnkleMax = FindLocalMax(rightAnkleAngles)
+                            val LeftKneeMin = FindLocalMin(leftKneeAngles)
+                            leftKneeMinAngles = LeftKneeMin.toMutableList()
+                            val LeftKneeMax = FindLocalMax(leftKneeAngles)
+                            leftKneeMaxAngles = LeftKneeMax.toMutableList()
+                            val RightKneeMin = FindLocalMin(rightKneeAngles)
+                            rightKneeMinAngles = RightKneeMin.toMutableList()
+                            val RightKneeMax = FindLocalMax(rightKneeAngles)
+                            rightKneeMaxAngles = RightKneeMax.toMutableList()
+                            val TorsoMin = FindLocalMin(torsoAngles)
+                            torsoMinAngles = TorsoMin.toMutableList()
+                            val TorsoMax = FindLocalMax(torsoAngles)
+                            torsoMaxAngles = TorsoMax.toMutableList()
+                            Log.d("ErrorCheck", "Left Hip Min: $LeftHipMin, Max: $LeftHipMax")
+                            Log.d("ErrorCheck", "Right Hip Min: $RightHipMin, Max: $RightHipMax")
+                            Log.d("ErrorCheck", "Left Ankle Min: $LeftAnkleMin, Max: $LeftAnkleMax")
+                            Log.d(
+                                "ErrorCheck",
+                                "Right Ankle Min: $RightAnkleMin, Max: $RightAnkleMax"
+                            )
+                            Log.d("ErrorCheck", "Left Knee Min: $LeftKneeMin, Max: $LeftKneeMax")
+                            Log.d("ErrorCheck", "Right Knee Min: $RightKneeMin, Max: $RightKneeMax")
+                            Log.d("ErrorCheck", "Torso Min: $TorsoMin, Max: $TorsoMax")
+                            var sum = calcStrideLength(participantHeight.toFloat())
+                            var strideSpeedAvg = sum / (videoLength * 0.000001)
+                            Log.d("ErrorCheck", "Stride Speed AVG(m/s): ${strideSpeedAvg}")
+                            Log.d(
+                                "ErrorCheck",
+                                "Stride Length AVG(m): ${calcStrideLengthAvg(participantHeight.toFloat())}"
+                            )
+                            Log.d("ErrorCheck", "Stride Angles: ${FindLocalMax(strideAngles)}")
+                        }
+
+                        //Update UI to remove all video progressing progress bars and text and make
+                        //Angle selection and analysis button clickable and visible.
+                        mBinding.SplittingText.visibility = GONE
+                        mBinding.CreationText.visibility = GONE
+                        mBinding.splittingBar.visibility = GONE
+                        mBinding.VideoCreation.visibility = GONE
+                        mBinding.splittingProgressValue.visibility = GONE
+                        mBinding.CreatingProgressValue.visibility = GONE
+                        mBinding.videoViewer.visibility = VISIBLE
+                        mBinding.calAngleBtn.visibility = VISIBLE
+                        mBinding.chooseAglBtn.isClickable = TRUE
+
+                        Log.d("ErrorChecking", "URI PATH: ${editedUri?.path}, URI: $editedUri")
+                        MediaScannerConnection.scanFile(
+                            this@SecondActivity,
+                            arrayOf(editedUri?.path),
+                            null
+                        ) { path, uri ->
+                            Log.d(
+                                "ErrorChecking",
+                                "File $path was scanned successfully with URI: $editedUri"
                             )
                         }
-                        //Log check video size and list sizes
-                        Log.d("ErrorCheck", "RecordVideo edited URI: $editedUri")
-                        Log.d("ErrorCheck","VideoSize: ${frameList.size}")
-                        Log.d("ErrorCheck","LeftKneeListSize: ${leftKneeAngles.size}")
-                        Log.d("ErrorCheck","RightKneeListSize: ${rightKneeAngles.size}")
-                        Log.d("ErrorCheck","LeftAnkleListSize: ${leftAnkleAngles.size}")
-                        Log.d("ErrorCheck","RightAnkleListSize: ${rightAnkleAngles.size}")
-                        Log.d("ErrorCheck","LeftHipListSize: ${leftHipAngles.size}")
-                        Log.d("ErrorCheck","RightHipListSize: ${rightHipAngles.size}")
-                        Log.d("ErrorCheck","TorsoListSize: ${torsoAngles.size}")
-                        Log.d("ErrorCheck","Count: $count")
-
-                        // Log check to see Local Min/Max
-                        val LeftHipMin = FindLocalMin(leftHipAngles)
-                        val LeftHipMax = FindLocalMax(leftHipAngles)
-                        val RightHipMin = FindLocalMin(rightHipAngles)
-                        val RightHipMax = FindLocalMax(rightHipAngles)
-                        val LeftAnkleMin = FindLocalMin(leftAnkleAngles)
-                        val LeftAnkleMax = FindLocalMax(leftAnkleAngles)
-                        val RightAnkleMin = FindLocalMin(rightAnkleAngles)
-                        val RightAnkleMax = FindLocalMax(rightAnkleAngles)
-                        val LeftKneeMin = FindLocalMin(leftKneeAngles)
-                        leftKneeMinAngles = LeftKneeMin.toMutableList()
-                        val LeftKneeMax = FindLocalMax(leftKneeAngles)
-                        leftKneeMaxAngles = LeftKneeMax.toMutableList()
-                        val RightKneeMin = FindLocalMin(rightKneeAngles)
-                        rightKneeMinAngles = RightKneeMin.toMutableList()
-                        val RightKneeMax = FindLocalMax(rightKneeAngles)
-                        rightKneeMaxAngles = RightKneeMax.toMutableList()
-                        val TorsoMin = FindLocalMin(torsoAngles)
-                        torsoMinAngles = TorsoMin.toMutableList()
-                        val TorsoMax = FindLocalMax(torsoAngles)
-                        torsoMaxAngles = TorsoMax.toMutableList()
-                        Log.d("ErrorCheck", "Left Hip Min: $LeftHipMin, Max: $LeftHipMax")
-                        Log.d("ErrorCheck", "Right Hip Min: $RightHipMin, Max: $RightHipMax")
-                        Log.d("ErrorCheck", "Left Ankle Min: $LeftAnkleMin, Max: $LeftAnkleMax")
-                        Log.d("ErrorCheck", "Right Ankle Min: $RightAnkleMin, Max: $RightAnkleMax")
-                        Log.d("ErrorCheck", "Left Knee Min: $LeftKneeMin, Max: $LeftKneeMax")
-                        Log.d("ErrorCheck", "Right Knee Min: $RightKneeMin, Max: $RightKneeMax")
-                        Log.d("ErrorCheck", "Torso Min: $TorsoMin, Max: $TorsoMax")
-                        var sum = calcStrideLength(participantHeight.toFloat())
-                        var strideSpeedAvg = sum / (videoLength * 0.000001)
-                        Log.d("ErrorCheck", "Stride Speed AVG(m/s): ${strideSpeedAvg}")
-                        Log.d("ErrorCheck", "Stride Length AVG(m): ${calcStrideLengthAvg(participantHeight.toFloat())}")
-                        Log.d("ErrorCheck","Stride Angles: ${FindLocalMax(strideAngles)}")
-                    }
-                    else
-                    {
-                        //Log check video size and list sizes
-                        Log.d("ErrorCheck", "RecordVideo edited URI: $editedUri")
-                        Log.d("ErrorCheck","VideoSize: ${frameList.size}")
-                        Log.d("ErrorCheck","LeftKneeListSize: ${leftKneeAngles.size}")
-                        Log.d("ErrorCheck","RightKneeListSize: ${rightKneeAngles.size}")
-                        Log.d("ErrorCheck","LeftAnkleListSize: ${leftAnkleAngles.size}")
-                        Log.d("ErrorCheck","RightAnkleListSize: ${rightAnkleAngles.size}")
-                        Log.d("ErrorCheck","LeftHipListSize: ${leftHipAngles.size}")
-                        Log.d("ErrorCheck","RightHipListSize: ${rightHipAngles.size}")
-                        Log.d("ErrorCheck","TorsoListSize: ${torsoAngles.size}")
-                        Log.d("ErrorCheck","Count: $count")
-
-                        // Log check to see Local Min/Max
-                        val LeftHipMin = FindLocalMin(leftHipAngles)
-                        val LeftHipMax = FindLocalMax(leftHipAngles)
-                        val RightHipMin = FindLocalMin(rightHipAngles)
-                        val RightHipMax = FindLocalMax(rightHipAngles)
-                        val LeftAnkleMin = FindLocalMin(leftAnkleAngles)
-                        val LeftAnkleMax = FindLocalMax(leftAnkleAngles)
-                        val RightAnkleMin = FindLocalMin(rightAnkleAngles)
-                        val RightAnkleMax = FindLocalMax(rightAnkleAngles)
-                        val LeftKneeMin = FindLocalMin(leftKneeAngles)
-                        leftKneeMinAngles = LeftKneeMin.toMutableList()
-                        val LeftKneeMax = FindLocalMax(leftKneeAngles)
-                        leftKneeMaxAngles = LeftKneeMax.toMutableList()
-                        val RightKneeMin = FindLocalMin(rightKneeAngles)
-                        rightKneeMinAngles = RightKneeMin.toMutableList()
-                        val RightKneeMax = FindLocalMax(rightKneeAngles)
-                        rightKneeMaxAngles = RightKneeMax.toMutableList()
-                        val TorsoMin = FindLocalMin(torsoAngles)
-                        torsoMinAngles = TorsoMin.toMutableList()
-                        val TorsoMax = FindLocalMax(torsoAngles)
-                        torsoMaxAngles = TorsoMax.toMutableList()
-                        Log.d("ErrorCheck", "Left Hip Min: $LeftHipMin, Max: $LeftHipMax")
-                        Log.d("ErrorCheck", "Right Hip Min: $RightHipMin, Max: $RightHipMax")
-                        Log.d("ErrorCheck", "Left Ankle Min: $LeftAnkleMin, Max: $LeftAnkleMax")
-                        Log.d("ErrorCheck", "Right Ankle Min: $RightAnkleMin, Max: $RightAnkleMax")
-                        Log.d("ErrorCheck", "Left Knee Min: $LeftKneeMin, Max: $LeftKneeMax")
-                        Log.d("ErrorCheck", "Right Knee Min: $RightKneeMin, Max: $RightKneeMax")
-                        Log.d("ErrorCheck", "Torso Min: $TorsoMin, Max: $TorsoMax")
-                        var sum = calcStrideLength(participantHeight.toFloat())
-                        var strideSpeedAvg = sum / (videoLength * 0.000001)
-                        Log.d("ErrorCheck", "Stride Speed AVG(m/s): ${strideSpeedAvg}")
-                        Log.d("ErrorCheck", "Stride Length AVG(m): ${calcStrideLengthAvg(participantHeight.toFloat())}")
-                        Log.d("ErrorCheck","Stride Angles: ${FindLocalMax(strideAngles)}")
-                    }
-
-                    //Update UI to remove all video progressing progress bars and text and make
-                    //Angle selection and analysis button clickable and visible.
-                    mBinding.SplittingText.visibility = GONE
-                    mBinding.CreationText.visibility = GONE
-                    mBinding.splittingBar.visibility = GONE
-                    mBinding.VideoCreation.visibility = GONE
-                    mBinding.splittingProgressValue.visibility = GONE
-                    mBinding.CreatingProgressValue.visibility = GONE
-                    mBinding.videoViewer.visibility = VISIBLE
-                    mBinding.calAngleBtn.visibility = VISIBLE
-                    mBinding.chooseAglBtn.isClickable = TRUE
-
-                    Log.d("ErrorChecking", "URI PATH: ${editedUri?.path}, URI: $editedUri")
-                    MediaScannerConnection.scanFile(
-                        this@SecondActivity,
-                        arrayOf(editedUri?.path),
-                        null
-                    ) { path, uri ->
-                        Log.d("ErrorChecking", "File $path was scanned successfully with URI: $editedUri")
-                    }
-                    Log.d("ErrorChecking", "Function URI: ${editedUri}")
-                    videoView.setVideoURI(editedUri)
+                        Log.d("ErrorChecking", "Function URI: ${editedUri}")
+                        videoView.setVideoURI(editedUri)
 
 
-                    //Runnable for updating angles above video with angle for current frame
-                    updateRunnable = object : Runnable
-                    {
-                        override fun run()
-                        {
-                            if(videoView.isPlaying) {
-                                var currentPos = videoView.currentPosition
-                                var interval = 33
-                                var index = currentPos / interval
-                                if(name == "HIP ANGLES")
-                                {
-                                    mBinding.AnkleAngle.visibility = GONE
-                                    mBinding.KneeAngle.visibility = GONE
-                                    mBinding.HipAngle.visibility = VISIBLE
-                                    mBinding.TorsoAngle.visibility = GONE
-                                    var string = ""
-                                    if (index < rightHipAngles.size) {
-                                        string += "Right Hip:\n" + String.format("%.1f", rightHipAngles[index])
 
-                                    } else {
-                                        string+= "Right Hip:\nERROR"
-
-                                    }
-                                    if (index < leftHipAngles.size) {
-                                        string += "\nLeft Hip:\n" + String.format("%.1f", leftHipAngles[index])
-                                    } else {
-                                        string += "\nLeft Hip:\nERROR"
-                                    }
-                                    mBinding.HipAngle.text = string
-                                }
-                                else if(name == "KNEE ANGLES")
-                                {
-                                    mBinding.AnkleAngle.visibility = GONE
-                                    mBinding.KneeAngle.visibility = VISIBLE
-                                    mBinding.HipAngle.visibility = GONE
-                                    mBinding.TorsoAngle.visibility = GONE
-                                    var string = ""
-                                    if (index < rightKneeAngles.size) {
-                                        string += "Right Knee:\n" + String.format("%.1f", rightKneeAngles[index])
-
-                                    } else {
-                                        string += "Right Knee:\nERROR"
-
-                                    }
-                                    if (index < leftKneeAngles.size) {
-                                        string += "\nLeft Knee:\n" + String.format("%.1f", leftKneeAngles[index])
-                                    } else {
-                                        string += "\nLeft Knee:\nERROR"
-                                    }
-                                    mBinding.KneeAngle.text = string
-                                }
-                                else if(name == "ANKLE ANGLES")
-                                {
-                                    mBinding.AnkleAngle.visibility = VISIBLE
-                                    mBinding.KneeAngle.visibility = GONE
-                                    mBinding.HipAngle.visibility = GONE
-                                    mBinding.TorsoAngle.visibility = GONE
-                                    var string = ""
-                                    if (index < rightAnkleAngles.size) {
-                                        string += "Right Ankle:\n" + String.format("%.1f", rightAnkleAngles[index])
-
-                                    } else {
-                                        string += "Right Ankle:\nERROR"
-
-                                    }
-                                    if (index < leftAnkleAngles.size) {
-                                        string += "\nLeft Ankle:\n" + String.format("%.1f", leftAnkleAngles[index])
-                                    } else {
-                                        string += "\nLeft Ankle:\nERROR"
-                                    }
-                                    mBinding.AnkleAngle.text = string
-                                }
-                                else if(name == "TORSO ANGLE")
-                                {
-                                    mBinding.AnkleAngle.visibility = GONE
-                                    mBinding.KneeAngle.visibility = GONE
-                                    mBinding.HipAngle.visibility = GONE
-                                    mBinding.TorsoAngle.visibility = VISIBLE
-                                    var string = ""
-                                    if (index < torsoAngles.size) {
-                                        string += "\nTorso:\n" + String.format("%.1f", torsoAngles[index])
-
-                                    } else {
-                                        string += "\nTorso:\nERROR"
-                                    }
-                                    mBinding.TorsoAngle.text = string
-                                }
-                                else if(name == "ALL ANGLES")
-                                {
-                                    mBinding.AnkleAngle.visibility = VISIBLE
-                                    mBinding.KneeAngle.visibility = VISIBLE
-                                    mBinding.HipAngle.visibility = VISIBLE
-                                    mBinding.TorsoAngle.visibility = VISIBLE
-                                    var stringA = ""
-                                    if (index < rightAnkleAngles.size) {
-                                        stringA += "Right Ankle:\n" + String.format("%.1f", rightAnkleAngles[index])
-
-                                    } else {
-                                        stringA += "Right Ankle:\nERROR"
-
-                                    }
-                                    if (index < leftAnkleAngles.size) {
-                                        stringA += "\nLeft Ankle:\n" + String.format("%.1f", leftAnkleAngles[index])
-                                    } else {
-                                        stringA += "\nLeft Ankle:\nERROR"
-                                    }
-                                    mBinding.AnkleAngle.text = stringA
-
-                                    var stringK = ""
-                                    if (index < rightKneeAngles.size) {
-                                        stringK += "Right Knee:\n" + String.format("%.1f", rightKneeAngles[index])
-
-                                    } else {
-                                        stringK += "Right Knee:\nERROR"
-
-                                    }
-                                    if (index < leftKneeAngles.size) {
-                                        stringK += "\nLeft Knee:\n" + String.format("%.1f", leftKneeAngles[index])
-                                    } else {
-                                        stringK += "\nLeft Knee:\nERROR"
-                                    }
-                                    mBinding.KneeAngle.text = stringK
-
-                                    var stringH = ""
-                                    if (index < rightHipAngles.size) {
-                                        stringH += "Right Hip:\n" + String.format("%.1f", rightHipAngles[index])
-                                    } else {
-                                        stringH += "Right Hip:\nERROR"
-
-                                    }
-                                    if (index < leftHipAngles.size) {
-                                        stringH += "\nLeft Hip:\n" + String.format("%.1f", leftHipAngles[index])
-                                    } else {
-                                        stringH += "\nLeft Hip:\nERROR"
-                                    }
-                                    mBinding.HipAngle.text = stringH
-
-                                    var stringT = ""
-                                    if (index < torsoAngles.size) {
-                                        stringT += "\nTorso:\n" + String.format("%.1f", torsoAngles[index])
-
-                                    } else {
-                                        stringT += "\nTorso:\nERROR"
-                                    }
-                                    mBinding.TorsoAngle.text = stringT
-                                }
-                            }
-
-                            handler.postDelayed(this, 33)
+                        videoView.setOnPreparedListener {
+                            videoView.start()
+                            handler.post(updateRunnable!!)
                         }
-                    }
-                    videoView.setOnPreparedListener {
-                        videoView.start()
-                        handler.post(updateRunnable!!)
-                    }
 
-                } catch(e:Exception){
-                    Log.e("ErrorChecking", "Error processing video: ${e.message}", e)
-                    Log.e("ErrorChecking", "Generated URI: ${editedUri}")
-                    e.printStackTrace()
+                    } catch (e: Exception) {
+                        Log.e("ErrorChecking", "Error processing video: ${e.message}", e)
+                        Log.e("ErrorChecking", "Generated URI: ${editedUri}")
+                        e.printStackTrace()
+                    }
                 }
+            } ?: run {
+                Log.e("ErrorChecking", "Gallery URI is NULL")
             }
-        } ?:run{
-            Log.e("ErrorChecking", "Gallery URI is NULL")
         }
     }
 

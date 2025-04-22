@@ -186,7 +186,7 @@ class MainActivity : ComponentActivity() {
         //Default Selection is 5 feet 9 inches
         feetSpinner.setSelection(1)
         inchesSpinner.setSelection(9)
-        
+
         mBinding.confirmVidBtn.setOnClickListener {
             val inputId = findViewById<EditText>(R.id.participant_id)
             participantId = inputId.text.toString()

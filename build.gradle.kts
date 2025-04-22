@@ -10,19 +10,7 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        maven(url="https://chaquo.com/maven")
     }
     dependencies {
     }
 }
-//Might be needed, but can stay commented out for now (10/8/24 Trevor Spencer)
-/*
-buildscript {
-    repositories {
-        google()
-        mavenCentral()
-    }
-    dependencies {
-        classpath("com.android.tools.build:gradle:8.1.0")
-    }
-}*/
