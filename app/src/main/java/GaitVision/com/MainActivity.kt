@@ -55,15 +55,6 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-    private val takePictureLauncher: ActivityResultLauncher<Intent> =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == RESULT_OK) {
-                // Handle the captured image if needed
-                val imageBitmap = result.data?.extras?.get("data") as? Bitmap
-                // You can use the bitmap here if you want to display it
-                // mBinding.imageView5.setImageBitmap(imageBitmap)
-            }
-        }
 
     private fun checkPermissions() {
         val permissions = arrayOf(
@@ -132,6 +123,12 @@ class MainActivity : ComponentActivity() {
         leftHipAngles.clear()
         rightHipAngles.clear()
         torsoAngles.clear()
+        leftKneeMinAngles.clear()
+        leftKneeMaxAngles.clear()
+        rightKneeMinAngles.clear()
+        rightKneeMaxAngles.clear()
+        torsoMinAngles.clear()
+        torsoMaxAngles.clear()
         participantId = ""
         participantHeight = 0
 
@@ -189,8 +186,7 @@ class MainActivity : ComponentActivity() {
         //Default Selection is 5 feet 9 inches
         feetSpinner.setSelection(1)
         inchesSpinner.setSelection(9)
-
-        //mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        
         mBinding.confirmVidBtn.setOnClickListener {
             val inputId = findViewById<EditText>(R.id.participant_id)
             participantId = inputId.text.toString()

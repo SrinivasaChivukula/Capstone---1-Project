@@ -1,6 +1,5 @@
 package GaitVision.com
 
-
 import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -26,16 +25,32 @@ import kotlin.math.roundToLong
 import java.io.InputStream
 import kotlin.math.sqrt
 
-class LastActivity : ComponentActivity() {
-
+class LastActivity : ComponentActivity()
+{
+    /*
+    Name           : loadFloatBinFile
+    Parameters     :
+        context    : This parameter is the interface that contains global information about
+                     the application environment.
+        filename   : This is the filename/path for the file we want to open.
+    Description    : This function will read in the data from file specified for use in the gait score
+                     process. It reads the entire binary file and converts the values in little endian
+                      to floats that were originally used.
+    Return         :
+        FloatArray : Returns an array of the float values to be used for calculating the gait score.
+                     Array is a 1 by 9 array
+     */
     fun loadFloatBinFile(context: Context, filename: String): FloatArray {
+        //Open file and read all the data
         val inputStream = context.assets.open(filename)
         val bytes = inputStream.readBytes()
         inputStream.close()
 
+        ///Change from bytearray to byte buffer in little endian
         val buffer = ByteBuffer.wrap(bytes).order(ByteOrder.LITTLE_ENDIAN)
         val numFloats = bytes.size / 4
 
+        //Loop through array including all values into return value
         val result = FloatArray(numFloats)
         for (i in 0 until numFloats) {
             result[i] = buffer.float
@@ -44,7 +59,18 @@ class LastActivity : ComponentActivity() {
         return result
     }
 
+    /*
+    Name            : loadNpyFloatArray
+    Parameters      :
+        assetStream : An opened file with the data we want to read out of.
+    Description     : This function will read a file with information on the clean and impaired
+                      centroid information used in the gait score training.
+    Return:
+        FloatArray : Returns an array of the locations of the centroid on the 2D plane during
+                     gait analysis training. Array is a 1 by 2
+     */
     fun loadNpyFloatArray(assetStream: InputStream): FloatArray {
+        //Ignore header information of file
         val header = ByteArray(128)
         assetStream.read(header)
 
@@ -52,6 +78,7 @@ class LastActivity : ComponentActivity() {
         val data = assetStream.readBytes()
         val buffer = ByteBuffer.wrap(data).order(ByteOrder.LITTLE_ENDIAN)
 
+        //Add value to array
         val floatList = mutableListOf<Float>()
         while (buffer.hasRemaining()) {
             floatList.add(buffer.float)
@@ -60,6 +87,16 @@ class LastActivity : ComponentActivity() {
         return floatList.toFloatArray()
     }
 
+    /*
+    Name        : euclideanDistance
+    Parameters  :
+        a       : First point we want position of.
+        b       : Second point we want position of.
+    Description : This function will calculate the distance between the 2 points in a 2D plane.
+                 Uses pythagorean theorem.
+    Return      :
+        Float   : Returns the distance between both points.
+     */
     fun euclideanDistance(a: FloatArray, b: FloatArray): Float {
         var sum = 0f  // Initialize a sum variable for the squared differences
 
@@ -77,6 +114,7 @@ class LastActivity : ComponentActivity() {
         setContentView(R.layout.activity_last)
 
 
+        //Initialize data for gait score prediction
         val inputData = floatArrayOf(
             leftKneeMinAngles.average().toFloat(),
             leftKneeMaxAngles.average().toFloat(),
@@ -88,34 +126,36 @@ class LastActivity : ComponentActivity() {
             leftKneeMaxAngles.average().toFloat() - leftKneeMinAngles.average().toFloat(),
             rightKneeMaxAngles.average().toFloat() - rightKneeMinAngles.average().toFloat()
         )
+
+        //Load files needed for prediction
         val tfliteModel = FileUtil.loadMappedFile(this, "encoder_model.tflite")
         val interpreter = Interpreter(tfliteModel)
-
         val scalerMean = loadFloatBinFile(this, "scaler_mean.bin")
         val scalerScale = loadFloatBinFile(this, "scaler_scale.bin")
+        val cleanCentroidStream = assets.open("clean_centroid.npy")
+        val impairedCentroidStream = assets.open("impaired_centroid.npy")
+        val cleanCentroid = loadNpyFloatArray(cleanCentroidStream)
+        val impairedCentroid = loadNpyFloatArray(impairedCentroidStream)
 
+        //Make sure no values are smaller than a threshold
         val minScaleValue = 1e-15f // Define a small threshold for scaler values
         val safeScalerScale = scalerScale.map {
             if (it < minScaleValue) minScaleValue else it
         }.toFloatArray()
 
+        //Scale input
         val scaledInput = FloatArray(inputData.size) { i ->
             (inputData[i] - scalerMean[i]) / safeScalerScale[i]
         }
 
+        //make input and output arrays for prediction
         val output = Array(1){FloatArray(2)}
         val input = arrayOf(scaledInput)
 
+        //Predict output
         interpreter.run(input, output)
 
-        val cleanCentroidStream = assets.open("clean_centroid.npy")
-        val impairedCentroidStream = assets.open("impaired_centroid.npy")
-
-
-        val cleanCentroid = loadNpyFloatArray(cleanCentroidStream)
-        val impairedCentroid = loadNpyFloatArray(impairedCentroidStream)
-
-
+        //Log check values to see if they look correct
         Log.d("ErrorCheck", "ScalerMean: ${scalerMean.contentToString()}")
         Log.d("ErrorCheck", "ScalerScale: ${scalerScale.contentToString()}")
         Log.d("ErrorCheck", "InputData: ${inputData.contentToString()}")
@@ -142,16 +182,9 @@ class LastActivity : ComponentActivity() {
         println("Gait Index (Unscaled): $gaitIndexUnscaled")
         println("Gait Index (Scaled): $gaitIndexScaled")
 
-
+        //Update score
         var scoreTextView = findViewById<TextView>(R.id.score_textview)
-        //scoreTextView.textSize = 30F
-        //scoreTextView.text = String.format("%.2f", gaitIndexScaled)
         scoreTextView.text = gaitIndexScaled.roundToLong().toString()
-
-
-        val randomScore = (50..70).random()
-        //scoreTextView.text = result.toString()
-
 
         val chooseGraphBtn = findViewById<Button>(R.id.select_graph_btn)
         val popupMenu = PopupMenu(this, chooseGraphBtn)
@@ -173,7 +206,7 @@ class LastActivity : ComponentActivity() {
                 // hip graph
                 val graphHip = findViewById<TextView>(R.id.select_graph_btn)
                 val graphHipName = "HIP GRAPH"
-                graphHip.text = graphHipName.toString()
+                graphHip.text = graphHipName
 
                 hipGraph.visibility = View.VISIBLE
                 kneeGraph.visibility = View.INVISIBLE
@@ -184,7 +217,7 @@ class LastActivity : ComponentActivity() {
                 // knee graph
                 val graphKnee = findViewById<TextView>(R.id.select_graph_btn)
                 val graphKneeName = "KNEE GRAPH"
-                graphKnee.text = graphKneeName.toString()
+                graphKnee.text = graphKneeName
 
                 hipGraph.visibility = View.INVISIBLE
                 kneeGraph.visibility = View.VISIBLE
@@ -195,7 +228,7 @@ class LastActivity : ComponentActivity() {
                 // ankle graph
                 val graphAnkle = findViewById<TextView>(R.id.select_graph_btn)
                 val graphAnkleName = "ANKLE GRAPH"
-                graphAnkle.text = graphAnkleName.toString()
+                graphAnkle.text = graphAnkleName
 
                 hipGraph.visibility = View.INVISIBLE
                 kneeGraph.visibility = View.INVISIBLE
@@ -206,7 +239,7 @@ class LastActivity : ComponentActivity() {
                 // torso graph
                 val graphTorso = findViewById<TextView>(R.id.select_graph_btn)
                 val graphTorsoName = "TORSO GRAPH"
-                graphTorso.text = graphTorsoName.toString()
+                graphTorso.text = graphTorsoName
 
                 hipGraph.visibility = View.INVISIBLE
                 kneeGraph.visibility = View.INVISIBLE

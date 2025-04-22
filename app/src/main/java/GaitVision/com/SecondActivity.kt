@@ -9,7 +9,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.media.MediaScannerConnection
-import android.net.Uri
 import android.os.Environment
 import android.os.Handler
 import android.os.Looper
@@ -29,26 +28,26 @@ import kotlinx.coroutines.withContext
 import java.io.File
 import java.lang.Boolean.FALSE
 import java.lang.Boolean.TRUE
-import java.security.AccessController.getContext
-import kotlin.math.roundToLong
-
 
 class SecondActivity : ComponentActivity()
 {
 
     private lateinit var mBinding: ActivitySecondBinding
-    private var videoUri: Uri?=null
     private val handler = Handler(Looper.getMainLooper())
     private var updateRunnable : Runnable? = null
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?)
+    {
         super.onCreate(savedInstanceState)
 
         mBinding = ActivitySecondBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
 
-        onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true){
-            override fun handleOnBackPressed() {
+        //Stop runnable if user wants to go back to first page
+        onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true)
+        {
+            override fun handleOnBackPressed()
+            {
                 updateRunnable?.let {
                     handler.removeCallbacks(it)
                 }
@@ -56,6 +55,7 @@ class SecondActivity : ComponentActivity()
             }
         })
 
+        //Stop ruunnable if user wants to go to next page
         mBinding.calAngleBtn.setOnClickListener{
             updateRunnable?.let{
                 handler.removeCallbacks(it)
@@ -67,11 +67,13 @@ class SecondActivity : ComponentActivity()
         val popupMenu = PopupMenu(this, chooseAngleBtn)
         popupMenu.menuInflater.inflate(R.menu.popup_menu, popupMenu.menu)
 
+        //Should never happen, but send user back to first page if they didn't select a video
         if(galleryUri == null)
         {
             startActivity(Intent(this, MainActivity::class.java))
         }
 
+        //Function calls for angle selection dropdown
         popupMenu.setOnMenuItemClickListener { menuItem -> val id = menuItem.itemId
 
             if (id == R.id.menu_hip){
@@ -107,6 +109,7 @@ class SecondActivity : ComponentActivity()
             false
         }
 
+        //Display popup menu when user clicks select angle
         chooseAngleBtn.setOnClickListener {
             popupMenu.show()
         }
@@ -131,16 +134,14 @@ class SecondActivity : ComponentActivity()
 
     fun processAngle(angle: String)
     {
-        // toggle here
         val angleChoice = findViewById<TextView>(R.id.choose_agl_btn)
-        //val name = "ALL ANGLES"
         val name = angle
-        angleChoice.text = name.toString()
+        angleChoice.text = name
 
         count = 0
-//                val uriString = intent.getStringExtra("VIDEO_URI")
+
         val videoView = findViewById<VideoView>(R.id.video_viewer)
-//                videoUri = Uri.parse(uriString)
+
         val mediaController = MediaController(this)
         videoView.setMediaController(mediaController)
 
@@ -149,7 +150,6 @@ class SecondActivity : ComponentActivity()
                 try{
                     Log.d("ErrorChecking", "VideoUri is now galleryUri")
                     Log.d("ErrorChecking", "galleryUri(RFAR): $galleryUri, galleryPath(RFAR): ${galleryUri?.path}")
-                    val outputPath = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES).absolutePath + "/edited_video.mp4"
                     val outputFilePath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)}/edited_video.mp4"
                     val outputFile = File(outputFilePath)
                     if(outputFile.exists())
@@ -158,6 +158,9 @@ class SecondActivity : ComponentActivity()
                         outputFile.delete()
                     }
                     Log.d("ErrorChecking", "Before function")
+
+                    //Update UI to remove all progress bars and text from screen and make angle
+                    //selection button unclickable
                     mBinding.videoViewer.visibility = GONE
                     mBinding.SplittingText.visibility = GONE
                     mBinding.CreationText.visibility = GONE
@@ -171,17 +174,17 @@ class SecondActivity : ComponentActivity()
                     mBinding.HipAngle.visibility = GONE
                     mBinding.TorsoAngle.visibility = GONE
                     mBinding.chooseAglBtn.isClickable = FALSE
-                    if(frameList.isEmpty())
+                    if(editedUri == null)
                     {
                         editedUri = withContext(Dispatchers.IO)
                         {
                             ProcVidEmpty(
                                 this@SecondActivity,
                                 outputFilePath,
-                                mBinding,
-                                name
+                                mBinding
                             )
                         }
+                        //Log check video size and list sizes
                         Log.d("ErrorCheck", "RecordVideo edited URI: $editedUri")
                         Log.d("ErrorCheck","VideoSize: ${frameList.size}")
                         Log.d("ErrorCheck","LeftKneeListSize: ${leftKneeAngles.size}")
@@ -192,87 +195,44 @@ class SecondActivity : ComponentActivity()
                         Log.d("ErrorCheck","RightHipListSize: ${rightHipAngles.size}")
                         Log.d("ErrorCheck","TorsoListSize: ${torsoAngles.size}")
                         Log.d("ErrorCheck","Count: $count")
-                        Log.d("ErrorCheck","Coms: ${centerOfMasses}")
 
-
-                        // Log check to see example of mutable list
-                        Log.d("MutableListContents", "leftKneeAngles after processing: $leftKneeAngles")
-                        Log.d("MutableListContents", "rightKneeAngles after processing: $rightKneeAngles")
+                        // Log check to see Local Min/Max
                         val LeftHipMin = FindLocalMin(leftHipAngles)
                         val LeftHipMax = FindLocalMax(leftHipAngles)
-                        Log.d("ErrorCheck", "Left Hip Min: $LeftHipMin, Max: $LeftHipMax")
-
                         val RightHipMin = FindLocalMin(rightHipAngles)
                         val RightHipMax = FindLocalMax(rightHipAngles)
-                        Log.d("ErrorCheck", "Right Hip Min: $RightHipMin, Max: $RightHipMax")
-
-                        Log.d("ErrorCheck","---------------")
                         val LeftAnkleMin = FindLocalMin(leftAnkleAngles)
                         val LeftAnkleMax = FindLocalMax(leftAnkleAngles)
-                        Log.d("ErrorCheck", "Left Ankle Min: $LeftAnkleMin, Max: $LeftAnkleMax")
-
                         val RightAnkleMin = FindLocalMin(rightAnkleAngles)
                         val RightAnkleMax = FindLocalMax(rightAnkleAngles)
-                        Log.d("ErrorCheck", "Right Ankle Min: $RightAnkleMin, Max: $RightAnkleMax")
-                        // Log check to see Local Min/Max
                         val LeftKneeMin = FindLocalMin(leftKneeAngles)
                         leftKneeMinAngles = LeftKneeMin.toMutableList()
                         val LeftKneeMax = FindLocalMax(leftKneeAngles)
                         leftKneeMaxAngles = LeftKneeMax.toMutableList()
-                        Log.d("ErrorCheck", "Left Knee Min: $LeftKneeMin, Max: $LeftKneeMax")
-
                         val RightKneeMin = FindLocalMin(rightKneeAngles)
                         rightKneeMinAngles = RightKneeMin.toMutableList()
                         val RightKneeMax = FindLocalMax(rightKneeAngles)
                         rightKneeMaxAngles = RightKneeMax.toMutableList()
-                        Log.d("ErrorCheck", "Right Knee Min: $RightKneeMin, Max: $RightKneeMax")
-
                         val TorsoMin = FindLocalMin(torsoAngles)
                         torsoMinAngles = TorsoMin.toMutableList()
                         val TorsoMax = FindLocalMax(torsoAngles)
                         torsoMaxAngles = TorsoMax.toMutableList()
+                        Log.d("ErrorCheck", "Left Hip Min: $LeftHipMin, Max: $LeftHipMax")
+                        Log.d("ErrorCheck", "Right Hip Min: $RightHipMin, Max: $RightHipMax")
+                        Log.d("ErrorCheck", "Left Ankle Min: $LeftAnkleMin, Max: $LeftAnkleMax")
+                        Log.d("ErrorCheck", "Right Ankle Min: $RightAnkleMin, Max: $RightAnkleMax")
+                        Log.d("ErrorCheck", "Left Knee Min: $LeftKneeMin, Max: $LeftKneeMax")
+                        Log.d("ErrorCheck", "Right Knee Min: $RightKneeMin, Max: $RightKneeMax")
                         Log.d("ErrorCheck", "Torso Min: $TorsoMin, Max: $TorsoMax")
-                        val stanceTimesL = calculateStanceTimes(leftAnkleAngles)
-                        val avgStanceTimeL = averageStanceTime(stanceTimesL)
-
-                        val swingTimesL = calculateSwingTimes(leftAnkleAngles)
-                        val avgSwingTimeL = averageSwingTime(swingTimesL)
-                        Log.d("ErrorCheck","Average Swing Time Left(s): $avgSwingTimeL seconds")
-                        val swingTimesR = calculateSwingTimes(rightAnkleAngles)
-                        val avgSwingTimeR = averageSwingTime(swingTimesR)
-                        Log.d("ErrorCheck","Average Swing Time Right(s): $avgSwingTimeR seconds")
-                        Log.d("ErrorCheck","Left Step Time(s): $avgStanceTimeL seconds")
-                        val stanceTimesR = calculateStanceTimes(rightAnkleAngles)
-                        val avgStanceTimeR = averageStanceTime(stanceTimesR)
-                        Log.d("ErrorCheck","Right Step Time(s): $avgStanceTimeR seconds")
-                        Log.d("ErrorCheck","Swing-Stance Ratio Left: ${calculateSwingStanceRatio(avgSwingTimeL,avgStanceTimeL)}")
-                        Log.d("ErrorCheck","Swing-Stance Ratio Right: ${calculateSwingStanceRatio(avgSwingTimeR,avgStanceTimeR)}")
-
                         var sum = calcStrideLength(participantHeight.toFloat())
                         var strideSpeedAvg = sum / (videoLength * 0.000001)
-
                         Log.d("ErrorCheck", "Stride Speed AVG(m/s): ${strideSpeedAvg}")
                         Log.d("ErrorCheck", "Stride Length AVG(m): ${calcStrideLengthAvg(participantHeight.toFloat())}")
-                        Log.d("ErrorCheck","---------------")
                         Log.d("ErrorCheck","Stride Angles: ${FindLocalMax(strideAngles)}")
-                        Log.d("ErrorCheck","Lowest Ankle Left Placements: ${minLeftAnkleY.maxOrNull()}")
-                        Log.d("ErrorCheck","Lowest Ankle Right Placements: ${minRightAnkleY.maxOrNull()}")
-
-                        Log.d("ErrorCheck","Stance Times Left(s): ${calculateStanceTimes(leftAnkleAngles)}")
-                        Log.d("ErrorCheck","Stance Times Right(s): ${calculateStanceTimes(rightAnkleAngles)}")
-                        Log.d("ErrorCheck","Swing Times Left(s): ${calculateSwingTimes(leftAnkleAngles)}")
-                        Log.d("ErrorCheck","Swing Times Right(s): ${calculateSwingTimes(rightAnkleAngles)}")
                     }
                     else
                     {
-                        editedUri = withContext(Dispatchers.IO) {
-                            ProcVidCon(
-                                this@SecondActivity,
-                                outputFilePath,
-                                mBinding,
-                                name
-                            )
-                        }
+                        //Log check video size and list sizes
                         Log.d("ErrorCheck", "RecordVideo edited URI: $editedUri")
                         Log.d("ErrorCheck","VideoSize: ${frameList.size}")
                         Log.d("ErrorCheck","LeftKneeListSize: ${leftKneeAngles.size}")
@@ -283,71 +243,44 @@ class SecondActivity : ComponentActivity()
                         Log.d("ErrorCheck","RightHipListSize: ${rightHipAngles.size}")
                         Log.d("ErrorCheck","TorsoListSize: ${torsoAngles.size}")
                         Log.d("ErrorCheck","Count: $count")
-                        Log.d("ErrorCheck","Coms: ${centerOfMasses}")
 
-
-                        // Log check to see example of mutable list
-                        Log.d("MutableListContents", "leftKneeAngles after processing: $leftKneeAngles")
-                        Log.d("MutableListContents", "rightKneeAngles after processing: $rightKneeAngles")
+                        // Log check to see Local Min/Max
                         val LeftHipMin = FindLocalMin(leftHipAngles)
                         val LeftHipMax = FindLocalMax(leftHipAngles)
-                        Log.d("ErrorCheck", "Left Hip Min: $LeftHipMin, Max: $LeftHipMax")
-
                         val RightHipMin = FindLocalMin(rightHipAngles)
                         val RightHipMax = FindLocalMax(rightHipAngles)
-                        Log.d("ErrorCheck", "Right Hip Min: $RightHipMin, Max: $RightHipMax")
-
-                        Log.d("ErrorCheck","---------------")
                         val LeftAnkleMin = FindLocalMin(leftAnkleAngles)
                         val LeftAnkleMax = FindLocalMax(leftAnkleAngles)
-                        Log.d("ErrorCheck", "Left Ankle Min: $LeftAnkleMin, Max: $LeftAnkleMax")
-
                         val RightAnkleMin = FindLocalMin(rightAnkleAngles)
                         val RightAnkleMax = FindLocalMax(rightAnkleAngles)
-                        Log.d("ErrorCheck", "Right Ankle Min: $RightAnkleMin, Max: $RightAnkleMax")
-// Log check to see Local Min/Max
                         val LeftKneeMin = FindLocalMin(leftKneeAngles)
+                        leftKneeMinAngles = LeftKneeMin.toMutableList()
                         val LeftKneeMax = FindLocalMax(leftKneeAngles)
-                        Log.d("ErrorCheck", "Left Knee Min: $LeftKneeMin, Max: $LeftKneeMax")
-
+                        leftKneeMaxAngles = LeftKneeMax.toMutableList()
                         val RightKneeMin = FindLocalMin(rightKneeAngles)
+                        rightKneeMinAngles = RightKneeMin.toMutableList()
                         val RightKneeMax = FindLocalMax(rightKneeAngles)
-                        Log.d("ErrorCheck", "Right Knee Min: $RightKneeMin, Max: $RightKneeMax")
-
+                        rightKneeMaxAngles = RightKneeMax.toMutableList()
                         val TorsoMin = FindLocalMin(torsoAngles)
+                        torsoMinAngles = TorsoMin.toMutableList()
                         val TorsoMax = FindLocalMax(torsoAngles)
+                        torsoMaxAngles = TorsoMax.toMutableList()
+                        Log.d("ErrorCheck", "Left Hip Min: $LeftHipMin, Max: $LeftHipMax")
+                        Log.d("ErrorCheck", "Right Hip Min: $RightHipMin, Max: $RightHipMax")
+                        Log.d("ErrorCheck", "Left Ankle Min: $LeftAnkleMin, Max: $LeftAnkleMax")
+                        Log.d("ErrorCheck", "Right Ankle Min: $RightAnkleMin, Max: $RightAnkleMax")
+                        Log.d("ErrorCheck", "Left Knee Min: $LeftKneeMin, Max: $LeftKneeMax")
+                        Log.d("ErrorCheck", "Right Knee Min: $RightKneeMin, Max: $RightKneeMax")
                         Log.d("ErrorCheck", "Torso Min: $TorsoMin, Max: $TorsoMax")
-                        val stanceTimesL = calculateStanceTimes(leftAnkleAngles)
-                        val avgStanceTimeL = averageStanceTime(stanceTimesL)
-
-                        val swingTimesL = calculateSwingTimes(leftAnkleAngles)
-                        val avgSwingTimeL = averageSwingTime(swingTimesL)
-                        Log.d("ErrorCheck","Average Swing Time Left(s): $avgSwingTimeL seconds")
-                        val swingTimesR = calculateSwingTimes(rightAnkleAngles)
-                        val avgSwingTimeR = averageSwingTime(swingTimesR)
-                        Log.d("ErrorCheck","Average Swing Time Right(s): $avgSwingTimeR seconds")
-                        Log.d("ErrorCheck","Left Step Time(s): $avgStanceTimeL seconds")
-                        val stanceTimesR = calculateStanceTimes(rightAnkleAngles)
-                        val avgStanceTimeR = averageStanceTime(stanceTimesR)
-                        Log.d("ErrorCheck","Right Step Time(s): $avgStanceTimeR seconds")
-                        Log.d("ErrorCheck","Swing-Stance Ratio Left: ${calculateSwingStanceRatio(avgSwingTimeL,avgStanceTimeL)}")
-                        Log.d("ErrorCheck","Swing-Stance Ratio Right: ${calculateSwingStanceRatio(avgSwingTimeR,avgStanceTimeR)}")
-
                         var sum = calcStrideLength(participantHeight.toFloat())
                         var strideSpeedAvg = sum / (videoLength * 0.000001)
-
                         Log.d("ErrorCheck", "Stride Speed AVG(m/s): ${strideSpeedAvg}")
                         Log.d("ErrorCheck", "Stride Length AVG(m): ${calcStrideLengthAvg(participantHeight.toFloat())}")
-                        Log.d("ErrorCheck","---------------")
                         Log.d("ErrorCheck","Stride Angles: ${FindLocalMax(strideAngles)}")
-                        Log.d("ErrorCheck","Lowest Ankle Left Placements: ${minLeftAnkleY.maxOrNull()}")
-                        Log.d("ErrorCheck","Lowest Ankle Right Placements: ${minRightAnkleY.maxOrNull()}")
-
-                        Log.d("ErrorCheck","Stance Times Left(s): ${calculateStanceTimes(leftAnkleAngles)}")
-                        Log.d("ErrorCheck","Stance Times Right(s): ${calculateStanceTimes(rightAnkleAngles)}")
-                        Log.d("ErrorCheck","Swing Times Left(s): ${calculateSwingTimes(leftAnkleAngles)}")
-                        Log.d("ErrorCheck","Swing Times Right(s): ${calculateSwingTimes(rightAnkleAngles)}")
                     }
+
+                    //Update UI to remove all video progressing progress bars and text and make
+                    //Angle selection and analysis button clickable and visible.
                     mBinding.SplittingText.visibility = GONE
                     mBinding.CreationText.visibility = GONE
                     mBinding.splittingBar.visibility = GONE
@@ -370,6 +303,7 @@ class SecondActivity : ComponentActivity()
                     videoView.setVideoURI(editedUri)
 
 
+                    //Runnable for updating angles above video with angle for current frame
                     updateRunnable = object : Runnable
                     {
                         override fun run()
@@ -386,7 +320,6 @@ class SecondActivity : ComponentActivity()
                                     mBinding.TorsoAngle.visibility = GONE
                                     var string = ""
                                     if (index < rightHipAngles.size) {
-                                        //string += "Right Hip:\n" + rightHipAngles[index].toString()
                                         string += "Right Hip:\n" + String.format("%.1f", rightHipAngles[index])
 
                                     } else {
@@ -394,7 +327,6 @@ class SecondActivity : ComponentActivity()
 
                                     }
                                     if (index < leftHipAngles.size) {
-                                        //string += "\nLeft Hip:\n" + leftHipAngles[index].toString()
                                         string += "\nLeft Hip:\n" + String.format("%.1f", leftHipAngles[index])
                                     } else {
                                         string += "\nLeft Hip:\nERROR"
@@ -409,7 +341,6 @@ class SecondActivity : ComponentActivity()
                                     mBinding.TorsoAngle.visibility = GONE
                                     var string = ""
                                     if (index < rightKneeAngles.size) {
-                                        //string += "Right Knee:\n" + rightKneeAngles[index].toString()
                                         string += "Right Knee:\n" + String.format("%.1f", rightKneeAngles[index])
 
                                     } else {
@@ -417,7 +348,6 @@ class SecondActivity : ComponentActivity()
 
                                     }
                                     if (index < leftKneeAngles.size) {
-                                        //string += "\nLeft Knee:\n" + leftKneeAngles[index].toString()
                                         string += "\nLeft Knee:\n" + String.format("%.1f", leftKneeAngles[index])
                                     } else {
                                         string += "\nLeft Knee:\nERROR"
@@ -432,7 +362,6 @@ class SecondActivity : ComponentActivity()
                                     mBinding.TorsoAngle.visibility = GONE
                                     var string = ""
                                     if (index < rightAnkleAngles.size) {
-                                        //string += "Right Ankle:\n" + rightAnkleAngles[index].toString()
                                         string += "Right Ankle:\n" + String.format("%.1f", rightAnkleAngles[index])
 
                                     } else {
@@ -440,7 +369,6 @@ class SecondActivity : ComponentActivity()
 
                                     }
                                     if (index < leftAnkleAngles.size) {
-                                        //string += "\nLeft Ankle:\n" + leftAnkleAngles[index].toString()
                                         string += "\nLeft Ankle:\n" + String.format("%.1f", leftAnkleAngles[index])
                                     } else {
                                         string += "\nLeft Ankle:\nERROR"
@@ -455,7 +383,6 @@ class SecondActivity : ComponentActivity()
                                     mBinding.TorsoAngle.visibility = VISIBLE
                                     var string = ""
                                     if (index < torsoAngles.size) {
-                                        //string += "\nTorso:\n" + torsoAngles[index].toString()
                                         string += "\nTorso:\n" + String.format("%.1f", torsoAngles[index])
 
                                     } else {
@@ -471,7 +398,6 @@ class SecondActivity : ComponentActivity()
                                     mBinding.TorsoAngle.visibility = VISIBLE
                                     var stringA = ""
                                     if (index < rightAnkleAngles.size) {
-                                        //string += "Right Ankle:\n" + rightAnkleAngles[index].toString()
                                         stringA += "Right Ankle:\n" + String.format("%.1f", rightAnkleAngles[index])
 
                                     } else {
@@ -479,7 +405,6 @@ class SecondActivity : ComponentActivity()
 
                                     }
                                     if (index < leftAnkleAngles.size) {
-                                        //string += "\nLeft Ankle:\n" + leftAnkleAngles[index].toString()
                                         stringA += "\nLeft Ankle:\n" + String.format("%.1f", leftAnkleAngles[index])
                                     } else {
                                         stringA += "\nLeft Ankle:\nERROR"
@@ -488,7 +413,6 @@ class SecondActivity : ComponentActivity()
 
                                     var stringK = ""
                                     if (index < rightKneeAngles.size) {
-                                        //string += "Right Knee:\n" + rightKneeAngles[index].toString()
                                         stringK += "Right Knee:\n" + String.format("%.1f", rightKneeAngles[index])
 
                                     } else {
@@ -496,7 +420,6 @@ class SecondActivity : ComponentActivity()
 
                                     }
                                     if (index < leftKneeAngles.size) {
-                                        //string += "\nLeft Knee:\n" + leftKneeAngles[index].toString()
                                         stringK += "\nLeft Knee:\n" + String.format("%.1f", leftKneeAngles[index])
                                     } else {
                                         stringK += "\nLeft Knee:\nERROR"
@@ -505,14 +428,12 @@ class SecondActivity : ComponentActivity()
 
                                     var stringH = ""
                                     if (index < rightHipAngles.size) {
-                                        //string += "Right Hip:\n" + rightHipAngles[index].toString()
                                         stringH += "Right Hip:\n" + String.format("%.1f", rightHipAngles[index])
                                     } else {
                                         stringH += "Right Hip:\nERROR"
 
                                     }
                                     if (index < leftHipAngles.size) {
-                                        //string += "\nLeft Hip:\n" + leftHipAngles[index].toString()
                                         stringH += "\nLeft Hip:\n" + String.format("%.1f", leftHipAngles[index])
                                     } else {
                                         stringH += "\nLeft Hip:\nERROR"
@@ -521,7 +442,6 @@ class SecondActivity : ComponentActivity()
 
                                     var stringT = ""
                                     if (index < torsoAngles.size) {
-                                        //string += "\nTorso:\n" + torsoAngles[index].toString()
                                         stringT += "\nTorso:\n" + String.format("%.1f", torsoAngles[index])
 
                                     } else {
@@ -538,18 +458,12 @@ class SecondActivity : ComponentActivity()
                         videoView.start()
                         handler.post(updateRunnable!!)
                     }
-                    videoView.setOnCompletionListener {
-//                                handler.removeCallbacks(updateRunnable)
-//                        Log.d("ErrorCheck", "Right Ankle Angles: ${rightAnkleAngles}")
-//                        Log.d("ErrorCheck", "Left Ankle Angles: ${leftAnkleAngles}")
-//                        Log.d("ErrorCheck", "Last Right Ankle: ${rightAnkleAngles[rightAnkleAngles.size-1]}\n")
-//                        Log.d("ErrorCheck", "Last Left Ankle: ${leftAnkleAngles[leftAnkleAngles.size-1]}\n")
-                    }
+
                 } catch(e:Exception){
                     Log.e("ErrorChecking", "Error processing video: ${e.message}", e)
-                    //Log.e("ErrorChecking", "Output Path: $outputPath")
                     Log.e("ErrorChecking", "Generated URI: ${editedUri}")
-                    e.printStackTrace()                }
+                    e.printStackTrace()
+                }
             }
         } ?:run{
             Log.e("ErrorChecking", "Gallery URI is NULL")

@@ -1,43 +1,30 @@
 package GaitVision.com
-import kotlin.math.exp
+
 import kotlin.math.PI
-import kotlin.math.pow
-import android.util.Log
 import kotlin.math.acos
 import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sqrt
 
-fun symmetry()
+
+/*
+Name          : calcTorso
+Parameters    :
+
+    hipX      : x coordinate of the hip average on the bitmap.
+    hipY      : y coordinate of the hip average on the bitmap.
+    shoulderX : x coordinate of the shoulder on the bitmap.
+    shoulderY : y coordinate of the shoulder on the bitmap.
+Description   : This function takes the input of the position of the hip average position and the
+                shoulder average position and gets the angle between then and the vertical.
+                0 degrees means hips and shoulder are vertical with each other.
+                Positive degrees means the person is leaning back from the vertical.
+                Negative degrees means the person is leaning forward from the vertical.
+Return        :
+      Float   : Returns the angle in degrees between the hips and shoulder from the vertical.
+ */
+fun calcTorso(hipX: Float, hipY: Float, shoulderX: Float, shoulderY: Float): Float
 {
-    var strideAngleMaxs: List<Float> = FindLocalMax(strideAngles)
-    var strideLengthMaxs: List<Float>
-
-    for(i in strideAngleMaxs.indices)
-    {
-        Log.d("ErrorCheck", "Stride Angle: ${strideAngleMaxs[i]} Stride Length: ${strideLengths[i]}")
-    }
-
-}
-
-fun swingTimeWithFrameIndex(){
-
-}
-
-fun stepTime()
-{
-
-}
-
-
-fun centerOfMass(lHipX: Float, lHipY: Float, rHipX: Float, rHipY: Float,lShoulderX: Float, lShoulderY: Float, rShoulderX: Float, rShoulderY: Float)
-{
-    var comX = (lHipX + rHipX + lShoulderX + rShoulderX) / 4F
-    var comY = (lHipY + rHipY + lShoulderY + rShoulderY) / 4F
-    centerOfMasses.add(Pair(comX,comY))
-}
-
-fun calcTorso(hipX: Float, hipY: Float, shoulderX: Float, shoulderY: Float): Float {
     // Calculate the differences in X and Y coordinates
     val deltaX = hipX - shoulderX
     val deltaY = hipY - shoulderY
@@ -48,6 +35,23 @@ fun calcTorso(hipX: Float, hipY: Float, shoulderX: Float, shoulderY: Float): Flo
     return angle.toFloat()
 }
 
+/*
+Name           : calcStrideAngle
+Parameters     :
+    leftHeelX  : x coordinate of the left heel on the bitmap.
+    leftHeelY  : y coordinate of the left heel on the bitmap.
+    hipX       : x coordinate of the hip average on the bitmap.
+    hipY       : y coordinate of the hip average on the bitmap.
+    rightHeelX : x coordinate of the right heel on the bitmap.
+    rightHeelY : y coordinate of the right heel on the bitmap.
+Description    : This function will take the position of the left heel, hip, and right heel
+                 and calculate the angle between the heels and hip at the current time and
+                 add it it a running list to use for calculating average stride length and
+                 total stride distance.
+Return         :
+    Float      : Returns the angle in degrees between the heels and the hip.
+
+ */
 fun calcStrideAngle(leftHeelX: Float, leftHeelY: Float, hipx: Float, hipY: Float, rightHeelX: Float, rightHeelY: Float) : Float
 {
     var htol = sqrt(((leftHeelX - hipx)*(leftHeelX - hipx))+((leftHeelY-hipY)*(leftHeelY-hipY)))
@@ -56,56 +60,22 @@ fun calcStrideAngle(leftHeelX: Float, leftHeelY: Float, hipx: Float, hipY: Float
 
     var cosAngle : Float = ((htol * htol) + (htor * htor) - (ltor * ltor))/(2*htol*htor)
     var angle = acos(cosAngle) * (180/PI.toFloat())
-    strideLengths.add(ltor)
     return String.format("%.2f", angle).toFloat()
 }
 
-
-
-
-fun smoothDataUsingGaussianFilter(data: MutableList<Float>, sigma: Double) {
-    val smoothedData = mutableListOf<Float>()
-    val windowSize = (sigma * 6).toInt()  // Usually window size is 6 * sigma
-
-    // Calculate the Gaussian kernel
-    val kernel = Array(windowSize) { i ->
-        val x = i - windowSize / 2
-        exp(-0.5 * (x / sigma).pow(2)) / (sigma * sqrt(2 * PI))
-    }
-
-    // Normalize the kernel
-    val kernelSum = kernel.sum()
-    val normalizedKernel = kernel.map { it / kernelSum }
-
-    for (i in data.indices) {
-        // Apply the Gaussian filter (convolution with the kernel)
-        var smoothedValue = 0.0
-        for (j in 0 until windowSize) {
-            val index = i + j - windowSize / 2
-            if (index in data.indices) {
-                smoothedValue += data[index] * normalizedKernel[j]
-            }
-        }
-        smoothedData.add(smoothedValue.toFloat())
-    }
-
-    // Update the original list with the smoothed values
-    data.clear()
-    data.addAll(smoothedData)
-}
-
-fun smoothDataUsingEMA(data: MutableList<Float>, alpha: Float) {
-    var previousEMA = data[0]  // Initialize with the first data point
-
-    for (i in data.indices) {
-        // Calculate the new EMA
-        val newEMA = alpha * data[i] + (1 - alpha) * previousEMA
-        data[i] = newEMA  // Update the list in place
-        previousEMA = newEMA
-    }
-}
-
-fun smoothDataUsingMovingAverage(data: MutableList<Float>, windowSize: Int) {
+/*
+Name           : smoothDataUsingMovingAverage
+Parameters     :
+    data       : This is the list of angles values to use for smoothing.
+    windowSize : This is the size of values we want to use.
+Description    : This function will take a list of values and a window size and calculate an
+                 average of those values to use for graph smoothing. There is some data lost with
+                 graph smoothing, but allows for better viewing and calculations.
+Return         :
+    NONE
+ */
+fun smoothDataUsingMovingAverage(data: MutableList<Float>, windowSize: Int)
+{
     val smoothedData = mutableListOf<Float>()
 
     for (i in data.indices) {
@@ -125,6 +95,24 @@ fun smoothDataUsingMovingAverage(data: MutableList<Float>, windowSize: Int) {
     data.addAll(smoothedData)  // Add the smoothed data back
 }
 
+/*
+Name        : GetAnglesA
+Parameters  :
+    x1      : x coordinate of the ball of the respective side.
+    y1      : y coordinate of the ball of the respective side.
+    x2      : x coordinate of the ankle of the respective side.
+    y2      : y coordinate of the ankle of the respective side.
+    x3      : x coordinate of the knee of the respective side.
+    y3      : y coordinate of the knee of the respective side.
+Description : This functions takes the position of the ball of the foot, the ankle, and the knee
+              and calculates the ankle angle using the law of cosine.
+              0 degrees means the foot is flat on the ground making a 90 degree angle from the foot
+              to ankle to knee.
+              Negative degrees means the foot is flexed up toward the knee.
+              Positive degrees means the foot is flexed down toward the ground.
+Return      :
+    Float   : Returns the angle in degrees between the ball of the foot, the ankle, and the knee.
+ */
 fun GetAnglesA(x1: Float,y1: Float, x2: Float, y2: Float, x3: Float, y3: Float): Float
 {
     // Get Distances
@@ -140,134 +128,21 @@ fun GetAnglesA(x1: Float,y1: Float, x2: Float, y2: Float, x3: Float, y3: Float):
     return String.format("%.2f", smallerAngle).toFloat() //round to 2 decimal places
 }
 
-fun calculateStanceTimes(
-    angles: MutableList<Float>,
-    threshold: Float = 20f,
-    minStanceDuration: Float = 0.1f,
-    frameRate: Int = 30
-): List<Pair<Float, Float>> {
-    val stanceTimes = mutableListOf<Pair<Float, Float>>()
-    var inStance = false
-    var stanceStartTime: Float? = null
-
-    // Iterate over each frame's angle.
-    for (i in angles.indices) {
-        val timestamp = i / frameRate.toFloat()  // Convert frame index to seconds.
-        val angle = angles[i]
-
-        // Assume the foot is in stance if the absolute anatomical ankle angle is within the threshold.
-        if (!inStance) {
-            if (kotlin.math.abs(angle) <= threshold) {
-                inStance = true
-                stanceStartTime = timestamp
-            }
-        } else {
-            // If the angle leaves the threshold, the stance phase has ended.
-            if (kotlin.math.abs(angle) > threshold) {
-                inStance = false
-                val stanceEndTime = timestamp
-                val duration = stanceEndTime - (stanceStartTime ?: stanceEndTime)
-                if (duration >= minStanceDuration) {
-                    stanceTimes.add(Pair(stanceStartTime ?: 0f, stanceEndTime))
-                }
-            }
-        }
-    }
-
-    // In case the stance phase continues until the last frame:
-    if (inStance && stanceStartTime != null) {
-        val stanceEndTime = angles.size / frameRate.toFloat()
-        val duration = stanceEndTime - stanceStartTime
-        if (duration >= minStanceDuration) {
-            stanceTimes.add(Pair(stanceStartTime, stanceEndTime))
-        }
-    }
-
-    return stanceTimes
-}
-
-fun averageStanceTime(stanceTimes: List<Pair<Float, Float>>): Float {
-    if (stanceTimes.isEmpty()) return 0f
-
-    var totalDuration = 0f
-    for ((start, end) in stanceTimes) {
-        totalDuration += (end - start)
-    }
-    return totalDuration / stanceTimes.size
-}
-
-fun calculateSwingTimes(
-    angles: MutableList<Float>,
-    // Use a threshold that defines when the foot is considered "in swing".
-    // For example, if the anatomical ankle angle (deviation from neutral) is greater than 20°,
-    // we consider the foot to be in swing.
-    threshold: Float = 20f,
-    minSwingDuration: Float = 0.1f,  // Minimum duration (in seconds) to count as a valid swing phase.
-    frameRate: Int = 30             // Frames per second.
-): List<Pair<Float, Float>> {
-    val swingTimes = mutableListOf<Pair<Float, Float>>()
-    var inSwing = false
-    var swingStartTime: Float? = null
-
-    // Loop through each frame in the angle time series.
-    for (i in angles.indices) {
-        val timestamp = i / frameRate.toFloat()  // Convert frame index to seconds.
-        val angle = angles[i]
-
-        // Here, we define the swing phase as when the absolute anatomical angle is above the threshold.
-        if (!inSwing) {
-            // Not currently in swing, so check if we are entering swing.
-            if (kotlin.math.abs(angle) > threshold) {
-                inSwing = true
-                swingStartTime = timestamp
-            }
-        } else {
-            // We are in swing. Check if the foot is returning to a stance (angle falls within threshold).
-            if (kotlin.math.abs(angle) <= threshold) {
-                inSwing = false
-                val swingEndTime = timestamp
-                val duration = swingEndTime - (swingStartTime ?: swingEndTime)
-                if (duration >= minSwingDuration) {
-                    swingTimes.add(Pair(swingStartTime ?: 0f, swingEndTime))
-                }
-            }
-        }
-    }
-
-    // If a swing phase is ongoing at the end of the sequence, record it.
-    if (inSwing && swingStartTime != null) {
-        val swingEndTime = angles.size / frameRate.toFloat()
-        val duration = swingEndTime - swingStartTime
-        if (duration >= minSwingDuration) {
-            swingTimes.add(Pair(swingStartTime, swingEndTime))
-        }
-    }
-
-    return swingTimes
-}
-fun averageSwingTime(swingTimes: List<Pair<Float, Float>>): Float {
-    if (swingTimes.isEmpty()) return 0f
-
-    var totalDuration = 0f
-    for ((start, end) in swingTimes) {
-        totalDuration += (end - start)
-    }
-    return totalDuration / swingTimes.size
-}
-
-fun calculateSwingStanceRatio(
-    swingTime: Float,
-    stanceTime:Float
-): Float {
-    // Return the ratio
-    return swingTime / stanceTime
-}
-
+/*
+Name             : calcStrideLength
+Parameters       :
+    heightInches : Height in inches of the participant given from the user input.
+Description      : This function takes the participants height and uses a helper function to find
+                   the local maximums of the participants stride. It will use those values
+                   to calculate the total stride (distance) the participant walked in meters.
+Return           :
+    Float        : Returns the total distance the participant walked in meters.
+ */
 fun calcStrideLength(heightInches: Float) : Float
 {
     var maxAngles: List<Float>
     maxAngles = FindLocalMax(strideAngles)
-    var sum: Float = 0f
+    var sum = 0f
     for(i in maxAngles.indices)
     {
         // Estimate hip-to-heel distance as 40-45% of height
@@ -288,11 +163,22 @@ fun calcStrideLength(heightInches: Float) : Float
     return sum
 }
 
+/*
+Name             : calcStrideLengthAvg
+Parameters       :
+    heightInches : Height in inches of the participant given from the user input.
+Description      : This function takes the participants height and uses a helper function to find
+                   the local maximums of the participants stride. It will use those values
+                   to calculate the total stride (distance) the participant walked in meters. Then
+                   we can find the average distance the participant took every step.
+Return           :
+    Float        : Returns the average distance the participant took with every step.
+ */
 fun calcStrideLengthAvg(heightInches: Float) : Float
 {
     var maxAngles: List<Float>
     maxAngles = FindLocalMax(strideAngles)
-    var sum: Float = 0f
+    var sum = 0f
     for(i in maxAngles.indices)
     {
         // Estimate hip-to-heel distance as 40-45% of height
