@@ -35,6 +35,15 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 
+/*
+Name             : plotLineGraph
+Parameters       :
+    lineChart    : LineChart used in graph creation
+    L/R Data     : Left and right Angles lists
+    L/R Labels   : Labels for graphs to be created
+Description      : Plots line graph using left angles as blue and right angles as red
+Return           : None
+ */
 fun plotLineGraph(
     lineChart: LineChart,
     leftData: List<Float>,
@@ -379,6 +388,13 @@ fun drawOnBitmap(bitmap: Bitmap, pose: Pose?): Bitmap
     return bitmap
 }
 
+/*
+Name             : GraphActivity Class
+Parameters       : None
+Description      : Moved from its own file to imageProcessing for ease of use.
+                   Creates Graph on screen using PlotLineGraph function
+Return           : N/A
+ */
 class GraphActivity : ComponentActivity() {
     companion object {
         lateinit var lineChartKnees: LineChart

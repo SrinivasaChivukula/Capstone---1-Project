@@ -5,6 +5,13 @@ import kotlin.math.acos
 import kotlin.math.pow
 import kotlin.math.sqrt
 
+/*
+Name             : CalculateDistance
+Parameters       :
+    Coordinates   : 2 pairs of x,y coordinates.
+Description      : Finds the length of a line using 2 x coordinates and 2 y coordinates.
+Return           : Length of a line in arbitrary measurements (Only use in context of ratios)
+ */
 fun CalculateDistance(x1: Float, y1: Float, x2: Float, y2: Float): Float
 {
     val xDifference = x2 - x1
@@ -12,7 +19,13 @@ fun CalculateDistance(x1: Float, y1: Float, x2: Float, y2: Float): Float
     return sqrt(xDifference.pow(2) + yDifference.pow(2))
 }
 
-
+/*
+Name             : GetAngles
+Parameters       :
+    Coordinates  : 3 pairs of x,y coordinates.
+Description      : Uses Calculate Distance to find length of all 3 sides of triangle which then uses law of cosines to find the angle
+Return           : Angle altered to be within expected format of Gait-Analysis
+ */
 fun GetAngles(x1: Float,y1: Float, x2: Float, y2: Float, x3: Float, y3: Float): Float
 {
     // Get Distances
@@ -28,6 +41,13 @@ fun GetAngles(x1: Float,y1: Float, x2: Float, y2: Float, x3: Float, y3: Float): 
     return String.format("%.2f", smallerAngle).toFloat() //round to 2 decimal places
 }
 
+/*
+Name             : FindLocalMax
+Parameters       :
+    AngleList    : Mutable list of angles
+Description      : Finds anytime the graph of angles has a local max in the form x1 < x2 > x3
+Return           : Mutable list composed of only local max angles
+ */
 fun FindLocalMax(AngleList: MutableList<Float>): List<Float>
 {
     val localMax: MutableList<Float> = mutableListOf()
@@ -51,6 +71,13 @@ fun FindLocalMax(AngleList: MutableList<Float>): List<Float>
     return localMax
 }
 
+/*
+Name             : FindLocalMin
+Parameters       :
+    AngleList    : Mutable list of angles
+Description      : Finds anytime the graph of angles has a local min in the form x1 > x2 < x3
+Return           : Mutable list composed of only local min angles
+ */
 fun FindLocalMin(AngleList: MutableList<Float>): List<Float>
 {
     val localMin: MutableList<Float> = mutableListOf()
