@@ -15,12 +15,15 @@ import android.os.Looper
 import android.util.Log
 import android.view.View.GONE
 import android.view.View.VISIBLE
+import android.widget.FrameLayout
 import android.widget.MediaController
 import android.widget.PopupMenu
 import android.widget.TextView
 import android.widget.VideoView
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.constraintlayout.widget.ConstraintSet
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -82,24 +85,85 @@ class SecondActivity : ComponentActivity()
                 updateRunnable?.let {
                     handler.removeCallbacks(it)
                 }
+
+                val frameLayout = findViewById<FrameLayout>(R.id.frame_layout)
+                val constraintLayout = frameLayout.parent as ConstraintLayout
+                val constraintSet = ConstraintSet()
+                constraintSet.clone(constraintLayout)
+
+                // Now change the top constraint dynamically
+                constraintSet.connect(
+                    frameLayout.id,
+                    ConstraintSet.TOP,
+                    R.id.HipAngle, // <-- this is the new view you want to constrain to
+                    ConstraintSet.BOTTOM
+                )
+
+                // Apply the updated constraints
+                constraintSet.applyTo(constraintLayout)
                 processAngle("HIP ANGLES")
             }
             else if (id == R.id.menu_knee){
                 updateRunnable?.let {
                     handler.removeCallbacks(it)
                 }
+                val frameLayout = findViewById<FrameLayout>(R.id.frame_layout)
+                val constraintLayout = frameLayout.parent as ConstraintLayout
+                val constraintSet = ConstraintSet()
+                constraintSet.clone(constraintLayout)
+
+                // Now change the top constraint dynamically
+                constraintSet.connect(
+                    frameLayout.id,
+                    ConstraintSet.TOP,
+                    R.id.KneeAngle, // <-- this is the new view you want to constrain to
+                    ConstraintSet.BOTTOM
+                )
+
+                // Apply the updated constraints
+                constraintSet.applyTo(constraintLayout)
                 processAngle("KNEE ANGLES")
             }
             else if (id == R.id.menu_ankle){
                 updateRunnable?.let {
                     handler.removeCallbacks(it)
                 }
+                val frameLayout = findViewById<FrameLayout>(R.id.frame_layout)
+                val constraintLayout = frameLayout.parent as ConstraintLayout
+                val constraintSet = ConstraintSet()
+                constraintSet.clone(constraintLayout)
+
+                // Now change the top constraint dynamically
+                constraintSet.connect(
+                    frameLayout.id,
+                    ConstraintSet.TOP,
+                    R.id.AnkleAngle, // <-- this is the new view you want to constrain to
+                    ConstraintSet.BOTTOM
+                )
+
+                // Apply the updated constraints
+                constraintSet.applyTo(constraintLayout)
                 processAngle("ANKLE ANGLES")
             }
             else if (id == R.id.menu_torso){
                 updateRunnable?.let {
                     handler.removeCallbacks(it)
                 }
+                val frameLayout = findViewById<FrameLayout>(R.id.frame_layout)
+                val constraintLayout = frameLayout.parent as ConstraintLayout
+                val constraintSet = ConstraintSet()
+                constraintSet.clone(constraintLayout)
+
+                // Now change the top constraint dynamically
+                constraintSet.connect(
+                    frameLayout.id,
+                    ConstraintSet.TOP,
+                    R.id.TorsoAngle, // <-- this is the new view you want to constrain to
+                    ConstraintSet.BOTTOM
+                )
+
+                // Apply the updated constraints
+                constraintSet.applyTo(constraintLayout)
                 processAngle("TORSO ANGLE")
             }
             else if (id == R.id.menu_all_agl) {

@@ -154,6 +154,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
+        android:id="@+id/frame_layout"
         app:layout_constraintTop_toBottomOf="@id/HipAngle"
         app:layout_constraintBottom_toTopOf="@id/cal_angle_btn"
         app:layout_constraintStart_toStartOf="parent"
