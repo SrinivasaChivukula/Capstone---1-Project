@@ -79,5 +79,10 @@ contact for clarification at nathaniel.schimpf@gmail.com
 ---
 
 ## References
+-[MPAndroidChart](https://github.com/PhilJay/MPAndroidChart) by Phil Jay (Apache 2.0 License)
 
-TODO
+Special thanks to:
+Guna Sindhuja Siripurapu 
+Dr. Rita Patterson
+Dr. Mark Albert
+Univeristy of North Texas
