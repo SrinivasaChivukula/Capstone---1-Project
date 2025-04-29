@@ -37,7 +37,7 @@ GaitVision in an android application focused on solving the problem of lower tec
 
 ## Technology
 
-- **Language:** Kotlin / Java / Python
+- **Language:** Kotlin / Java
 - **UI Framework:** Android XML
 - **Pose Detection:** MLKit
 - **Gait Score:** Autoencoder

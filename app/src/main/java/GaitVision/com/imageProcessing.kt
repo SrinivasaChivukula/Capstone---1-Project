@@ -389,44 +389,7 @@ fun drawOnBitmap(bitmap: Bitmap, pose: Pose?): Bitmap
 }
 
 /*
-Name             : GraphActivity Class
-Parameters       : None
-Description      : Moved from its own file to imageProcessing for ease of use.
-                   Creates Graph on screen using PlotLineGraph function
-Return           : N/A
- */
-class GraphActivity : ComponentActivity() {
-    companion object {
-        lateinit var lineChartKnees: LineChart
-        lateinit var lineChartAnkles: LineChart
-        lateinit var lineChartHips: LineChart
-        lateinit var lineChartTorso: LineChart
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_graph)
-
-        lineChartKnees = findViewById(R.id.lineChartKnee)
-        lineChartAnkles = findViewById(R.id.lineChartAnkle)
-        lineChartHips = findViewById(R.id.lineChartHip)
-        lineChartTorso = findViewById(R.id.lineChartTorso)
-
-        plotLineGraph(lineChartKnees, leftKneeAngles, rightKneeAngles, "Left Knee Angles", "Right Knee Angles")
-        plotLineGraph(lineChartAnkles, leftAnkleAngles, rightAnkleAngles, "Left Ankle Angles", "Right Ankle Angles")
-        plotLineGraph(lineChartHips, leftHipAngles, rightHipAngles, "Left Hip Angles", "Right Hip Angles")
-        plotLineGraph(lineChartTorso, torsoAngles, torsoAngles, "Torso Angles", "Torso Angles") // Assuming torso is the same
-
-        val uploadCSVBtn = findViewById<Button>(R.id.upload_csv_btn)
-        uploadCSVBtn.setOnClickListener {
-            val intent = Intent(this, GraphActivity::class.java)
-            startActivity(intent)
-        }
-    }
-}
-
-/*
-Name           : ProcVid
+Name           : ProcVidEmpty
 Parameters     :
     context    : This parameter is the interface that contains global information about
                  the application environment.
@@ -610,6 +573,6 @@ suspend fun ProcVidEmpty(context: Context, outputPath: String, mBinding: Activit
 
     val outputFile = File(outputPath)
     val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", outputFile)
-    Log.d("ErrorChecking", "Generated URI: $uri")
+    Log.d("ErrorCheck", "Generated URI: $uri")
     return uri
 }
