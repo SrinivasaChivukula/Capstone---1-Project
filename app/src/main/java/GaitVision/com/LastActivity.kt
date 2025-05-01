@@ -8,6 +8,8 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.Button
 import android.content.Intent
+import android.media.MediaScannerConnection
+import android.net.Uri
 import android.os.Environment
 import android.util.Log
 import android.view.View
@@ -18,6 +20,7 @@ import java.io.FileOutputStream
 import android.widget.TextView
 import org.tensorflow.lite.Interpreter
 import org.tensorflow.lite.support.common.FileUtil
+import java.io.IOException
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import kotlin.math.roundToLong
@@ -361,13 +364,14 @@ class LastActivity : ComponentActivity()
     //Function for renaming the edited video
     private fun renameTo(participantId:String) {
         val vidName = buildString {     //String is built to include participant ID in the name
-            append("Movies/")
             append(participantId)
             append("_video.mp4")
         }
 
-        val oldFilePath = File(Environment.getExternalStorageDirectory(), "Movies/edited_video.mp4")    //Path of the existing edited video
-        val newFilePath = File(Environment.getExternalStorageDirectory(), vidName)                           //New path for the renamed video
+        val oldFilePath = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES), "edited_video.mp4")    //Path of the existing edited video
+        val newFilePath = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES), vidName)                           //New path for the renamed video
+
+        editedUri = Uri.fromFile(newFilePath)
 
         oldFilePath.renameTo(newFilePath)
     }

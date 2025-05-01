@@ -380,7 +380,8 @@ class SecondActivity : ComponentActivity()
 
 
 
-        if (editedUri != null) {
+        if (editedUri != null)
+        {
             //Log check video size and list sizes
             Log.d("ErrorCheck", "RecordVideo edited URI: $editedUri")
             Log.d("ErrorCheck", "VideoSize: ${frameList.size}")
@@ -440,12 +441,28 @@ class SecondActivity : ComponentActivity()
             mBinding.calAngleBtn.visibility = VISIBLE
             mBinding.chooseAglBtn.isClickable = TRUE
 
+            Log.d("ErrorCheck", "URI PATH: ${editedUri?.path}, URI: $editedUri")
+            MediaScannerConnection.scanFile(
+                this@SecondActivity,
+                arrayOf(editedUri?.path),
+                null
+            ) { path, uri ->
+                Log.d(
+                    "ErrorCheck",
+                    "File $path was scanned successfully with URI: $editedUri"
+                )
+            }
+            Log.d("ErrorCheck", "Function URI: ${editedUri}")
             videoView.setVideoURI(editedUri)
+
+
+
             videoView.setOnPreparedListener {
                 videoView.start()
                 handler.post(updateRunnable!!)
             }
-        } else {
+        } else
+        {
             galleryUri?.let {
                 lifecycleScope.launch {
                     try {
@@ -454,8 +471,7 @@ class SecondActivity : ComponentActivity()
                             "ErrorChecking",
                             "galleryUri(RFAR): $galleryUri, galleryPath(RFAR): ${galleryUri?.path}"
                         )
-                        val outputFilePath =
-                            "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)}/edited_video.mp4"
+                        val outputFilePath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)}/edited_video.mp4"
                         val outputFile = File(outputFilePath)
                         if (outputFile.exists()) {
                             Log.d("ErrorChecking", "Video Exists")
@@ -552,18 +568,18 @@ class SecondActivity : ComponentActivity()
                         mBinding.calAngleBtn.visibility = VISIBLE
                         mBinding.chooseAglBtn.isClickable = TRUE
 
-                        Log.d("ErrorChecking", "URI PATH: ${editedUri?.path}, URI: $editedUri")
+                        Log.d("ErrorCheck", "URI PATH: ${editedUri?.path}, URI: $editedUri")
                         MediaScannerConnection.scanFile(
                             this@SecondActivity,
                             arrayOf(editedUri?.path),
                             null
                         ) { path, uri ->
                             Log.d(
-                                "ErrorChecking",
+                                "ErrorCheck",
                                 "File $path was scanned successfully with URI: $editedUri"
                             )
                         }
-                        Log.d("ErrorChecking", "Function URI: ${editedUri}")
+                        Log.d("ErrorCheck", "Function URI: ${editedUri}")
                         videoView.setVideoURI(editedUri)
 
 
@@ -574,13 +590,13 @@ class SecondActivity : ComponentActivity()
                         }
 
                     } catch (e: Exception) {
-                        Log.e("ErrorChecking", "Error processing video: ${e.message}", e)
-                        Log.e("ErrorChecking", "Generated URI: ${editedUri}")
+                        Log.e("ErrorCheck", "Error processing video: ${e.message}", e)
+                        Log.e("ErrorCheck", "Generated URI: ${editedUri}")
                         e.printStackTrace()
                     }
                 }
             } ?: run {
-                Log.e("ErrorChecking", "Gallery URI is NULL")
+                Log.e("ErrorCheck", "Gallery URI is NULL")
             }
         }
     }
