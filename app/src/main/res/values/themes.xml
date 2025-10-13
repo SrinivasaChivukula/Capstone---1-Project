@@ -1,22 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <resources>
-
+    <!-- Main App Theme -->
     <style name="Theme.GaitVision" parent="android:Theme.Material.Light.DarkActionBar">
-        <item name = "colorPrimary">@color/black</item>
-        <item name = "colorPrimaryVariant">@color/black</item>
-        <item name = "colorOnPrimary">@color/black</item>
-
-        <item name = "colorSecondary">@color/logo_blue</item>
-        <item name = "colorSecondaryVariant">@color/logo_blue</item>
-        <item name = "colorOnSecondary">@color/white</item>
-
-
-        <item name = "android:statusBarColor">?attr/colorPrimaryVariant</item>
-
+        <!-- Primary Colors -->
+        <item name="colorPrimary">@color/primary_blue</item>
+        <item name="colorPrimaryDark">@color/primary_blue_dark</item>
+        <item name="colorAccent">@color/secondary_teal</item>
+        
+        <!-- Background Colors -->
+        <item name="android:colorBackground">@color/background_light</item>
+        <item name="android:windowBackground">@color/background_light</item>
+        
+        <!-- Status Bar -->
+        <item name="android:statusBarColor">@color/primary_blue</item>
+        <item name="android:windowLightStatusBar">false</item>
+        
+        <!-- Text Colors -->
+        <item name="android:textColorPrimary">@color/text_primary</item>
+        <item name="android:textColorSecondary">@color/text_secondary</item>
     </style>
 
-
+    <!-- Dialog Animation -->
     <style name="DialogAnimation">
         <item name="android:windowEnterAnimation">@anim/slide_in</item>
         <item name="android:windowExitAnimation">@anim/slide_out</item>

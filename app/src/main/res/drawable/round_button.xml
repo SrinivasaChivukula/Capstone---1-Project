@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
-
-    <solid
-        android:color="@color/logo_Green" />
-
-    <corners
-        android:topLeftRadius="50dp"
-        android:topRightRadius="50dp"
-        android:bottomLeftRadius="50dp"
-        android:bottomRightRadius="50dp"/>
-
-</shape>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <shape android:shape="oval">
+            <solid android:color="@color/button_secondary_pressed" />
+            <stroke android:width="2dp" android:color="@color/white" />
+        </shape>
+    </item>
+    <item android:state_enabled="true">
+        <shape android:shape="oval">
+            <solid android:color="@color/button_secondary" />
+            <stroke android:width="2dp" android:color="@color/white" />
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="oval">
+            <solid android:color="@color/button_secondary" />
+            <stroke android:width="2dp" android:color="@color/white" />
+        </shape>
+    </item>
+</selector>

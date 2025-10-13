@@ -8,80 +8,125 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <androidx.cardview.widget.CardView
-        android:padding="10dp"
-        app:cardCornerRadius="15dp"
-        android:background="@color/white"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:padding="0dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="16dp"
+        android:background="@color/card_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="24dp">
 
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:padding="32dp">
 
-            <TextView
-                android:id="@+id/help01_title"
+            <!-- Header -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="5dp"
-                android:gravity="center"
-                android:padding="5dp"
-                android:text="HOW TO USE"
-                android:textColor="@color/logo_Green"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:visibility="visible"
-                tools:ignore="HardcodedText" />
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="24dp">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/white">
+                <ImageView
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_help_modern"
+                    android:layout_marginEnd="16dp" />
 
                 <TextView
-                    android:id="@+id/help01_message"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/help01_title"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:gravity="center"
-                    android:padding="10dp"
-                    android:text="Enter patient details. RECORD or SELECT VIDEO then PERFORM ANALYSIS. For optimal analysis, video should be no longer than 10 seconds."
+                    android:layout_weight="1"
+                    android:text="How to Use GaitVision"
+                    android:textColor="@color/text_primary"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <!-- Description -->
+            <TextView
+                android:id="@+id/help01_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/help_content"
+                android:textSize="16sp"
+                android:textColor="@color/text_secondary"
+                android:layout_marginBottom="24dp"
+                android:lineSpacingExtra="4dp" />
+
+            <!-- Instructions -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginBottom="32dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Quick Start Guide:"
+                    android:textSize="18sp"
                     android:textStyle="bold"
-                    tools:ignore="HardcodedText" />
+                    android:textColor="@color/text_primary"
+                    android:layout_marginBottom="16dp" />
 
-                <View
-                    android:id="@+id/help01_view"
+                <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_below="@+id/help01_message"
-                    android:background="@color/white"
-                    android:visibility="gone" />
+                    android:layout_height="wrap_content"
+                    android:text="@string/instruction_step1"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginBottom="8dp" />
 
-                <LinearLayout
+                <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:layout_below="@+id/help01_view"
-                    android:gravity="center"
-                    android:orientation="horizontal">
+                    android:layout_height="wrap_content"
+                    android:text="@string/instruction_step2"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginBottom="8dp" />
 
-                    <Button
-                        android:id="@+id/help01_yes"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center"
-                        android:background="@color/logo_Green"
-                        android:gravity="center"
-                        android:text="OK, GOT IT!"
-                        android:textAllCaps="true"
-                        android:textColor="@color/white"
-                        android:textSize="15sp"
-                        android:textStyle="bold"
-                        tools:ignore="HardcodedText" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/instruction_step3"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginBottom="8dp" />
 
-                </LinearLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/instruction_step4"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_secondary"
+                    android:layout_marginBottom="8dp" />
 
-            </RelativeLayout>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/instruction_step5"
+                    android:textSize="14sp"
+                    android:textColor="@color/text_secondary" />
+
+            </LinearLayout>
+
+            <!-- Action Button -->
+            <Button
+                android:id="@+id/help01_yes"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:text="Got it, let's start!"
+                android:textColor="@color/white"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:background="@drawable/button_primary_modern"
+                android:elevation="4dp" />
 
         </LinearLayout>
 
