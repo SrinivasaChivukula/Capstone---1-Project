@@ -39,6 +39,7 @@ class SecondActivity : ComponentActivity()
     private val handler = Handler(Looper.getMainLooper())
     private var updateRunnable : Runnable? = null
 
+        //Stop runnable if user wants to go back to first page
 
     override fun onCreate(savedInstanceState: Bundle?)
     {
