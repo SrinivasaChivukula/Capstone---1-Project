@@ -48,7 +48,6 @@ class SecondActivity : ComponentActivity()
         setContentView(mBinding.root)
 
 
-        //Stop runnable if user wants to go back to first page
         onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true)
         {
             override fun handleOnBackPressed()
