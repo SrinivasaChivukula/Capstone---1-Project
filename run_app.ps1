@@ -2,6 +2,7 @@
 Write-Host "GaitVision Android App Runner" -ForegroundColor Green
 Write-Host "============================" -ForegroundColor Green
 
+# Se the android path righ here and it works out
 $ANDROID_HOME = "C:\Users\$env:USERNAME\AppData\Local\Android\Sdk"
 $ADB_PATH = "$ANDROID_HOME\platform-tools-2\adb.exe"
 
