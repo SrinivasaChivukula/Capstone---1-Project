@@ -1,7 +1,7 @@
 package GaitVision.com.ui.theme
 // This is the color pallet file with the color schema
 import androidx.compose.ui.graphics.Color
-
+// These are the suitable colors
 val Purple80 = Color(0xFFD0BCFF)
 val PurpleGrey80 = Color(0xFFCCC2DC)
 val Pink80 = Color(0xFFEFB8C8)
