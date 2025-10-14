@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    
+    <!-- Chart Background -->
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M3,13h2v8H3V13zM7,9h2v12H7V9zM11,5h2v16h-2V5zM15,1h2v20h-2V1zM19,7h2v14h-2V7z" />
+    
+    <!-- Data Points -->
+    <circle
+        android:fillColor="@color/accent_green"
+        android:cx="4"
+        android:cy="18"
+        android:r="1.5" />
+    <circle
+        android:fillColor="@color/accent_green"
+        android:cx="8"
+        android:cy="14"
+        android:r="1.5" />
+    <circle
+        android:fillColor="@color/accent_green"
+        android:cx="12"
+        android:cy="8"
+        android:r="1.5" />
+    <circle
+        android:fillColor="@color/accent_green"
+        android:cx="16"
+        android:cy="4"
+        android:r="1.5" />
+    <circle
+        android:fillColor="@color/accent_green"
+        android:cx="20"
+        android:cy="10"
+        android:r="1.5" />
+    
+    <!-- Trend Line -->
+    <path
+        android:fillColor="@color/primary_blue"
+        android:pathData="M3,18L8,14L12,8L16,4L20,10"
+        android:strokeWidth="2"
+        android:strokeLineCap="round" />
+    
+</vector>

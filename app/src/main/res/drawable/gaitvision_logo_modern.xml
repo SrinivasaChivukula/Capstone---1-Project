@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    
+    <!-- Background Circle with Gradient -->
+    <path
+        android:fillColor="@color/primary_blue"
+        android:pathData="M100,100 m-90,0 a90,90 0,1 1,180 0 a90,90 0,1 1,-180 0" />
+    
+    <!-- Inner Circle -->
+    <path
+        android:fillColor="@color/white"
+        android:pathData="M100,100 m-75,0 a75,75 0,1 1,150 0 a75,75 0,1 1,-150 0" />
+    
+    <!-- Human Figure - Modern Walking Pose -->
+    <!-- Head -->
+    <path
+        android:fillColor="@color/primary_blue"
+        android:pathData="M100,50 A12,12 0,1 1,100,74 A12,12 0,1 1,100,50 Z" />
+    
+    <!-- Body -->
+    <path
+        android:fillColor="@color/primary_blue"
+        android:pathData="M100,74 L100,120"
+        android:strokeWidth="8"
+        android:strokeLineCap="round" />
+    
+    <!-- Arms in Dynamic Walking Motion -->
+    <path
+        android:fillColor="@color/primary_blue"
+        android:pathData="M100,85 L80,100"
+        android:strokeWidth="6"
+        android:strokeLineCap="round" />
+    <path
+        android:fillColor="@color/primary_blue"
+        android:pathData="M100,85 L120,95"
+        android:strokeWidth="6"
+        android:strokeLineCap="round" />
+    
+    <!-- Legs in Walking Stride -->
+    <path
+        android:fillColor="@color/primary_blue"
+        android:pathData="M100,120 L85,150"
+        android:strokeWidth="8"
+        android:strokeLineCap="round" />
+    <path
+        android:fillColor="@color/primary_blue"
+        android:pathData="M100,120 L115,140"
+        android:strokeWidth="8"
+        android:strokeLineCap="round" />
+    
+    <!-- Motion Trail with Gradient Effect -->
+    <path
+        android:fillColor="@color/secondary_teal"
+        android:pathData="M30,100 Q65,95 100,100 Q135,105 170,100"
+        android:strokeWidth="6"
+        android:strokeLineCap="round" />
+    
+    <!-- Data Analysis Points -->
+    <path
+        android:fillColor="@color/accent_emerald"
+        android:pathData="M50,100 A5,5 0,1 1,50,110 A5,5 0,1 1,50,100 Z" />
+    <path
+        android:fillColor="@color/accent_emerald"
+        android:pathData="M70,98 A5,5 0,1 1,70,108 A5,5 0,1 1,70,98 Z" />
+    <path
+        android:fillColor="@color/accent_emerald"
+        android:pathData="M130,102 A5,5 0,1 1,130,112 A5,5 0,1 1,130,102 Z" />
+    <path
+        android:fillColor="@color/accent_emerald"
+        android:pathData="M150,100 A5,5 0,1 1,150,110 A5,5 0,1 1,150,100 Z" />
+    
+    <!-- Analysis Grid (Subtle) -->
+    <path
+        android:fillColor="@color/surface_light"
+        android:pathData="M25,25 L25,175 M45,25 L45,175 M65,25 L65,175 M135,25 L135,175 M155,25 L155,175 M175,25 L175,175"
+        android:strokeWidth="0.5" />
+    <path
+        android:fillColor="@color/surface_light"
+        android:pathData="M25,25 L175,25 M25,45 L175,45 M25,65 L175,65 M25,135 L175,135 M25,155 L175,155 M25,175 L175,175"
+        android:strokeWidth="0.5" />
+    
+    <!-- Medical Cross Symbol -->
+    <path
+        android:fillColor="@color/accent_rose"
+        android:pathData="M100,20 L100,30 M95,25 L105,25"
+        android:strokeWidth="3"
+        android:strokeLineCap="round" />
+    
+    <!-- Pulse Wave -->
+    <path
+        android:fillColor="@color/accent_purple"
+        android:pathData="M40,160 L50,150 L60,160 L70,140 L80,160 L90,150 L100,160 L110,150 L120,160 L130,140 L140,160 L150,150 L160,160"
+        android:strokeWidth="3"
+        android:strokeLineCap="round" />
+    
+</vector>

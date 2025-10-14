@@ -2,21 +2,33 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <solid android:color="@color/button_primary_pressed" />
+            <gradient
+                android:type="linear"
+                android:angle="135"
+                android:startColor="@color/button_primary_pressed"
+                android:endColor="@color/primary_deep_blue" />
             <corners android:radius="16dp" />
             <stroke android:width="0dp" />
         </shape>
     </item>
     <item android:state_enabled="true">
         <shape android:shape="rectangle">
-            <solid android:color="@color/button_primary" />
+            <gradient
+                android:type="linear"
+                android:angle="135"
+                android:startColor="@color/button_primary"
+                android:endColor="@color/primary_blue_light" />
             <corners android:radius="16dp" />
             <stroke android:width="0dp" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
-            <solid android:color="@color/button_primary" />
+            <gradient
+                android:type="linear"
+                android:angle="135"
+                android:startColor="@color/button_primary"
+                android:endColor="@color/primary_blue_light" />
             <corners android:radius="16dp" />
             <stroke android:width="0dp" />
         </shape>

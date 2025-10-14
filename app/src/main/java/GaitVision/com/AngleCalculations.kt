@@ -18,7 +18,6 @@ fun CalculateDistance(x1: Float, y1: Float, x2: Float, y2: Float): Float
     val yDifference = y2 - y1
     return sqrt(xDifference.pow(2) + yDifference.pow(2))
 }
-
 /*
 Name             : GetAngles
 Parameters       :

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_gradient">
+
+    <!-- Animated Logo -->
+    <ImageView
+        android:id="@+id/splash_logo"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_centerInParent="true"
+        android:src="@drawable/gaitvision_logo_modern"
+        android:contentDescription="GaitVision Logo" />
+
+    <!-- App Title -->
+    <TextView
+        android:id="@+id/splash_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/splash_logo"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"
+        android:text="GaitVision"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:textColor="@color/primary_blue"
+        android:fontFamily="@font/montserrat_variablefont_wght"
+        android:shadowColor="@color/primary_blue_pale"
+        android:shadowDx="0"
+        android:shadowDy="2"
+        android:shadowRadius="8" />
+
+    <!-- Subtitle -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/splash_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"
+        android:text="@string/app_subtitle"
+        android:textSize="18sp"
+        android:textColor="@color/text_secondary"
+        android:gravity="center" />
+
+    <!-- Loading Indicator -->
+    <ProgressBar
+        android:id="@+id/splash_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/splash_title"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="48dp"
+        android:indeterminateTint="@color/primary_blue" />
+
+    <!-- Version Info -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="32dp"
+        android:text="v1.0.0"
+        android:textSize="14sp"
+        android:textColor="@color/text_tertiary" />
+
+</RelativeLayout>
