@@ -30,19 +30,7 @@ import kotlin.math.sqrt
 
 class LastActivity : ComponentActivity()
 {
-    /*
-    Name           : loadFloatBinFile
-    Parameters     :
-        context    : This parameter is the interface that contains global information about
-                     the application environment.
-        filename   : This is the filename/path for the file we want to open.
-    Description    : This function will read in the data from file specified for use in the gait score
-                     process. It reads the entire binary file and converts the values in little endian
-                      to floats that were originally used.
-    Return         :
-        FloatArray : Returns an array of the float values to be used for calculating the gait score.
-                     Array is a 1 by 9 array
-     */
+   
     fun loadFloatBinFile(context: Context, filename: String): FloatArray {
         //Open file and read all the data
         val inputStream = context.assets.open(filename)
