@@ -19,6 +19,9 @@ _2-D Gait Analysis for clinical use._
 ## Overview
 
 GaitVision in an android application focused on solving the problem of lower technology access for gait analysis in developing parts of the world. Using a minimum ammount of hardware only requiring:
+1. Android phone
+2. GaitVision Software
+3. Camera access OR stored videos
 
 ---
 
