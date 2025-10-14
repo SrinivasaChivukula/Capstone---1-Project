@@ -18,7 +18,13 @@ fun CalculateDistance(x1: Float, y1: Float, x2: Float, y2: Float): Float
     val yDifference = y2 - y1
     return sqrt(xDifference.pow(2) + yDifference.pow(2))
 }
-
+/*
+Name             : GetAngles
+Parameters       :
+    Coordinates  : 3 pairs of x,y coordinates.
+Description      : Uses Calculate Distance to find length of all 3 sides of triangle which then uses law of cosines to find the angle
+Return           : Angle altered to be within expected format of Gait-Analysis
+ */
 fun GetAngles(x1: Float,y1: Float, x2: Float, y2: Float, x3: Float, y3: Float): Float
 {
     // Get Distances
