@@ -7,7 +7,22 @@ import kotlin.math.cos
 import kotlin.math.sqrt
 
 
+/*
+Name          : calcTorso
+Parameters    :
 
+    hipX      : x coordinate of the hip average on the bitmap.
+    hipY      : y coordinate of the hip average on the bitmap.
+    shoulderX : x coordinate of the shoulder on the bitmap.
+    shoulderY : y coordinate of the shoulder on the bitmap.
+Description   : This function takes the input of the position of the hip average position and the
+                shoulder average position and gets the angle between then and the vertical.
+                0 degrees means hips and shoulder are vertical with each other.
+                Positive degrees means the person is leaning back from the vertical.
+                Negative degrees means the person is leaning forward from the vertical.
+Return        :
+      Float   : Returns the angle in degrees between the hips and shoulder from the vertical.
+ */
 fun calcTorso(hipX: Float, hipY: Float, shoulderX: Float, shoulderY: Float): Float
 {
     // Calculate the differences in X and Y coordinates
