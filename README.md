@@ -27,11 +27,11 @@ GaitVision in an android application focused on solving the problem of lower tec
 
 ## Features
 
-- [Record Videos in App]
-- [Alter Input video to show angles at timepoint]
-- [Show gait score estimate from autoencoder]
-- [Show graph of angles for analysis]
-- [Store CSV of angles on local machine for later use]
+- Records Videos in App
+- Alters Input video to show angles at timepoint
+- Shows gait score estimate from autoencoder
+- Shows graph of angles for analysis
+- Stores CSV of angles on local machine for later use
 
 ---
 
