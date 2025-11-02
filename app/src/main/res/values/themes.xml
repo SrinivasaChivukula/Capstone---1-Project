@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Main App Theme -->
-    <style name="Theme.GaitVision" parent="android:Theme.Material.Light.DarkActionBar">
+    <style name="Theme.GaitVision" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <!-- Primary Colors -->
         <item name="colorPrimary">@color/primary_blue</item>
         <item name="colorPrimaryDark">@color/primary_blue_dark</item>
