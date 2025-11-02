@@ -22,6 +22,10 @@ var strideAngles: MutableList<Float> = mutableListOf()
 var participantId: String = ""
 var participantHeight: Int = 0
 
+//Database IDs for current session
+var currentPatientId: Long? = null
+var currentVideoId: Long? = null
+
 //Variable for counting angle faults
 var count: Int = 0;
 

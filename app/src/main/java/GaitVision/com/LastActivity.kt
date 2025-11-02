@@ -1,5 +1,8 @@
 package GaitVision.com
 
+import GaitVision.com.data.AppDatabase
+import GaitVision.com.data.GaitScore
+import GaitVision.com.data.repository.GaitScoreRepository
 import android.app.Dialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
@@ -14,7 +17,12 @@ import android.os.Environment
 import android.util.Log
 import android.view.View
 import android.widget.PopupMenu
+import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.io.File
 import java.io.FileOutputStream
 import android.widget.TextView
@@ -187,7 +195,65 @@ class LastActivity : ComponentActivity()
 
         //Update score
         var scoreTextView = findViewById<TextView>(R.id.score_textview)
-        scoreTextView.text = gaitIndexScaled.roundToLong().toString()
+        val finalScore = gaitIndexScaled.roundToLong().toDouble()
+        scoreTextView.text = finalScore.toLong().toString()
+
+        // Save gait score to database
+        if (currentPatientId != null && currentVideoId != null) {
+            lifecycleScope.launch {
+                try {
+                    val database = AppDatabase.getDatabase(this@LastActivity)
+                    val gaitScoreRepository = GaitScoreRepository(database.gaitScoreDao())
+
+                    withContext(Dispatchers.IO) {
+                        // Calculate individual joint scores (simple average for now)
+                        val leftKneeScore = if (leftKneeMinAngles.isNotEmpty() && leftKneeMaxAngles.isNotEmpty()) {
+                            (leftKneeMaxAngles.average() - leftKneeMinAngles.average()) / 180.0 * 100.0
+                        } else null
+
+                        val rightKneeScore = if (rightKneeMinAngles.isNotEmpty() && rightKneeMaxAngles.isNotEmpty()) {
+                            (rightKneeMaxAngles.average() - rightKneeMinAngles.average()) / 180.0 * 100.0
+                        } else null
+
+                        val leftHipScore = if (leftHipAngles.isNotEmpty()) {
+                            leftHipAngles.average().toDouble() / 180.0 * 100.0
+                        } else null
+
+                        val rightHipScore = if (rightHipAngles.isNotEmpty()) {
+                            rightHipAngles.average().toDouble() / 180.0 * 100.0
+                        } else null
+
+                        val torsoScore = if (torsoMinAngles.isNotEmpty() && torsoMaxAngles.isNotEmpty()) {
+                            (torsoMaxAngles.average() - torsoMinAngles.average()) / 180.0 * 100.0
+                        } else null
+
+                        val gaitScore = GaitScore(
+                            patientId = currentPatientId!!,
+                            videoId = currentVideoId!!,
+                            overallScore = finalScore,
+                            leftKneeScore = leftKneeScore,
+                            rightKneeScore = rightKneeScore,
+                            leftHipScore = leftHipScore,
+                            rightHipScore = rightHipScore,
+                            torsoScore = torsoScore,
+                            recordedAt = System.currentTimeMillis()
+                        )
+
+                        gaitScoreRepository.insertGaitScore(gaitScore)
+                        Log.d("LastActivity", "Saved gait score: ${gaitScore.overallScore} for video ID: $currentVideoId")
+                    }
+                } catch (e: Exception) {
+                    Log.e("LastActivity", "Error saving gait score: ${e.message}", e)
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(
+                            this@LastActivity,
+                            "Warning: Score not saved to database: ${e.message}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
+        }
 
         val chooseGraphBtn = findViewById<Button>(R.id.select_graph_btn)
         val popupMenu = PopupMenu(this, chooseGraphBtn)
