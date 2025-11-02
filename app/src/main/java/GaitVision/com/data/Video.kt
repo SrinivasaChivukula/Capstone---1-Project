@@ -17,6 +17,7 @@ data class Video(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
     val patientId: Long,
-    val videoPath: String,
+    val originalVideoPath: String, // Original video URI path (galleryUri)
+    val editedVideoPath: String, // Processed video URI path (editedUri)
     val recordedAt: Long = System.currentTimeMillis()
 )

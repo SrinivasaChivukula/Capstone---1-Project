@@ -23,6 +23,9 @@ interface PatientDao {
     @Query("SELECT * FROM patients WHERE firstName LIKE :search OR lastName LIKE :search")
     fun searchPatients(search: String): Flow<List<Patient>>
 
+    @Query("SELECT * FROM patients WHERE participantId = :participantId LIMIT 1")
+    suspend fun getPatientByParticipantId(participantId: String): Patient?
+
     // Update
     @Update
     suspend fun updatePatient(patient: Patient): Int

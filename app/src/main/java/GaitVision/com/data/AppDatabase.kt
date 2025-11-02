@@ -6,8 +6,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [Patient::class, Video::class, GaitScore::class],
-    version = 1,
+    entities = [Patient::class, Video::class, GaitScore::class, AngleData::class],
+    version = 3,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -15,6 +15,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun patientDao(): PatientDao
     abstract fun videoDao(): VideoDao
     abstract fun gaitScoreDao(): GaitScoreDao
+    abstract fun angleDataDao(): AngleDataDao
 
     companion object {
         @Volatile

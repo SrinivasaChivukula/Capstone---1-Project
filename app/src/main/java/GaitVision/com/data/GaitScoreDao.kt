@@ -23,6 +23,9 @@ interface GaitScoreDao {
     @Query("SELECT * FROM gait_scores WHERE patientId = :patientId ORDER BY recordedAt DESC")
     fun getGaitScoresByPatientIdOrdered(patientId: Long): Flow<List<GaitScore>>
 
+    @Query("SELECT * FROM gait_scores WHERE videoId = :videoId")
+    suspend fun getGaitScoreByVideoId(videoId: Long): GaitScore?
+
     @Query("SELECT * FROM gait_scores WHERE patientId = :patientId ORDER BY overallScore DESC LIMIT 1")
     suspend fun getBestScoreForPatient(patientId: Long): GaitScore?
 
@@ -55,6 +58,9 @@ interface GaitScoreDao {
 
     @Query("SELECT COUNT(*) FROM gait_scores WHERE patientId = :patientId")
     suspend fun getGaitScoreCountForPatient(patientId: Long): Int
+
+    @Query("SELECT COUNT(*) FROM gait_scores WHERE videoId = :videoId")
+    suspend fun getGaitScoreCountForVideo(videoId: Long): Int
 
     // Relations - Get patient with their scores
     @Query("""

@@ -68,4 +68,41 @@ class PatientRepository(private val patientDao: PatientDao) {
             }
         }
     }
+
+    suspend fun getPatientByParticipantId(participantId: String): Patient? {
+        return patientDao.getPatientByParticipantId(participantId)
+    }
+
+    suspend fun findOrCreatePatientByParticipantId(
+        participantId: String,
+        height: Int,
+        firstName: String = "",
+        lastName: String = "",
+        age: Int? = null,
+        gender: String? = null
+    ): Patient {
+        val existing = getPatientByParticipantId(participantId)
+        return if (existing != null) {
+            // Update height if provided and different
+            if (existing.height != height) {
+                val updated = existing.copy(height = height)
+                updatePatient(updated)
+                updated
+            } else {
+                existing
+            }
+        } else {
+            // Create new patient
+            val newPatient = Patient(
+                participantId = participantId,
+                firstName = firstName,
+                lastName = lastName,
+                age = age,
+                gender = gender,
+                height = height
+            )
+            val id = insertPatient(newPatient)
+            newPatient.copy(id = id)
+        }
+    }
 }

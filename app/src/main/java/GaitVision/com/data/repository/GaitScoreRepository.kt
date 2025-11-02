@@ -28,6 +28,10 @@ class GaitScoreRepository(private val gaitScoreDao: GaitScoreDao) {
         return gaitScoreDao.getGaitScoresByPatientIdOrdered(patientId)
     }
 
+    suspend fun getGaitScoreByVideoId(videoId: Long): GaitScore? {
+        return gaitScoreDao.getGaitScoreByVideoId(videoId)
+    }
+
     fun getAllGaitScores(): Flow<List<GaitScore>> {
         return gaitScoreDao.getAllGaitScores()
     }
@@ -72,6 +76,10 @@ class GaitScoreRepository(private val gaitScoreDao: GaitScoreDao) {
         return gaitScoreDao.getGaitScoreCountForPatient(patientId)
     }
 
+    suspend fun getGaitScoreCountForVideo(videoId: Long): Int {
+        return gaitScoreDao.getGaitScoreCountForVideo(videoId)
+    }
+
     // Search operations
     fun searchGaitScores(searchQuery: String): Flow<List<GaitScore>> {
         val query = "%$searchQuery%"
@@ -85,5 +93,9 @@ class GaitScoreRepository(private val gaitScoreDao: GaitScoreDao) {
 
     suspend fun hasScoresForPatient(patientId: Long): Boolean {
         return getGaitScoreCountForPatient(patientId) > 0
+    }
+
+    suspend fun hasScoreForVideo(videoId: Long): Boolean {
+        return getGaitScoreCountForVideo(videoId) > 0
     }
 }

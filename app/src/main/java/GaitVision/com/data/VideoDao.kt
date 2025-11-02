@@ -17,6 +17,9 @@ interface VideoDao {
     @Query("SELECT * FROM videos WHERE id = :videoId")
     suspend fun getVideoById(videoId: Long): Video?
 
+    @Query("SELECT * FROM videos WHERE patientId = :patientId AND originalVideoPath = :originalPath LIMIT 1")
+    suspend fun getVideoByPatientAndPath(patientId: Long, originalPath: String): Video?
+
     @Query("SELECT * FROM videos WHERE patientId = :patientId")
     fun getVideosByPatientId(patientId: Long): Flow<List<Video>>
 
