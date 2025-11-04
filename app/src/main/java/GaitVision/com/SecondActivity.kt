@@ -471,8 +471,9 @@ class SecondActivity : ComponentActivity()
                             "ErrorChecking",
                             "galleryUri(RFAR): $galleryUri, galleryPath(RFAR): ${galleryUri?.path}"
                         )
-                        val outputFilePath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)}/edited_video.mp4"
-                        val outputFile = File(outputFilePath)
+                        // Use app-specific external storage - no permissions needed on Android 10+
+                        val outputFile = File(getExternalFilesDir(Environment.DIRECTORY_MOVIES), "edited_video.mp4")
+                        val outputFilePath = outputFile.absolutePath
                         if (outputFile.exists()) {
                             Log.d("ErrorChecking", "Video Exists")
                             outputFile.delete()

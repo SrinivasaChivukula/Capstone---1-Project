@@ -30,6 +30,10 @@ import kotlin.math.sqrt
 
 class LastActivity : ComponentActivity()
 {
+    // Store scores for CSV export
+    private var autoencoderScore: Float = 0f
+    private var pcaScore: Float = 0f
+
     /*
     Name           : loadFloatBinFile
     Parameters     :
@@ -112,6 +116,112 @@ class LastActivity : ComponentActivity()
         return sqrt(sum)  // Return the square root of the sum
     }
 
+    /*
+    Name        : calculateAutoencoderScore
+    Parameters  :
+        scaledInput : The z-score normalized 9-feature input vector
+    Description : This function calculates the gait score using the neural network autoencoder.
+                  It loads the TFLite model, runs inference to get 2D latent space coordinates,
+                  then calculates distances to clean/impaired centroids to produce a score.
+    Return      :
+        Float   : Gait score from 0-100, where higher values indicate more impaired gait
+     */
+    private fun calculateAutoencoderScore(scaledInput: FloatArray): Float {
+        // Load autoencoder model
+        val tfliteModel = FileUtil.loadMappedFile(this, "encoder_model.tflite")
+        val interpreter = Interpreter(tfliteModel)
+        
+        // Load centroids
+        val cleanCentroidStream = assets.open("clean_centroid.npy")
+        val impairedCentroidStream = assets.open("impaired_centroid.npy")
+        val cleanCentroid = loadNpyFloatArray(cleanCentroidStream)
+        val impairedCentroid = loadNpyFloatArray(impairedCentroidStream)
+        
+        // Run autoencoder inference: 9D → 2D
+        val output = Array(1){FloatArray(2)}
+        val input = arrayOf(scaledInput)
+        interpreter.run(input, output)
+        
+        val latentSpace = output[0]
+        Log.d("GaitAnalysis", "Autoencoder Latent: ${latentSpace.contentToString()}")
+        
+        // Calculate distances to centroids
+        val distClean = euclideanDistance(latentSpace, cleanCentroid)
+        val distImpaired = euclideanDistance(latentSpace, impairedCentroid)
+        
+        Log.d("GaitAnalysis", "Autoencoder - DistClean: $distClean, DistImpaired: $distImpaired")
+        
+        // Calculate gait score
+        val gaitIndexUnscaled = 1 - (distClean / (distClean + distImpaired))
+        val gaitIndexScaled = gaitIndexUnscaled * 100
+        
+        // Clean up
+        interpreter.close()
+        cleanCentroidStream.close()
+        impairedCentroidStream.close()
+        
+        return gaitIndexScaled
+    }
+
+    /*
+    Name        : calculatePCAScore
+    Parameters  :
+        inputData : The raw 9-feature input vector (not normalized)
+    Description : Calculates gait score using PCA transformation.
+                  Loads PCA's scaler, normalizes input, transforms to 2D space,
+                  then calculates distances to centroids to produce a score.
+    Return      :
+        Float   : Gait score from 0-100, where higher values indicate more impaired gait
+     */
+    private fun calculatePCAScore(inputData: FloatArray): Float {
+        // Load PCA's scaler (fit on PCA training data)
+        val pcaScalerMean = loadFloatBinFile(this, "scaler_mean_pca.bin")
+        val pcaScalerScale = loadFloatBinFile(this, "scaler_scale_pca.bin")
+        
+        // Make sure no values are smaller than a threshold
+        val minScaleValue = 1e-15f
+        val safePcaScalerScale = pcaScalerScale.map {
+            if (it < minScaleValue) minScaleValue else it
+        }.toFloatArray()
+        
+        // Normalize input using PCA's scaler
+        val scaledInput = FloatArray(inputData.size) { i ->
+            (inputData[i] - pcaScalerMean[i]) / safePcaScalerScale[i]
+        }
+        
+        // Load PCA components matrix (9x2)
+        val pcaComponents = loadFloatBinFile(this, "pca_components.bin")
+        
+        // Reshape components to 9x2 matrix (stored as flat array: 18 floats)
+        // Matrix multiplication: scaledInput (1x9) @ pcaComponents (9x2) = result (1x2)
+        val pcaResult = FloatArray(2)
+        for (i in 0 until 2) {
+            var sum = 0f
+            for (j in 0 until 9) {
+                sum += scaledInput[j] * pcaComponents[j * 2 + i]
+            }
+            pcaResult[i] = sum
+        }
+        
+        Log.d("GaitAnalysis", "PCA Latent: ${pcaResult.contentToString()}")
+        
+        // Load centroids
+        val cleanCentroidPCA = loadFloatBinFile(this, "clean_centroid_pca.bin")
+        val impairedCentroidPCA = loadFloatBinFile(this, "impaired_centroid_pca.bin")
+        
+        // Calculate distances to centroids
+        val distClean = euclideanDistance(pcaResult, cleanCentroidPCA)
+        val distImpaired = euclideanDistance(pcaResult, impairedCentroidPCA)
+        
+        Log.d("GaitAnalysis", "PCA - DistClean: $distClean, DistImpaired: $distImpaired")
+        
+        // Calculate gait score (same formula as autoencoder)
+        val gaitIndexUnscaled = 1 - (distClean / (distClean + distImpaired))
+        val gaitIndexScaled = gaitIndexUnscaled * 100
+        
+        return gaitIndexScaled
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_last)
@@ -130,64 +240,49 @@ class LastActivity : ComponentActivity()
             rightKneeMaxAngles.average().toFloat() - rightKneeMinAngles.average().toFloat()
         )
 
-        //Load files needed for prediction
-        val tfliteModel = FileUtil.loadMappedFile(this, "encoder_model.tflite")
-        val interpreter = Interpreter(tfliteModel)
-        val scalerMean = loadFloatBinFile(this, "scaler_mean.bin")
-        val scalerScale = loadFloatBinFile(this, "scaler_scale.bin")
-        val cleanCentroidStream = assets.open("clean_centroid.npy")
-        val impairedCentroidStream = assets.open("impaired_centroid.npy")
-        val cleanCentroid = loadNpyFloatArray(cleanCentroidStream)
-        val impairedCentroid = loadNpyFloatArray(impairedCentroidStream)
+        //Log check values to see if they look correct
+        Log.d("GaitAnalysis", "InputData: ${inputData.contentToString()}")
 
-        //Make sure no values are smaller than a threshold
-        val minScaleValue = 1e-15f // Define a small threshold for scaler values
-        val safeScalerScale = scalerScale.map {
+        // ==================== AUTOENCODER ANALYSIS ====================
+        // Load autoencoder's scaler
+        val aeScalerMean = loadFloatBinFile(this, "scaler_mean.bin")
+        val aeScalerScale = loadFloatBinFile(this, "scaler_scale.bin")
+        
+        // Make sure no values are smaller than a threshold
+        val minScaleValue = 1e-15f
+        val safeAeScalerScale = aeScalerScale.map {
             if (it < minScaleValue) minScaleValue else it
         }.toFloatArray()
-
-        //Scale input
-        val scaledInput = FloatArray(inputData.size) { i ->
-            (inputData[i] - scalerMean[i]) / safeScalerScale[i]
+        
+        // Normalize input for autoencoder
+        val scaledInputAE = FloatArray(inputData.size) { i ->
+            (inputData[i] - aeScalerMean[i]) / safeAeScalerScale[i]
         }
+        
+        autoencoderScore = calculateAutoencoderScore(scaledInputAE)
+        Log.d("GaitAnalysis", "Autoencoder Score: $autoencoderScore")
 
-        //make input and output arrays for prediction
-        val output = Array(1){FloatArray(2)}
-        val input = arrayOf(scaledInput)
+        // ==================== PCA ANALYSIS ====================
+        // PCA uses its own scaler (fit on PCA training data)
+        pcaScore = calculatePCAScore(inputData)
+        Log.d("GaitAnalysis", "PCA Score: $pcaScore")
 
-        //Predict output
-        interpreter.run(input, output)
+        // ==================== UPDATE UI WITH BOTH SCORES ====================
+        val autoencoderScoreView = findViewById<TextView>(R.id.autoencoder_score)
+        val pcaScoreView = findViewById<TextView>(R.id.pca_score)
+        val comparisonTextView = findViewById<TextView>(R.id.comparison_text)
 
-        //Log check values to see if they look correct
-        Log.d("ErrorCheck", "ScalerMean: ${scalerMean.contentToString()}")
-        Log.d("ErrorCheck", "ScalerScale: ${scalerScale.contentToString()}")
-        Log.d("ErrorCheck", "InputData: ${inputData.contentToString()}")
-        Log.d("ErrorCheck", "ScaledInputData: ${input[0].joinToString(", ")}")
-        Log.d("ErrorCheck", "Output: ${output[0].contentToString()} Length: ${output[0].size}")
-        Log.d("ErrorCheck", "Clean Centroid: ${cleanCentroid.contentToString()} Length: ${cleanCentroid.size}")
-        Log.d("ErrorCheck", "Impaired Centroid: ${impairedCentroid.contentToString()} Length: ${impairedCentroid.size}")
+        autoencoderScoreView.text = autoencoderScore.roundToLong().toString()
+        pcaScoreView.text = pcaScore.roundToLong().toString()
 
-        // Calculate the Euclidean distance between the encoded output and the centroids
-        val distClean = euclideanDistance(output[0], cleanCentroid)
-        val distImpaired = euclideanDistance(output[0], impairedCentroid)
-        Log.d("ErrorCheck", "DistClean: $distClean")
-        Log.d("ErrorCheck", "DistImpaired: $distImpaired")
-
-
-        // Calculate the gait index
-        val gaitIndexUnscaled = 1 - (distClean / (distClean + distImpaired))
-        val gaitIndexScaled = gaitIndexUnscaled * 100  // Scale it from 0 to 100
-
-        // Print or use the gait index
-        Log.d("ErrorCheck", "Gait Index (Unscaled): $gaitIndexUnscaled")
-        Log.d("ErrorCheck", "Gait Index (Scaled): $gaitIndexScaled")
-
-        println("Gait Index (Unscaled): $gaitIndexUnscaled")
-        println("Gait Index (Scaled): $gaitIndexScaled")
-
-        //Update score
-        var scoreTextView = findViewById<TextView>(R.id.score_textview)
-        scoreTextView.text = gaitIndexScaled.roundToLong().toString()
+        // Calculate and display difference
+        val difference = pcaScore - autoencoderScore
+        val diffText = when {
+            difference > 0 -> "PCA +${difference.roundToLong()} higher"
+            difference < 0 -> "Autoencoder +${(-difference).roundToLong()} higher"
+            else -> "Scores match"
+        }
+        comparisonTextView.text = diffText
 
         val chooseGraphBtn = findViewById<Button>(R.id.select_graph_btn)
         val popupMenu = PopupMenu(this, chooseGraphBtn)
@@ -265,7 +360,8 @@ class LastActivity : ComponentActivity()
             rightKneeAngles,
             leftAnkleAngles,
             rightAnkleAngles,
-            torsoAngles
+            torsoAngles,
+            strideAngles
         )
 
         val angleNames = listOf(        //list of names used for files
@@ -275,7 +371,8 @@ class LastActivity : ComponentActivity()
             "RightKnee",
             "LeftAnkle",
             "RightAnkle",
-            "Torso"
+            "Torso",
+            "Stride"
         )
 
         val exportButton = findViewById<Button>(R.id.submit_id_btn)
@@ -292,9 +389,30 @@ class LastActivity : ComponentActivity()
                 renameTo(participantId.toString())
             }
 
+            // Export metadata (participant height for stride calculation)
+            val metadataFileName = buildString {
+                append(participantId.toString())
+                append("_metadata.csv")
+            }
+            writeMetadataFile(metadataFileName)
+
+            // Export comparison results
+            val comparisonFileName = buildString {
+                append(participantId.toString())
+                append("_analysis_comparison.csv")
+            }
+            writeComparisonFile(comparisonFileName)
+
             val builder: AlertDialog.Builder = AlertDialog.Builder(this)
             builder
-                .setMessage("CSV Files saved to Documents as ParticipantID_GraphName.csv.\n\nUpdated video saved to Videos as ParticipantID_video.mp4")
+                .setMessage("Files exported successfully!\n\n" +
+                        "CSV Files saved to Downloads folder:\n" +
+                        "• 8 angle data files: ParticipantID_GraphName.csv\n" +
+                        "  (LeftHip, RightHip, LeftKnee, RightKnee, LeftAnkle, RightAnkle, Torso, Stride)\n" +
+                        "• Metadata: ParticipantID_metadata.csv (height, stride length)\n" +
+                        "• Analysis comparison: ParticipantID_analysis_comparison.csv\n\n" +
+                        "Access via Files app → Downloads folder\n" +
+                        "Easy to transfer to computer via USB!")
                 .setTitle("Successfully Exported")
 
             val dialog: AlertDialog = builder.create()
@@ -341,9 +459,10 @@ class LastActivity : ComponentActivity()
         }
     }
 
-    //Function for writing to file
+    //Function for writing angle data to file
     private fun writeToFile(fileName:String, fileData:MutableList<Float>) {
-        val fileDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS) //Directory of the Documents folder is located
+        // Use Downloads folder - publicly accessible, no permissions needed on Android 10+
+        val fileDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
         val outputFile = File(fileDirectory, fileName)
 
         FileOutputStream(outputFile).use { output ->
@@ -361,6 +480,67 @@ class LastActivity : ComponentActivity()
         }
     }
 
+    //Function for writing comparison analysis results to file
+    private fun writeComparisonFile(fileName: String) {
+        // Use Downloads folder - publicly accessible, no permissions needed on Android 10+
+        val fileDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        val outputFile = File(fileDirectory, fileName)
+
+        FileOutputStream(outputFile).use { output ->
+            // Header
+            val header = "Participant ID,Analysis Method,Gait Score,Difference,Notes\n"
+            output.write(header.toByteArray())
+
+            // Autoencoder row
+            val autoRow = "$participantId,Autoencoder,${autoencoderScore.roundToLong()},,Neural network-based analysis\n"
+            output.write(autoRow.toByteArray())
+
+            // PCA row
+            val difference = pcaScore - autoencoderScore
+            val diffStr = if (difference > 0) "+${difference.roundToLong()}" else "${difference.roundToLong()}"
+            val pcaRow = "$participantId,PCA,${pcaScore.roundToLong()},$diffStr,Linear dimensionality reduction\n"
+            output.write(pcaRow.toByteArray())
+
+            // Summary row
+            val summaryRow = ",,,,Comparison for educational purposes\n"
+            output.write(summaryRow.toByteArray())
+        }
+
+        Log.d("GaitAnalysis", "Comparison file exported: $fileName")
+    }
+
+    //Function for writing participant metadata to file
+    private fun writeMetadataFile(fileName: String) {
+        // Use Downloads folder - publicly accessible, no permissions needed on Android 10+
+        val fileDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        val outputFile = File(fileDirectory, fileName)
+
+        FileOutputStream(outputFile).use { output ->
+            // Header
+            val header = "Field,Value\n"
+            output.write(header.toByteArray())
+
+            // Participant ID
+            val idRow = "ParticipantID,$participantId\n"
+            output.write(idRow.toByteArray())
+
+            // Height in inches (needed for stride calculation)
+            val heightRow = "HeightInches,$participantHeight\n"
+            output.write(heightRow.toByteArray())
+
+            // Calculated stride length
+            val strideLength = calcStrideLengthAvg(participantHeight.toFloat() * 39.37F)
+            val strideRow = "StrideLengthAvg,$strideLength\n"
+            output.write(strideRow.toByteArray())
+
+            // Video length
+            val videoRow = "VideoLengthMicroseconds,$videoLength\n"
+            output.write(videoRow.toByteArray())
+        }
+
+        Log.d("GaitAnalysis", "Metadata file exported: $fileName")
+    }
+
     //Function for renaming the edited video
     private fun renameTo(participantId:String) {
         val vidName = buildString {     //String is built to include participant ID in the name
@@ -368,8 +548,9 @@ class LastActivity : ComponentActivity()
             append("_video.mp4")
         }
 
-        val oldFilePath = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES), "edited_video.mp4")    //Path of the existing edited video
-        val newFilePath = File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES), vidName)                           //New path for the renamed video
+        // Use app-specific external storage - no permissions needed on Android 10+
+        val oldFilePath = File(getExternalFilesDir(Environment.DIRECTORY_MOVIES), "edited_video.mp4")    //Path of the existing edited video
+        val newFilePath = File(getExternalFilesDir(Environment.DIRECTORY_MOVIES), vidName)                           //New path for the renamed video
 
         editedUri = Uri.fromFile(newFilePath)
 

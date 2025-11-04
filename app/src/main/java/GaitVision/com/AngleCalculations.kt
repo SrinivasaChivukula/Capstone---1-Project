@@ -61,10 +61,8 @@ fun FindLocalMax(AngleList: MutableList<Float>): List<Float>
         val curr = AngleList[i]
         val next = AngleList[i+1]
 
-        if(prev != null && curr != null && next != null){ //Cancel check if any null
-            if(curr > prev && curr > next){
-                localMax.add(curr)
-            }
+        if(curr > prev && curr > next){
+            localMax.add(curr)
         }
     }
     return localMax
@@ -91,10 +89,8 @@ fun FindLocalMin(AngleList: MutableList<Float>): List<Float>
         val curr = AngleList[i]
         val next = AngleList[i+1]
 
-        if(prev != null && curr != null && next != null){ //Cancel check if any null
-            if(curr < prev && curr < next){
-                localMin.add(curr)
-            }
+        if(curr < prev && curr < next){
+            localMin.add(curr)
         }
     }
     return localMin

@@ -7,9 +7,48 @@
 /.idea/workspace.xml
 /.idea/navEditor.xml
 /.idea/assetWizardSettings.xml
+/.idea/misc.xml
+/.idea/deploymentTargetSelector.xml
+/.idea/deviceManager.xml
+/.idea/migrations.xml
+/.idea/AndroidProjectSystem.xml
 .DS_Store
 /build
 /captures
 .externalNativeBuild
 .cxx
 local.properties
+
+# Android build artifacts
+*.apk
+*.ap_
+*.dex
+*.class
+/app/build/
+
+# Design documents
+/docs/changes/*.md
+/docs/*.md
+/pca_training/*.md
+/pca_training/**/*.md
+
+# Python virtual environments
+/pca_training/venv/
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.pytest_cache/
+
+# Generated PCA outputs
+/pca_training/visualizations/*.txt
+/pca_training/visualizations/*.png
+/pca_training/models/*.bin
+/pca_training/data/processed/
+
+# Training data
+/pca_training/data/**/*.csv
+/pca_training/synth_data/
+
+# Temporary directories
+/docs_temp/

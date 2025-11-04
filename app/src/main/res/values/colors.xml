@@ -7,6 +7,7 @@
     <!-- Modern Medical Theme - Deep Ocean & Teal -->
     <color name="primary_deep_blue">#FF1E3A8A</color>
     <color name="primary_blue">#FF3B82F6</color>
+    <color name="primary_blue_dark">#FF1E3A8A</color>
     <color name="primary_blue_light">#FF60A5FA</color>
     <color name="primary_blue_pale">#FFDBEAFE</color>
     
@@ -14,17 +15,22 @@
     <color name="secondary_teal">#FF0891B2</color>
     <color name="secondary_teal_light">#FF22D3EE</color>
     <color name="secondary_teal_pale">#FFCCFBF1</color>
+    <color name="teal_200">#FF22D3EE</color>
     
     <!-- Accent Colors -->
     <color name="accent_emerald">#FF10B981</color>
+    <color name="accent_green">#FF10B981</color>
     <color name="accent_amber">#FFF59E0B</color>
     <color name="accent_rose">#FFF43F5E</color>
+    <color name="accent_red">#FFF43F5E</color>
     <color name="accent_purple">#FF8B5CF6</color>
     
     <!-- Background Gradients -->
     <color name="background_gradient_start">#FFF8FAFC</color>
     <color name="background_gradient_end">#FFE2E8F0</color>
     <color name="background_white">#FFFFFFFF</color>
+    <color name="background_light">#FFF8FAFC</color>
+    <color name="background_gray">#FFE2E8F0</color>
     <color name="background_glass">#80FFFFFF</color>
     
     <!-- Text Colors -->

@@ -426,8 +426,10 @@ suspend fun ProcVidEmpty(context: Context, outputPath: String, mBinding: Activit
     }
 
     getFrameBitmaps(context, galleryUri, mBinding) // Get frames from the original video
-    mBinding.splittingBar.setProgress(100)
-    mBinding.splittingProgressValue.text = (" " + 100.toString() + "%")
+    withContext(Dispatchers.Main) {
+        mBinding.splittingBar.setProgress(100)
+        mBinding.splittingProgressValue.text = (" " + 100.toString() + "%")
+    }
     if(frameList.isEmpty()) return galleryUri
 
     val firstFrame = frameList[0]
