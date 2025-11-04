@@ -19,5 +19,7 @@ data class Video(
     val patientId: Long,
     val originalVideoPath: String, // Original video URI path (galleryUri)
     val editedVideoPath: String, // Processed video URI path (editedUri)
-    val recordedAt: Long = System.currentTimeMillis()
+    val recordedAt: Long = System.currentTimeMillis(),
+    val strideLengthAvg: Double? = null, // Average stride length in meters
+    val videoLengthMicroseconds: Long? = null // Video length in microseconds
 )

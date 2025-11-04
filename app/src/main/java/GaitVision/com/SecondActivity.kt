@@ -575,11 +575,14 @@ class SecondActivity : ComponentActivity()
                                         val editedPath = editedUri?.path ?: editedUri?.toString() ?: ""
 
                                         // Save video record
+                                        val strideLengthAvg = calcStrideLengthAvg(participantHeight.toFloat()).toDouble()
                                         val video = Video(
                                             patientId = currentPatientId!!,
                                             originalVideoPath = originalPath,
                                             editedVideoPath = editedPath,
-                                            recordedAt = System.currentTimeMillis()
+                                            recordedAt = System.currentTimeMillis(),
+                                            strideLengthAvg = strideLengthAvg,
+                                            videoLengthMicroseconds = videoLength
                                         )
                                         val videoId = videoRepository.insertVideo(video)
                                         currentVideoId = videoId
