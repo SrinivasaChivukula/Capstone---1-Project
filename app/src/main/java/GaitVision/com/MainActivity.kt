@@ -1,6 +1,8 @@
 package GaitVision.com
 
 import GaitVision.com.databinding.ActivityMainBinding
+import GaitVision.com.data.AppDatabase
+import GaitVision.com.data.repository.PatientRepository
 import android.app.Activity
 import android.os.Bundle
 import android.widget.Button
@@ -24,7 +26,10 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import android.widget.EditText
 import android.widget.Spinner
-
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import android.graphics.Bitmap
 import android.util.Log
 
@@ -131,6 +136,8 @@ class MainActivity : ComponentActivity() {
         torsoMaxAngles.clear()
         participantId = ""
         participantHeight = 0
+        currentPatientId = null
+        currentVideoId = null
 
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mBinding.root)
@@ -196,7 +203,49 @@ class MainActivity : ComponentActivity() {
             val inches = inchesSpinner.selectedItem.toString().toIntOrNull() ?: 0
             participantHeight = (feet * 12) + inches
 
-            startActivity(Intent(this, SecondActivity::class.java))
+            // Validate input
+            if (participantId.isEmpty()) {
+                Toast.makeText(this, "Please enter a Participant ID", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (participantHeight <= 0) {
+                Toast.makeText(this, "Please select a valid height", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            if (galleryUri == null) {
+                Toast.makeText(this, "Please select or record a video first", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // Find or create patient in database
+            lifecycleScope.launch {
+                try {
+                    val database = AppDatabase.getDatabase(this@MainActivity)
+                    val patientRepository = PatientRepository(database.patientDao())
+                    
+                    val patient = withContext(Dispatchers.IO) {
+                        patientRepository.findOrCreatePatientByParticipantId(
+                            participantId = participantId,
+                            height = participantHeight
+                        )
+                    }
+                    
+                    // Store patient ID for use in other activities
+                    currentPatientId = patient.id
+                    
+                    // Navigate to SecondActivity
+                    startActivity(Intent(this@MainActivity, SecondActivity::class.java))
+                } catch (e: Exception) {
+                    Log.e("MainActivity", "Error finding/creating patient: ${e.message}", e)
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Error saving patient: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
         }
             mBinding.openGalBtn.setOnClickListener { startIntentFromGallary() }
 

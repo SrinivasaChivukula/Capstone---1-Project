@@ -1,6 +1,11 @@
 package GaitVision.com
 
 import GaitVision.com.databinding.ActivitySecondBinding
+import GaitVision.com.data.AngleData
+import GaitVision.com.data.AppDatabase
+import GaitVision.com.data.Video
+import GaitVision.com.data.repository.AngleDataRepository
+import GaitVision.com.data.repository.VideoRepository
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
@@ -19,6 +24,7 @@ import android.widget.FrameLayout
 import android.widget.MediaController
 import android.widget.PopupMenu
 import android.widget.TextView
+import android.widget.Toast
 import android.widget.VideoView
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
@@ -556,17 +562,90 @@ class SecondActivity : ComponentActivity()
                             Log.d("ErrorCheck", "Stride Angles: ${FindLocalMax(strideAngles)}")
                         }
 
-                        //Update UI to remove all video progressing progress bars and text and make
-                        //Angle selection and analysis button clickable and visible.
-                        mBinding.SplittingText.visibility = GONE
-                        mBinding.CreationText.visibility = GONE
-                        mBinding.splittingBar.visibility = GONE
-                        mBinding.VideoCreation.visibility = GONE
-                        mBinding.splittingProgressValue.visibility = GONE
-                        mBinding.CreatingProgressValue.visibility = GONE
-                        mBinding.videoViewer.visibility = VISIBLE
-                        mBinding.calAngleBtn.visibility = VISIBLE
-                        mBinding.chooseAglBtn.isClickable = TRUE
+                            // Save video and angle data to database
+                            if (currentPatientId != null && editedUri != null) {
+                                try {
+                                    val database = AppDatabase.getDatabase(this@SecondActivity)
+                                    val videoRepository = VideoRepository(database.videoDao())
+                                    val angleDataRepository = AngleDataRepository(database.angleDataDao())
+
+                                    withContext(Dispatchers.IO) {
+                                        // Get paths from URIs
+                                        val originalPath = galleryUri?.path ?: galleryUri?.toString() ?: ""
+                                        val editedPath = editedUri?.path ?: editedUri?.toString() ?: ""
+
+                                        // Save video record
+                                        val strideLengthAvg = calcStrideLengthAvg(participantHeight.toFloat()).toDouble()
+                                        val video = Video(
+                                            patientId = currentPatientId!!,
+                                            originalVideoPath = originalPath,
+                                            editedVideoPath = editedPath,
+                                            recordedAt = System.currentTimeMillis(),
+                                            strideLengthAvg = strideLengthAvg,
+                                            videoLengthMicroseconds = videoLength
+                                        )
+                                        val videoId = videoRepository.insertVideo(video)
+                                        currentVideoId = videoId
+
+                                        // Save all angle data for each frame
+                                        val maxFrames = maxOf(
+                                            leftKneeAngles.size,
+                                            rightKneeAngles.size,
+                                            leftHipAngles.size,
+                                            rightHipAngles.size,
+                                            leftAnkleAngles.size,
+                                            rightAnkleAngles.size,
+                                            torsoAngles.size,
+                                            strideAngles.size
+                                        )
+
+                                        val angleDataList = mutableListOf<AngleData>()
+                                        for (frameNumber in 0 until maxFrames) {
+                                            val angleData = AngleData(
+                                                videoId = videoId,
+                                                frameNumber = frameNumber,
+                                                leftAnkleAngle = leftAnkleAngles.getOrNull(frameNumber),
+                                                rightAnkleAngle = rightAnkleAngles.getOrNull(frameNumber),
+                                                leftKneeAngle = leftKneeAngles.getOrNull(frameNumber),
+                                                rightKneeAngle = rightKneeAngles.getOrNull(frameNumber),
+                                                leftHipAngle = leftHipAngles.getOrNull(frameNumber),
+                                                rightHipAngle = rightHipAngles.getOrNull(frameNumber),
+                                                torsoAngle = torsoAngles.getOrNull(frameNumber),
+                                                strideAngle = strideAngles.getOrNull(frameNumber)
+                                            )
+                                            angleDataList.add(angleData)
+                                        }
+
+                                        // Insert all angle data
+                                        if (angleDataList.isNotEmpty()) {
+                                            angleDataRepository.insertAngleDataList(angleDataList)
+                                        }
+
+                                        Log.d("SecondActivity", "Saved video ID: $videoId with ${angleDataList.size} angle data records")
+                                    }
+                                } catch (e: Exception) {
+                                    Log.e("SecondActivity", "Error saving video/angles: ${e.message}", e)
+                                    withContext(Dispatchers.Main) {
+                                        Toast.makeText(
+                                            this@SecondActivity,
+                                            "Warning: Data not saved to database: ${e.message}",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                    }
+                                }
+                            }
+
+                            //Update UI to remove all video progressing progress bars and text and make
+                            //Angle selection and analysis button clickable and visible.
+                            mBinding.SplittingText.visibility = GONE
+                            mBinding.CreationText.visibility = GONE
+                            mBinding.splittingBar.visibility = GONE
+                            mBinding.VideoCreation.visibility = GONE
+                            mBinding.splittingProgressValue.visibility = GONE
+                            mBinding.CreatingProgressValue.visibility = GONE
+                            mBinding.videoViewer.visibility = VISIBLE
+                            mBinding.calAngleBtn.visibility = VISIBLE
+                            mBinding.chooseAglBtn.isClickable = TRUE
 
                         Log.d("ErrorCheck", "URI PATH: ${editedUri?.path}, URI: $editedUri")
                         MediaScannerConnection.scanFile(
