@@ -99,7 +99,8 @@ class PatientRepository(private val patientDao: PatientDao) {
                 lastName = lastName,
                 age = age,
                 gender = gender,
-                height = height
+                height = height,
+                createdAt = System.currentTimeMillis()
             )
             val id = insertPatient(newPatient)
             newPatient.copy(id = id)

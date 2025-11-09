@@ -54,7 +54,7 @@ interface VideoDao {
     @Query("""
         SELECT v.* FROM videos v
         INNER JOIN patients p ON v.patientId = p.id
-        WHERE p.firstName LIKE :search OR p.lastName LIKE :search OR v.videoPath LIKE :search
+        WHERE p.firstName LIKE :search OR p.lastName LIKE :search OR v.originalVideoPath LIKE :search OR v.editedVideoPath LIKE :search
         ORDER BY v.recordedAt DESC
     """)
     fun searchVideos(search: String): Flow<List<Video>>

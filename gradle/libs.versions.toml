@@ -12,7 +12,7 @@ composeBom = "2024.04.01"
 appcompat = "1.6.1"
 material = "1.10.0"
 activity = "1.9.2"
-room = "2.6.1"
+room = "2.7.0"
 
 [libraries]
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }

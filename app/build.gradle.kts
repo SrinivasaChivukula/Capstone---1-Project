@@ -40,6 +40,14 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    kapt {
+        correctErrorTypes = true
+        useBuildCache = true
+        arguments {
+            arg("room.incremental", "true")
+            arg("room.expandProjection", "true")
+        }
+    }
     buildFeatures {
         compose = true
     }
