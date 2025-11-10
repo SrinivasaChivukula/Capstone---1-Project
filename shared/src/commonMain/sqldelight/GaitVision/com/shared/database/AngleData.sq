@@ -1,0 +1,87 @@
+CREATE TABLE angle_data (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    video_id INTEGER NOT NULL,
+    frame_number INTEGER NOT NULL,
+    left_ankle_angle REAL,
+    right_ankle_angle REAL,
+    left_knee_angle REAL,
+    right_knee_angle REAL,
+    left_hip_angle REAL,
+    right_hip_angle REAL,
+    torso_angle REAL,
+    stride_angle REAL,
+    FOREIGN KEY (video_id) REFERENCES videos(id) ON DELETE CASCADE
+);
+
+CREATE INDEX index_angle_data_video_id ON angle_data(video_id);
+CREATE INDEX index_angle_data_frame_number ON angle_data(video_id, frame_number);
+
+createAngleData:
+INSERT INTO angle_data (video_id, frame_number, left_ankle_angle, right_ankle_angle, left_knee_angle, right_knee_angle, left_hip_angle, right_hip_angle, torso_angle, stride_angle)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+getAngleDataById:
+SELECT * FROM angle_data WHERE id = ?;
+
+getAngleDataByVideoId:
+SELECT * FROM angle_data WHERE video_id = ? ORDER BY frame_number ASC;
+
+getAllAngleData:
+SELECT * FROM angle_data;
+
+getLastInsertId:
+SELECT last_insert_rowid();
+
+getLeftKneeAnglesByVideoId:
+SELECT left_knee_angle FROM angle_data WHERE video_id = ? AND left_knee_angle IS NOT NULL ORDER BY frame_number ASC;
+
+getRightKneeAnglesByVideoId:
+SELECT right_knee_angle FROM angle_data WHERE video_id = ? AND right_knee_angle IS NOT NULL ORDER BY frame_number ASC;
+
+getLeftHipAnglesByVideoId:
+SELECT left_hip_angle FROM angle_data WHERE video_id = ? AND left_hip_angle IS NOT NULL ORDER BY frame_number ASC;
+
+getRightHipAnglesByVideoId:
+SELECT right_hip_angle FROM angle_data WHERE video_id = ? AND right_hip_angle IS NOT NULL ORDER BY frame_number ASC;
+
+getLeftAnkleAnglesByVideoId:
+SELECT left_ankle_angle FROM angle_data WHERE video_id = ? AND left_ankle_angle IS NOT NULL ORDER BY frame_number ASC;
+
+getRightAnkleAnglesByVideoId:
+SELECT right_ankle_angle FROM angle_data WHERE video_id = ? AND right_ankle_angle IS NOT NULL ORDER BY frame_number ASC;
+
+getTorsoAnglesByVideoId:
+SELECT torso_angle FROM angle_data WHERE video_id = ? AND torso_angle IS NOT NULL ORDER BY frame_number ASC;
+
+getStrideAnglesByVideoId:
+SELECT stride_angle FROM angle_data WHERE video_id = ? AND stride_angle IS NOT NULL ORDER BY frame_number ASC;
+
+updateAngleData:
+UPDATE angle_data
+SET video_id = ?,
+    frame_number = ?,
+    left_ankle_angle = ?,
+    right_ankle_angle = ?,
+    left_knee_angle = ?,
+    right_knee_angle = ?,
+    left_hip_angle = ?,
+    right_hip_angle = ?,
+    torso_angle = ?,
+    stride_angle = ?
+WHERE id = ?;
+
+deleteAngleData:
+DELETE FROM angle_data WHERE id = ?;
+
+deleteAngleDataByVideoId:
+DELETE FROM angle_data WHERE video_id = ?;
+
+getAngleDataCount:
+SELECT COUNT(*) FROM angle_data;
+
+getAngleDataCountByVideoId:
+SELECT COUNT(*) FROM angle_data WHERE video_id = ?;
+
+getMaxFrameNumberForVideo:
+SELECT MAX(frame_number) FROM angle_data WHERE video_id = ?;
+

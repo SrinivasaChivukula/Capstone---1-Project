@@ -23,3 +23,4 @@ dependencyResolutionManagement {
 
 rootProject.name = "GaitVision"
 include(":app")
+include(":shared")

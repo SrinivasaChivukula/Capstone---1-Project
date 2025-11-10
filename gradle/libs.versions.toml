@@ -12,6 +12,12 @@ composeBom = "2024.04.01"
 appcompat = "1.6.1"
 material = "1.10.0"
 activity = "1.9.2"
+room = "2.7.0"
+compose-multiplatform = "1.6.10"
+sqldelight = "2.0.2"
+koin = "3.5.6"
+coroutines = "1.7.3"
+serialization = "1.6.3"
 
 [libraries]
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }
@@ -35,6 +41,12 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
+android-library = { id = "com.android.library", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+compose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }
+sqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }
 

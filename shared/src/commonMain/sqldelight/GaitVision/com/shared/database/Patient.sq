@@ -1,0 +1,52 @@
+CREATE TABLE patients (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    participant_id TEXT,
+    first_name TEXT NOT NULL DEFAULT '',
+    last_name TEXT NOT NULL DEFAULT '',
+    age INTEGER,
+    gender TEXT,
+    height INTEGER NOT NULL,
+    created_at INTEGER NOT NULL
+);
+
+CREATE INDEX index_patients_participant_id ON patients(participant_id);
+
+createPatient:
+INSERT INTO patients (participant_id, first_name, last_name, age, gender, height, created_at)
+VALUES (?, ?, ?, ?, ?, ?, ?);
+
+getLastInsertId:
+SELECT last_insert_rowid();
+
+getPatientById:
+SELECT * FROM patients WHERE id = ?;
+
+getPatientByParticipantId:
+SELECT * FROM patients WHERE participant_id = ? LIMIT 1;
+
+getAllPatients:
+SELECT * FROM patients;
+
+searchPatients:
+SELECT * FROM patients WHERE first_name LIKE ? OR last_name LIKE ?;
+
+updatePatient:
+UPDATE patients
+SET participant_id = ?,
+    first_name = ?,
+    last_name = ?,
+    age = ?,
+    gender = ?,
+    height = ?,
+    created_at = ?
+WHERE id = ?;
+
+deletePatient:
+DELETE FROM patients WHERE id = ?;
+
+getPatientCount:
+SELECT COUNT(*) FROM patients;
+
+getPatientsOrderedByName:
+SELECT * FROM patients ORDER BY last_name, first_name;
+

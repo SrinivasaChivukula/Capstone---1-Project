@@ -1,0 +1,63 @@
+CREATE TABLE videos (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    patient_id INTEGER NOT NULL,
+    original_video_path TEXT NOT NULL,
+    edited_video_path TEXT NOT NULL,
+    recorded_at INTEGER NOT NULL,
+    stride_length_avg REAL,
+    video_length_microseconds INTEGER,
+    FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE
+);
+
+CREATE INDEX index_videos_patient_id ON videos(patient_id);
+
+createVideo:
+INSERT INTO videos (patient_id, original_video_path, edited_video_path, recorded_at, stride_length_avg, video_length_microseconds)
+VALUES (?, ?, ?, ?, ?, ?);
+
+getVideoById:
+SELECT * FROM videos WHERE id = ?;
+
+getVideoByPatientAndPath:
+SELECT * FROM videos WHERE patient_id = ? AND original_video_path = ? LIMIT 1;
+
+getVideosByPatientId:
+SELECT * FROM videos WHERE patient_id = ?;
+
+getVideosByPatientIdOrdered:
+SELECT * FROM videos WHERE patient_id = ? ORDER BY recorded_at DESC;
+
+getAllVideos:
+SELECT * FROM videos;
+
+getLastInsertId:
+SELECT last_insert_rowid();
+
+updateVideo:
+UPDATE videos
+SET patient_id = ?,
+    original_video_path = ?,
+    edited_video_path = ?,
+    recorded_at = ?,
+    stride_length_avg = ?,
+    video_length_microseconds = ?
+WHERE id = ?;
+
+deleteVideo:
+DELETE FROM videos WHERE id = ?;
+
+deleteVideosByPatientId:
+DELETE FROM videos WHERE patient_id = ?;
+
+getVideoCount:
+SELECT COUNT(*) FROM videos;
+
+getVideoCountForPatient:
+SELECT COUNT(*) FROM videos WHERE patient_id = ?;
+
+searchVideos:
+SELECT v.* FROM videos v
+INNER JOIN patients p ON v.patient_id = p.id
+WHERE p.first_name LIKE ? OR p.last_name LIKE ? OR v.original_video_path LIKE ? OR v.edited_video_path LIKE ?
+ORDER BY v.recorded_at DESC;
+

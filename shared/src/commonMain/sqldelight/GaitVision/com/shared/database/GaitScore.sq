@@ -1,0 +1,88 @@
+CREATE TABLE gait_scores (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    patient_id INTEGER NOT NULL,
+    video_id INTEGER NOT NULL,
+    overall_score REAL NOT NULL,
+    recorded_at INTEGER NOT NULL,
+    left_knee_score REAL,
+    right_knee_score REAL,
+    left_hip_score REAL,
+    right_hip_score REAL,
+    torso_score REAL,
+    FOREIGN KEY (patient_id) REFERENCES patients(id) ON DELETE CASCADE,
+    FOREIGN KEY (video_id) REFERENCES videos(id) ON DELETE CASCADE
+);
+
+CREATE INDEX index_gait_scores_patient_id ON gait_scores(patient_id);
+CREATE INDEX index_gait_scores_video_id ON gait_scores(video_id);
+
+createGaitScore:
+INSERT INTO gait_scores (patient_id, video_id, overall_score, recorded_at, left_knee_score, right_knee_score, left_hip_score, right_hip_score, torso_score)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+getGaitScoreById:
+SELECT * FROM gait_scores WHERE id = ?;
+
+getGaitScoresByPatientId:
+SELECT * FROM gait_scores WHERE patient_id = ?;
+
+getGaitScoresByPatientIdOrdered:
+SELECT * FROM gait_scores WHERE patient_id = ? ORDER BY recorded_at DESC;
+
+getGaitScoreByVideoId:
+SELECT * FROM gait_scores WHERE video_id = ?;
+
+getBestScoreForPatient:
+SELECT * FROM gait_scores WHERE patient_id = ? ORDER BY overall_score DESC LIMIT 1;
+
+getWorstScoreForPatient:
+SELECT * FROM gait_scores WHERE patient_id = ? ORDER BY overall_score ASC LIMIT 1;
+
+getAverageScoreForPatient:
+SELECT AVG(overall_score) FROM gait_scores WHERE patient_id = ?;
+
+getAllGaitScores:
+SELECT * FROM gait_scores;
+
+getLastInsertId:
+SELECT last_insert_rowid();
+
+updateGaitScore:
+UPDATE gait_scores
+SET patient_id = ?,
+    video_id = ?,
+    overall_score = ?,
+    recorded_at = ?,
+    left_knee_score = ?,
+    right_knee_score = ?,
+    left_hip_score = ?,
+    right_hip_score = ?,
+    torso_score = ?
+WHERE id = ?;
+
+deleteGaitScore:
+DELETE FROM gait_scores WHERE id = ?;
+
+deleteGaitScoresByPatientId:
+DELETE FROM gait_scores WHERE patient_id = ?;
+
+getGaitScoreCount:
+SELECT COUNT(*) FROM gait_scores;
+
+getGaitScoreCountForPatient:
+SELECT COUNT(*) FROM gait_scores WHERE patient_id = ?;
+
+getGaitScoreCountForVideo:
+SELECT COUNT(*) FROM gait_scores WHERE video_id = ?;
+
+getGaitScoresWithPatientInfo:
+SELECT * FROM gait_scores
+WHERE patient_id = ?
+ORDER BY recorded_at DESC;
+
+searchGaitScores:
+SELECT gs.* FROM gait_scores gs
+INNER JOIN patients p ON gs.patient_id = p.id
+WHERE p.first_name LIKE ? OR p.last_name LIKE ?
+ORDER BY gs.recorded_at DESC;
+

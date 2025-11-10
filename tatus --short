@@ -1,0 +1,36 @@
+[1mdiff --git a/gradle/libs.versions.toml b/gradle/libs.versions.toml[m
+[1mindex b6f425e..aeb093b 100644[m
+[1m--- a/gradle/libs.versions.toml[m
+[1m+++ b/gradle/libs.versions.toml[m
+[36m@@ -12,6 +12,15 @@[m [mcomposeBom = "2024.04.01"[m
+ appcompat = "1.6.1"[m
+ material = "1.10.0"[m
+ activity = "1.9.2"[m
+[32m+[m[32m<<<<<<< Updated upstream[m
+[32m+[m[32m=======[m
+[32m+[m[32mroom = "2.7.0"[m
+[32m+[m[32mcompose-multiplatform = "1.6.10"[m
+[32m+[m[32msqldelight = "2.0.2"[m
+[32m+[m[32mkoin = "3.5.6"[m
+[32m+[m[32mcoroutines = "1.7.3"[m
+[32m+[m[32mserialization = "1.6.3"[m
+[32m+[m[32m>>>>>>> Stashed changes[m
+ [m
+ [libraries][m
+ androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "constraintlayout" }[m
+[36m@@ -35,6 +44,15 @@[m [mandroidx-activity = { group = "androidx.activity", name = "activity", version.re[m
+ [m
+ [plugins][m
+ android-application = { id = "com.android.application", version.ref = "agp" }[m
+[32m+[m[32mandroid-library = { id = "com.android.library", version.ref = "agp" }[m
+ kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }[m
+[32m+[m[32mkotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }[m
+ kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }[m
+[32m+[m[32m<<<<<<< Updated upstream[m
+[32m+[m[32m=======[m
+[32m+[m[32mkotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }[m
+[32m+[m[32mkotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }[m
+[32m+[m[32mcompose-multiplatform = { id = "org.jetbrains.compose", version.ref = "compose-multiplatform" }[m
+[32m+[m[32msqldelight = { id = "app.cash.sqldelight", version.ref = "sqldelight" }[m
+[32m+[m[32m>>>>>>> Stashed changes[m
+ [m
