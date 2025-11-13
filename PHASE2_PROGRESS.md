@@ -1,6 +1,6 @@
 # Phase 2: Database Migration - Progress Report
 
-## ✅  Tasks
+## ✅  Completed Tasks
 
 ### 1. SQLDelight Schema Files Created ✅
 - ✅ `Patient.sq` - Patient table with all queries
