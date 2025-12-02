@@ -4,13 +4,17 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.media.MediaMetadataRetriever
 import android.os.Bundle
+import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Spinner
+import android.view.View
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -105,20 +109,54 @@ class DashboardActivity : AppCompatActivity() {
     private fun setupSpinners() {
         // Feet spinner (4-7 feet)
         val feetArray = arrayOf("4", "5", "6", "7")
-        val feetAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, feetArray)
+        val feetAdapter = object : ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, feetArray) {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view = super.getView(position, convertView, parent)
+                (view as TextView).setTextColor(Color.WHITE)
+                return view
+            }
+
+            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view = super.getDropDownView(position, convertView, parent)
+                (view as TextView).setTextColor(Color.WHITE)
+                return view
+            }
+        }
         feetAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         feetSpinner.adapter = feetAdapter
         feetSpinner.setSelection(1) // Default to 5 feet
 
         // Inches spinner (0-11)
         val inchesArray = (0..11).map { it.toString() }.toTypedArray()
-        val inchesAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, inchesArray)
+        val inchesAdapter = object : ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, inchesArray) {
+            override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view = super.getView(position, convertView, parent)
+                (view as TextView).setTextColor(Color.WHITE)
+                return view
+            }
+
+            override fun getDropDownView(position: Int, convertView: View?, parent: ViewGroup): View {
+                val view = super.getDropDownView(position, convertView, parent)
+                (view as TextView).setTextColor(Color.WHITE)
+                return view
+            }
+        }
         inchesAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         inchesSpinner.adapter = inchesAdapter
         inchesSpinner.setSelection(9) // Default to 9 inches
     }
 
     private fun setupButtons() {
+        // Patient Management Cards
+        findViewById<View>(R.id.cardSearchPatient).setOnClickListener {
+            startActivity(Intent(this, PatientListActivity::class.java))
+        }
+
+        findViewById<View>(R.id.cardNewPatient).setOnClickListener {
+            startActivity(Intent(this, PatientCreateActivity::class.java))
+        }
+
+        // Quick Analysis Buttons
         findViewById<Button>(R.id.btnRecord).setOnClickListener {
             if (validateAndSaveInputs()) {
                 val intent = Intent(this, VideoPickerActivity::class.java)

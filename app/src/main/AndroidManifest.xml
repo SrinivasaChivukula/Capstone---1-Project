@@ -64,6 +64,31 @@
             android:parentActivityName="GaitVision.com.ui.AnalysisActivity"
             tools:ignore="DiscouragedApi,LockedOrientationActivity" />
 
+        <!-- Patient Management Activities -->
+        <activity 
+            android:name="GaitVision.com.ui.PatientListActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.GaitVision"
+            android:parentActivityName="GaitVision.com.ui.DashboardActivity"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
+
+        <activity 
+            android:name="GaitVision.com.ui.PatientCreateActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.GaitVision"
+            android:parentActivityName="GaitVision.com.ui.DashboardActivity"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
+
+        <activity 
+            android:name="GaitVision.com.ui.PatientProfileActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.GaitVision"
+            android:parentActivityName="GaitVision.com.ui.PatientListActivity"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
+
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="GaitVision.com.provider"

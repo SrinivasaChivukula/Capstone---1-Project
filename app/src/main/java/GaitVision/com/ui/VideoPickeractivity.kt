@@ -26,6 +26,7 @@ class VideoPickerActivity : AppCompatActivity() {
     private lateinit var videoView: VideoView
     private lateinit var tvStatus: TextView
     private lateinit var btnContinue: Button
+    private var fromPatientProfile = false
 
     private lateinit var recordVideoLauncher: ActivityResultLauncher<Intent>
     private lateinit var pickVideoLauncher: ActivityResultLauncher<Array<String>>
@@ -40,6 +41,8 @@ class VideoPickerActivity : AppCompatActivity() {
 
         // Check if we should auto-launch based on intent
         val mode = intent.getStringExtra("mode")
+        fromPatientProfile = intent.getBooleanExtra("fromPatientProfile", false)
+
         when (mode) {
             "record" -> openCameraForVideo()
             "gallery" -> pickVideoFromGallery()
@@ -125,8 +128,13 @@ class VideoPickerActivity : AppCompatActivity() {
 
         btnContinue.setOnClickListener {
             if (galleryUri != null) {
-                // Return to dashboard - the video is already saved in galleryUri
-                setResult(Activity.RESULT_OK)
+                if (fromPatientProfile) {
+                    // Came from patient profile - go to analysis
+                    startActivity(Intent(this, AnalysisActivity::class.java))
+                } else {
+                    // Came from dashboard - return to dashboard
+                    setResult(Activity.RESULT_OK)
+                }
                 finish()
             } else {
                 Toast.makeText(this, "Please select a video first", Toast.LENGTH_SHORT).show()

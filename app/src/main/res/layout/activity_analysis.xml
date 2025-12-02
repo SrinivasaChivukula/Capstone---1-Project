@@ -272,6 +272,8 @@
         android:layout_height="64dp"
         android:layout_margin="16dp"
         android:text="📊 View Results"
+        android:drawableStart="@android:drawable/ic_menu_recent_history"
+        android:drawablePadding="8dp"
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/white"

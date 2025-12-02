@@ -79,4 +79,12 @@
         <item>10</item>
         <item>11</item>
     </string-array>
+
+    <string-array name="gender_array">
+        <item>Select Gender</item>
+        <item>Male</item>
+        <item>Female</item>
+        <item>Other</item>
+        <item>Prefer not to say</item>
+    </string-array>
 </resources>
