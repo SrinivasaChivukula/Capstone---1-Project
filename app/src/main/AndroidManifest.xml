@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission
         android:name="android.permission.READ_EXTERNAL_STORAGE"
         android:maxSdkVersion="32" />
@@ -23,37 +24,45 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GaitVision"
         tools:targetApi="31" >
-        <activity
-            android:name=".CameraActivity"
-            android:exported="false"
-            android:label="@string/title_activity_camera"
-            android:parentActivityName=".MainActivity"
-            android:theme="@style/Theme.GaitVision" />
-        <activity
-            android:name=".LastActivity"
-            android:exported="true"
-            android:parentActivityName=".SecondActivity"
-            android:screenOrientation="portrait"
-            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
-        <activity
-            android:name=".SecondActivity"
-            android:exported="true"
-            android:parentActivityName=".MainActivity"
-            android:screenOrientation="portrait"
-            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
-        <activity
-            android:name=".MainActivity"
+
+        <!-- Main Entry Point -->
+        <activity 
+            android:name="GaitVision.com.ui.DashboardActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.GaitVision"
-            tools:ignore="DiscouragedApi,LockedOrientationActivity,RedundantLabel" >
+            tools:ignore="DiscouragedApi,LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity 
+            android:name="GaitVision.com.ui.VideoPickerActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.GaitVision"
+            android:parentActivityName="GaitVision.com.ui.DashboardActivity"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
+
+        <activity 
+            android:name="GaitVision.com.ui.AnalysisActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.GaitVision"
+            android:parentActivityName="GaitVision.com.ui.DashboardActivity"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
+
+        <activity 
+            android:name="GaitVision.com.ui.ResultsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.GaitVision"
+            android:parentActivityName="GaitVision.com.ui.AnalysisActivity"
+            tools:ignore="DiscouragedApi,LockedOrientationActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

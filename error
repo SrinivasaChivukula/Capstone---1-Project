@@ -1,0 +1,154 @@
+2025-12-01 22:55:13.935 15584-15584 GraphicsEnvironment     GaitVision.com                       V  Currently set values for:
+2025-12-01 22:55:13.935 15584-15584 GraphicsEnvironment     GaitVision.com                       V    angle_gl_driver_selection_pkgs=[]
+2025-12-01 22:55:13.935 15584-15584 GraphicsEnvironment     GaitVision.com                       V    angle_gl_driver_selection_values=[]
+2025-12-01 22:55:13.935 15584-15584 GraphicsEnvironment     GaitVision.com                       V  GaitVision.com is not listed in per-application setting
+2025-12-01 22:55:13.938 15584-15584 GraphicsEnvironment     GaitVision.com                       V  ANGLE allowlist from config: com.dreamgames.royalmatch com.dts.freefiremax com.dxx.firenow com.gramgames.mergedragons com.ludo.king com.mojang.minecraftpe com.my.defense com.nintendo.zaka com.os.airforce com.playrix.fishdomdd.gplay io.teslatech.callbreak jp.konami.prospia net.peakgames.toonblast
+2025-12-01 22:55:13.938 15584-15584 GraphicsEnvironment     GaitVision.com                       V  GaitVision.com is not listed in ANGLE allowlist or settings, returning default
+2025-12-01 22:55:13.939 15584-15584 GraphicsEnvironment     GaitVision.com                       V  Neither updatable production driver nor prerelease driver is supported.
+2025-12-01 22:55:14.117 15584-15584 WM-WrkMgrInitializer    GaitVision.com                       D  Initializing WorkManager with default configuration.
+2025-12-01 22:55:14.509 15584-15599 ashmem                  GaitVision.com                       E  Pinning is deprecated since Android Q. Please use trim or other methods.
+2025-12-01 22:55:14.523 15584-15600 DisplayManager          GaitVision.com                       I  Choreographer implicitly registered for the refresh rate.
+2025-12-01 22:55:14.659 15584-15599 GaitVision.com          GaitVision.com                       W  JNI critical lock held for 26.696ms on Thread[14,tid=15599,Runnable,Thread*=0x72ed8663cf00,peer=0x229a7f8,"WM.task-1"]
+2025-12-01 22:55:14.689 15584-15584 DesktopExperienceFlags  GaitVision.com                       D  Toggle override initialized to: false
+2025-12-01 22:55:14.770 15584-15599 GaitVision.com          GaitVision.com                       W  JNI critical lock held for 51.775ms on Thread[14,tid=15599,Runnable,Thread*=0x72ed8663cf00,peer=0x229a7f8,"WM.task-1"]
+2025-12-01 22:55:14.817 15584-15584 AppCompatDelegate       GaitVision.com                       D  Checking for metadata for AppLocalesMetadataHolderService : Service not found
+2025-12-01 22:55:14.967 15584-15600 GFXSTREAM               GaitVision.com                       I  [eglDisplay.cpp(297)] Opening libGLESv1_CM_emulation.so
+2025-12-01 22:55:14.973 15584-15600 GFXSTREAM               GaitVision.com                       I  [eglDisplay.cpp(297)] Opening libGLESv2_emulation.so
+2025-12-01 22:55:15.115 15584-15584 DesktopModeFlags        GaitVision.com                       D  Toggle override initialized to: OVERRIDE_UNSET
+2025-12-01 22:55:15.222 15584-15584 GaitVision.com          GaitVision.com                       I  hiddenapi: Accessing hidden method Landroid/view/View;->computeFitSystemWindows(Landroid/graphics/Rect;Landroid/graphics/Rect;)Z (runtime_flags=0, domain=platform, api=unsupported) from Landroidx/appcompat/widget/ViewUtils; (domain=app) using reflection: allowed
+2025-12-01 22:55:15.223 15584-15584 GaitVision.com          GaitVision.com                       I  hiddenapi: Accessing hidden method Landroid/view/ViewGroup;->makeOptionalFitsSystemWindows()V (runtime_flags=0, domain=platform, api=unsupported) from Landroidx/appcompat/widget/ViewUtils; (domain=app) using reflection: allowed
+2025-12-01 22:55:15.238 15584-15600 HWUI                    GaitVision.com                       W  Failed to choose config with EGL_SWAP_BEHAVIOR_PRESERVED, retrying without...
+2025-12-01 22:55:15.239 15584-15600 HWUI                    GaitVision.com                       W  Failed to initialize 101010-2 format, error = EGL_SUCCESS
+2025-12-01 22:55:15.774 15584-15584 HWUI                    GaitVision.com                       W  Unknown dataspace 0
+2025-12-01 22:55:15.858 15584-15584 VRI[DashboardActivity]  GaitVision.com                       D  WindowInsets changed: 1080x2400 statusBars:[0,63,0,0] navigationBars:[0,0,0,63] mandatorySystemGestures:[0,63,0,84] 
+2025-12-01 22:55:15.865 15584-15584 WindowOnBackDispatcher  GaitVision.com                       D  setTopOnBackInvokedCallback (unwrapped): android.view.ViewRootImpl$$ExternalSyntheticLambda12@1413b8a
+2025-12-01 22:55:15.872 15584-15584 HWUI                    GaitVision.com                       I  Using FreeType backend (prop=Auto)
+2025-12-01 22:55:16.497 15584-15584 Choreographer           GaitVision.com                       I  Skipped 39 frames!  The application may be doing too much work on its main thread.
+2025-12-01 22:55:16.609 15584-15584 InsetsController        GaitVision.com                       D  hide(ime())
+2025-12-01 22:55:16.615 15584-15584 ImeTracker              GaitVision.com                       I  GaitVision.com:6bf4aab: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+2025-12-01 22:55:17.432 15584-15589 GaitVision.com          GaitVision.com                       I  Compiler allocated 5200KB to compile void android.view.ViewRootImpl.performTraversals()
+2025-12-01 22:55:19.936 15584-15616 ProfileInstaller        GaitVision.com                       D  Installing profile for GaitVision.com
+2025-12-01 22:55:23.624 15584-15584 AutofillManager         GaitVision.com                       I  showAutofillDialog() return false due to improve fill dialog
+2025-12-01 22:55:23.627 15584-15584 ImeTracker              GaitVision.com                       I  GaitVision.com:45e6876b: onRequestShow at ORIGIN_CLIENT reason SHOW_SOFT_INPUT fromUser true
+2025-12-01 22:55:23.634 15584-15584 InsetsController        GaitVision.com                       D  show(ime())
+2025-12-01 22:55:23.638 15584-15584 InsetsController        GaitVision.com                       D  Setting requestedVisibleTypes to 511 (was 503)
+2025-12-01 22:55:23.678 15584-15584 AssistStructure         GaitVision.com                       I  Flattened final assist data: 2988 bytes, containing 1 windows, 18 views
+2025-12-01 22:55:23.698 15584-15590 GaitVision.com          GaitVision.com                       W  userfaultfd: MOVE ioctl seems unsupported: Connection timed out
+2025-12-01 22:55:23.773 15584-15590 GaitVision.com          GaitVision.com                       I  Background concurrent mark compact GC freed 3904KB AllocSpace bytes, 0(0B) LOS objects, 49% free, 3776KB/7553KB, paused 2.579ms,15.791ms total 140.895ms
+2025-12-01 22:55:25.036 15584-15584 WindowOnBackDispatcher  GaitVision.com                       D  setTopOnBackInvokedCallback (unwrapped): android.view.ImeBackAnimationController@3e2e652
+2025-12-01 22:55:26.123 15584-15633 InteractionJankMonitor  GaitVision.com                       W  Initializing without READ_DEVICE_CONFIG permission. enabled=false, interval=1, missedFrameThreshold=3, frameTimeThreshold=64, package=GaitVision.com
+2025-12-01 22:55:26.337 15584-15584 ImeTracker              GaitVision.com                       I  GaitVision.com:45e6876b: onShown
+2025-12-01 22:55:26.591 15584-15584 WindowOnBackDispatcher  GaitVision.com                       D  setTopOnBackInvokedCallback (unwrapped): android.view.ViewRootImpl$$ExternalSyntheticLambda12@d33b105
+2025-12-01 22:55:26.689 15584-15584 ImeTracker              GaitVision.com                       I  system_server:93cd96a1: onCancelled at PHASE_CLIENT_ON_CONTROLS_CHANGED
+2025-12-01 22:55:27.107 15584-15584 ImeTracker              GaitVision.com                       I  system_server:f2b6db63: onCancelled at PHASE_CLIENT_ON_CONTROLS_CHANGED
+2025-12-01 22:55:27.108 15584-15584 WindowOnBackDispatcher  GaitVision.com                       D  setTopOnBackInvokedCallback (unwrapped): android.view.ViewRootImpl$$ExternalSyntheticLambda12@1413b8a
+2025-12-01 22:55:27.108 15584-15584 WindowOnBackDispatcher  GaitVision.com                       D  setTopOnBackInvokedCallback (unwrapped): android.view.ImeBackAnimationController@3e2e652
+2025-12-01 22:55:27.370 15584-15584 WindowOnBackDispatcher  GaitVision.com                       D  setTopOnBackInvokedCallback (unwrapped): null
+2025-12-01 22:55:27.391 15584-15600 HWUI                    GaitVision.com                       D  endAllActiveAnimators on 0x72eeb6610420 (DropDownListView) with handle 0x72ed36645440
+2025-12-01 22:55:27.848 15584-15584 WindowOnBackDispatcher  GaitVision.com                       D  setTopOnBackInvokedCallback (unwrapped): android.view.ViewRootImpl$$ExternalSyntheticLambda12@73cd36b
+2025-12-01 22:55:27.919 15584-15584 ImeTracker              GaitVision.com                       I  system_server:a5a7df6e: onCancelled at PHASE_CLIENT_ON_CONTROLS_CHANGED
+2025-12-01 22:55:29.526 15584-15584 ImeTracker              GaitVision.com                       I  system_server:e2a6eb50: onCancelled at PHASE_CLIENT_ON_CONTROLS_CHANGED
+2025-12-01 22:55:29.527 15584-15584 WindowOnBackDispatcher  GaitVision.com                       D  setTopOnBackInvokedCallback (unwrapped): android.view.ViewRootImpl$$ExternalSyntheticLambda12@1413b8a
+2025-12-01 22:55:29.527 15584-15584 WindowOnBackDispatcher  GaitVision.com                       D  setTopOnBackInvokedCallback (unwrapped): android.view.ImeBackAnimationController@3e2e652
+2025-12-01 22:55:29.809 15584-15584 WindowOnBackDispatcher  GaitVision.com                       D  setTopOnBackInvokedCallback (unwrapped): null
+2025-12-01 22:55:29.838 15584-15600 HWUI                    GaitVision.com                       D  endAllActiveAnimators on 0x72eeb66455e0 (DropDownListView) with handle 0x72ed36643790
+2025-12-01 22:55:30.114 15584-15584 WindowOnBackDispatcher  GaitVision.com                       D  setTopOnBackInvokedCallback (unwrapped): android.view.ViewRootImpl$$ExternalSyntheticLambda12@2bd5128
+2025-12-01 22:55:30.172 15584-15584 ImeTracker              GaitVision.com                       I  system_server:b934c0db: onCancelled at PHASE_CLIENT_ON_CONTROLS_CHANGED
+2025-12-01 22:55:31.843 15584-15584 ImeTracker              GaitVision.com                       I  system_server:e2ff3bc3: onCancelled at PHASE_CLIENT_ON_CONTROLS_CHANGED
+2025-12-01 22:55:31.843 15584-15584 WindowOnBackDispatcher  GaitVision.com                       D  setTopOnBackInvokedCallback (unwrapped): android.view.ViewRootImpl$$ExternalSyntheticLambda12@1413b8a
+2025-12-01 22:55:31.844 15584-15584 WindowOnBackDispatcher  GaitVision.com                       D  setTopOnBackInvokedCallback (unwrapped): android.view.ImeBackAnimationController@3e2e652
+2025-12-01 22:55:32.131 15584-15584 WindowOnBackDispatcher  GaitVision.com                       D  setTopOnBackInvokedCallback (unwrapped): null
+2025-12-01 22:55:32.133 15584-15600 HWUI                    GaitVision.com                       D  endAllActiveAnimators on 0x72eeb6642f40 (DropDownListView) with handle 0x72ed36646a30
+2025-12-01 22:55:33.053 15584-15584 VRI[VideoP...rActivity] GaitVision.com                       D  WindowInsets changed: 1080x2400 statusBars:[0,63,0,0] navigationBars:[0,0,0,63] mandatorySystemGestures:[0,63,0,84] 
+2025-12-01 22:55:33.054 15584-15584 WindowOnBackDispatcher  GaitVision.com                       D  setTopOnBackInvokedCallback (unwrapped): android.view.ViewRootImpl$$ExternalSyntheticLambda12@298a3dc
+2025-12-01 22:55:33.298 15584-15584 ImeTracker              GaitVision.com                       I  system_server:f0c2f518: onCancelled at PHASE_CLIENT_ON_CONTROLS_CHANGED
+2025-12-01 22:55:33.354 15584-15584 ImeTracker              GaitVision.com                       I  system_server:49fa1630: onCancelled at PHASE_CLIENT_ON_CONTROLS_CHANGED
+2025-12-01 22:55:38.312 15584-15584 VRI[DashboardActivity]  GaitVision.com                       D  visibilityChanged oldVisibility=true newVisibility=false
+2025-12-01 22:55:38.523 15584-15584 ImeTracker              GaitVision.com                       I  system_server:1d71f8bf: onCancelled at PHASE_CLIENT_ON_CONTROLS_CHANGED
+2025-12-01 22:55:38.808 15584-15584 AutofillManager         GaitVision.com                       I  onInvisibleForAutofill(): expiringResponse
+2025-12-01 22:55:39.089 15584-15584 WindowOnBackDispatcher  GaitVision.com                       D  setTopOnBackInvokedCallback (unwrapped): android.view.ViewRootImpl$$ExternalSyntheticLambda12@1413b8a
+2025-12-01 22:55:39.289 15584-15592 System                  GaitVision.com                       W  A resource failed to call release. 
+2025-12-01 22:55:39.289 15584-15592 System                  GaitVision.com                       W  A resource failed to call release. 
+2025-12-01 22:55:44.045 15584-15584 VideoPickerActivity     GaitVision.com                       D  Selected video URI: content://com.android.providers.downloads.documents/document/raw%3A%2Fstorage%2Femulated%2F0%2FDownload%2FIMG_9934.mov
+2025-12-01 22:55:44.251 15584-15584 AudioSystem             GaitVision.com                       D  onNewServiceWithAdapter: media.audio_flinger service obtained 0x72ed36647f30
+2025-12-01 22:55:44.279 15584-15584 AudioSystem             GaitVision.com                       D  getService: IAudioFlingerService retrieved: 0x72eef66916a0  IAudioFlinger cached: 0x72ed36647f30
+2025-12-01 22:55:46.284 15584-15584 Choreographer           GaitVision.com                       I  Skipped 131 frames!  The application may be doing too much work on its main thread.
+2025-12-01 22:55:46.427 15584-15595 HWUI                    GaitVision.com                       I  Davey! duration=2335ms; Flags=1, FrameTimelineVsyncId=567049, IntendedVsync=39233472714790, Vsync=39233489381456, InputEventId=0, HandleInputStart=39233495297500, AnimationStart=39233495333700, PerformTraversalsStart=39233495391100, DrawStart=39235665089000, FrameDeadline=39233489381456, FrameStartTime=39233495270600, FrameInterval=16666666, WorkloadTarget=16666666, SyncQueued=39235671182700, SyncStart=39235674623600, IssueDrawCommandsStart=39235674872700, SwapBuffers=39235709674600, FrameCompleted=39235811706900, DequeueBufferDuration=15280700, QueueBufferDuration=451300, GpuCompleted=39235811706900, SwapBuffersCompleted=39235727626000, DisplayPresentTime=0, CommandSubmissionCompleted=39235709674600, 
+2025-12-01 22:55:46.429 15584-15595 HWUI                    GaitVision.com                       I  Davey! duration=2310ms; Flags=0, FrameTimelineVsyncId=567095, IntendedVsync=39233539381454, Vsync=39235722714700, InputEventId=0, HandleInputStart=39235729337600, AnimationStart=39235729360200, PerformTraversalsStart=39235729563100, DrawStart=39235729933700, FrameDeadline=39235839381362, FrameStartTime=39235728793400, FrameInterval=16666666, WorkloadTarget=16666666, SyncQueued=39235730168800, SyncStart=39235730361900, IssueDrawCommandsStart=39235730460400, SwapBuffers=39235731356900, FrameCompleted=39235850328700, DequeueBufferDuration=37507700, QueueBufferDuration=237600, GpuCompleted=39235850328700, SwapBuffersCompleted=39235769814600, DisplayPresentTime=0, CommandSubmissionCompleted=39235731356900, 
+2025-12-01 22:55:46.723 15584-15584 ImeBackDispatcher       GaitVision.com                       W  Ime callback not found. Ignoring unregisterReceivedCallback. callbackId: 266136806 remaining callbacks: 0
+2025-12-01 22:55:46.843 15584-15584 InsetsController        GaitVision.com                       D  hide(ime())
+2025-12-01 22:55:46.844 15584-15584 ImeTracker              GaitVision.com                       I  GaitVision.com:37fa0b5f: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+2025-12-01 22:55:46.981 15584-15584 MediaPlayerNative       GaitVision.com                       D  getMetadata
+2025-12-01 22:55:47.553 15584-15584 WindowOnBackDispatcher  GaitVision.com                       D  setTopOnBackInvokedCallback (unwrapped): android.view.ViewRootImpl$$ExternalSyntheticLambda12@abad334
+2025-12-01 22:55:48.704   863-2014  AppOps                  system_server                        E  attributionTag  not declared in manifest of GaitVision.com
+2025-12-01 22:55:48.705   863-2014  AppOps                  system_server                        E  attributionTag  not declared in manifest of GaitVision.com
+2025-12-01 22:55:48.731 15584-15584 AudioSystem             GaitVision.com                       D  onNewService: media.audio_policy service obtained 0x72eef668ae90
+2025-12-01 22:55:48.736 15584-15584 AudioSystem             GaitVision.com                       D  getService: IAudioPolicyService retrieved: 0x72eef668ae90  cached: 0x72eef668ae90
+2025-12-01 22:55:50.551 15584-15584 WindowOnBackDispatcher  GaitVision.com                       D  setTopOnBackInvokedCallback (unwrapped): null
+2025-12-01 22:55:50.625 15584-15584 InsetsController        GaitVision.com                       D  hide(ime())
+2025-12-01 22:55:50.625 15584-15584 ImeTracker              GaitVision.com                       I  GaitVision.com:9cf87d7a: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+2025-12-01 22:55:53.882   863-1362  AppOps                  system_server                        E  attributionTag  not declared in manifest of GaitVision.com
+2025-12-01 22:55:53.884   863-1362  AppOps                  system_server                        E  attributionTag  not declared in manifest of GaitVision.com
+2025-12-01 22:56:00.010 15584-15584 Activity                GaitVision.com                       W  Slow operation Fragment dispatchResume since onResume, duration=1045
+2025-12-01 22:56:00.010 15584-15584 Activity                GaitVision.com                       W  Slow operation onPostResume since onResume, duration=1046
+2025-12-01 22:56:00.011 15584-15584 Activity                GaitVision.com                       W  Slow operation dispatchActivityPostResumed since onResume, duration=1046
+2025-12-01 22:56:00.159 15584-15584 VRI[VideoP...rActivity] GaitVision.com                       D  visibilityChanged oldVisibility=true newVisibility=false
+2025-12-01 22:56:00.295 15584-15584 MediaPlayer             GaitVision.com                       V  resetDrmState:  mDrmInfo=null mDrmProvisioningThread=null mPrepareDrmInProgress=false mActiveDrmScheme=false
+2025-12-01 22:56:00.296 15584-15584 MediaPlayer             GaitVision.com                       V  cleanDrmObj: mDrmObj=null mDrmSessionId=null
+2025-12-01 22:56:00.298 15584-15584 MediaPlayer             GaitVision.com                       V  resetDrmState:  mDrmInfo=null mDrmProvisioningThread=null mPrepareDrmInProgress=false mActiveDrmScheme=false
+2025-12-01 22:56:00.298 15584-15584 MediaPlayer             GaitVision.com                       V  cleanDrmObj: mDrmObj=null mDrmSessionId=null
+2025-12-01 22:56:00.327 15584-15584 WindowOnBackDispatcher  GaitVision.com                       D  setTopOnBackInvokedCallback (unwrapped): null
+2025-12-01 22:56:00.329 15584-15584 ViewRootImpl            GaitVision.com                       D  Skipping stats log for color mode
+2025-12-01 22:56:00.406 15584-15584 InsetsController        GaitVision.com                       D  show(ime())
+2025-12-01 22:56:00.406 15584-15584 ImeTracker              GaitVision.com                       I  GaitVision.com:5e87ac32: onCancelled at PHASE_CLIENT_REPORT_REQUESTED_VISIBLE_TYPES
+2025-12-01 22:56:00.494 15584-15584 WindowOnBackDispatcher  GaitVision.com                       D  setTopOnBackInvokedCallback (unwrapped): android.view.ImeBackAnimationController@3e2e652
+2025-12-01 22:56:00.904 15584-15584 ImeTracker              GaitVision.com                       I  system_server:b0aa339e: onShown
+2025-12-01 22:56:02.530 15584-15584 VRI[AnalysisActivity]   GaitVision.com                       D  WindowInsets changed: 1080x2400 statusBars:[0,63,0,0] navigationBars:[0,0,0,63] mandatorySystemGestures:[0,63,0,84] 
+2025-12-01 22:56:02.530 15584-15584 WindowOnBackDispatcher  GaitVision.com                       D  setTopOnBackInvokedCallback (unwrapped): android.view.ViewRootImpl$$ExternalSyntheticLambda12@2f29947
+2025-12-01 22:56:02.751 15584-15584 ImeTracker              GaitVision.com                       I  system_server:599a4874: onCancelled at PHASE_CLIENT_ON_CONTROLS_CHANGED
+2025-12-01 22:56:02.875 15584-15584 WindowOnBackDispatcher  GaitVision.com                       D  setTopOnBackInvokedCallback (unwrapped): android.view.ViewRootImpl$$ExternalSyntheticLambda12@1413b8a
+2025-12-01 22:56:02.875 15584-15584 WindowOnBackDispatcher  GaitVision.com                       D  setTopOnBackInvokedCallback (unwrapped): android.view.ImeBackAnimationController@245750d
+2025-12-01 22:56:02.892 15584-15584 InsetsController        GaitVision.com                       D  hide(ime())
+2025-12-01 22:56:02.892 15584-15584 ImeTracker              GaitVision.com                       I  GaitVision.com:d8da30a: onCancelled at PHASE_CLIENT_ALREADY_HIDDEN
+2025-12-01 22:56:02.932 15584-15584 RemoteInpu...ectionImpl GaitVision.com                       W  requestCursorUpdates on inactive InputConnection
+2025-12-01 22:56:02.958 15584-15584 ImeTracker              GaitVision.com                       I  system_server:9579979f: onCancelled at PHASE_CLIENT_ON_CONTROLS_CHANGED
+2025-12-01 22:56:02.984 15584-15584 WindowOnBackDispatcher  GaitVision.com                       D  setTopOnBackInvokedCallback (unwrapped): android.view.ViewRootImpl$$ExternalSyntheticLambda12@2f29947
+2025-12-01 22:56:03.088 15584-15584 WindowOnBackDispatcher  GaitVision.com                       D  setTopOnBackInvokedCallback (unwrapped): android.view.ImeBackAnimationController@245750d
+2025-12-01 22:56:03.105 15584-15584 WindowOnBackDispatcher  GaitVision.com                       D  setTopOnBackInvokedCallback (unwrapped): android.view.ViewRootImpl$$ExternalSyntheticLambda12@2f29947
+2025-12-01 22:56:03.264 15584-15584 VRI[DashboardActivity]  GaitVision.com                       D  visibilityChanged oldVisibility=true newVisibility=false
+2025-12-01 22:56:03.293 15584-15584 AutofillManager         GaitVision.com                       I  onInvisibleForAutofill(): expiringResponse
+2025-12-01 22:56:04.240 15584-15584 AnalysisActivity        GaitVision.com                       D  Patient ID: 2
+2025-12-01 22:56:12.190 15584-15590 GaitVision.com          GaitVision.com                       W  Cleared Reference was only reachable from finalizer (only reported once)
+2025-12-01 22:56:12.217 15584-15592 System                  GaitVision.com                       W  A resource failed to call release. 
+2025-12-01 22:56:12.218 15584-15592 System                  GaitVision.com                       W  A resource failed to call release. 
+2025-12-01 22:56:12.218 15584-15592 System                  GaitVision.com                       W  A resource failed to call release. 
+2025-12-01 22:56:22.498 15584-15590 GaitVision.com          GaitVision.com                       I  NativeAlloc concurrent mark compact GC freed 570KB AllocSpace bytes, 0(0B) LOS objects, 49% free, 4309KB/8619KB, paused 1.710ms,2.455ms total 146.154ms
+2025-12-01 22:57:35.762 15584-15590 GaitVision.com          GaitVision.com                       I  NativeAlloc concurrent mark compact GC freed 184KB AllocSpace bytes, 0(0B) LOS objects, 49% free, 4357KB/8715KB, paused 1.154ms,5.337ms total 34.115ms
+2025-12-01 22:57:50.393 15584-15584 AnalysisActivity        GaitVision.com                       E  Error during analysis: Only the original thread that created a view hierarchy can touch its views. Expected: main Calling: DefaultDispatcher-worker-2 (Ask Gemini)
+                                                                                                    android.view.ViewRootImpl$CalledFromWrongThreadException: Only the original thread that created a view hierarchy can touch its views. Expected: main Calling: DefaultDispatcher-worker-2
+                                                                                                    	at android.view.ViewRootImpl.checkThread(ViewRootImpl.java:11491)
+                                                                                                    	at android.view.ViewRootImpl.requestLayout(ViewRootImpl.java:2630)
+                                                                                                    	at android.view.View.requestLayout(View.java:28508)
+                                                                                                    	at android.view.View.requestLayout(View.java:28508)
+                                                                                                    	at android.view.View.requestLayout(View.java:28508)
+                                                                                                    	at android.view.View.requestLayout(View.java:28508)
+                                                                                                    	at android.view.View.requestLayout(View.java:28508)
+                                                                                                    	at android.view.View.requestLayout(View.java:28508)
+                                                                                                    	at android.view.View.requestLayout(View.java:28508)
+                                                                                                    	at android.view.View.requestLayout(View.java:28508)
+                                                                                                    	at android.widget.TextView.checkForRelayout(TextView.java:11772)
+                                                                                                    	at android.widget.TextView.setText(TextView.java:7520)
+                                                                                                    	at android.widget.TextView.setText(TextView.java:7335)
+                                                                                                    	at android.widget.TextView.setText(TextView.java:7273)
+                                                                                                    	at GaitVision.com.ImageProcessingKt.ProcVidEmpty(imageProcessing.kt:416)
+                                                                                                    	at GaitVision.com.ImageProcessingKt$ProcVidEmpty$1.invokeSuspend(Unknown Source:13)
+                                                                                                    	at kotlin.coroutines.jvm.internal.BaseContinuationImpl.resumeWith(ContinuationImpl.kt:33)
+                                                                                                    	at kotlinx.coroutines.DispatchedTask.run(DispatchedTask.kt:108)
+                                                                                                    	at kotlinx.coroutines.internal.LimitedDispatcher$Worker.run(LimitedDispatcher.kt:115)
+                                                                                                    	at kotlinx.coroutines.scheduling.TaskImpl.run(Tasks.kt:103)
+                                                                                                    	at kotlinx.coroutines.scheduling.CoroutineScheduler.runSafely(CoroutineScheduler.kt:584)
+                                                                                                    	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.executeTask(CoroutineScheduler.kt:793)
+                                                                                                    	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.runWorker(CoroutineScheduler.kt:697)
+                                                                                                    	at kotlinx.coroutines.scheduling.CoroutineScheduler$Worker.run(CoroutineScheduler.kt:684)
+2025-12-01 22:57:57.807 15584-15584 AnalysisActivity        GaitVision.com                       D  Patient ID: 2
+2025-12-01 22:58:21.023 15584-15590 GaitVision.com          GaitVision.com                       I  NativeAlloc concurrent mark compact GC freed 188KB AllocSpace bytes, 0(0B) LOS objects, 49% free, 4337KB/8675KB, paused 1.990ms,6.910ms total 48.423ms
