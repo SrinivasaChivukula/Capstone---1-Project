@@ -147,3 +147,4 @@ app/debug/
 # Cursor (your IDE)
 .cursor/
 terminals/
+gradle.properties
