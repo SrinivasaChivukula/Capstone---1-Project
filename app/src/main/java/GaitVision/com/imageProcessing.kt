@@ -1,6 +1,5 @@
 package GaitVision.com
 
-import GaitVision.com.databinding.ActivitySecondBinding
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -16,10 +15,14 @@ import android.media.MediaMuxer
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.widget.Button
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.pose.PoseDetection
@@ -77,92 +80,6 @@ fun plotLineGraph(
     lineChart.data = lineData
     lineChart.description.isEnabled = false
     lineChart.invalidate() // Refresh chart
-}
-
-/*
-Name             : getFrameBitmaps
-Parameters       :
-    context      : This parameter is the interface that contains global information about
-                   the application environment.
-    fileUri      : This parameter is the uri to the video that will be used in the function.
-    mBinding     : This is the view of the activity page. Use this for messing with XML features.
-Description      : This function takes a uri of a video and sends it through a process to get a
-                   bitmap of every frame in the video so pose tracking can be done on it.
-Return           :
-    NONE
- */
-suspend fun getFrameBitmaps(context: Context,fileUri: Uri?, mBinding: ActivitySecondBinding)
-{
-    if(fileUri == null)
-    {
-        return
-    }
-
-    //Declare and initialize constants that can be used for frame syncing
-    val OPTION_PREVIOUS_SYNC = MediaMetadataRetriever.OPTION_PREVIOUS_SYNC
-    val OPTION_NEXT_SYNC = MediaMetadataRetriever.OPTION_NEXT_SYNC
-    val OPTION_CLOSEST_SYNC = MediaMetadataRetriever.OPTION_CLOSEST_SYNC
-    val OPTION_CLOSEST = MediaMetadataRetriever.OPTION_CLOSEST
-
-    //Declare and initialize variables to be used in function
-    val retriever = MediaMetadataRetriever()
-    frameList = mutableListOf<Bitmap>()
-
-    //Set data input
-    retriever.setDataSource(context, fileUri)
-
-    //Video length in microseconds
-    if(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE) == "video/mp4")
-    {
-        val videoLengthMs = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0L
-
-        //Change this for more or less bitmaps
-        //1000L * 1000L = 1 second (1fps)
-        val frameInterval = (1000L * 1000L) / 30
-
-        //Start time of video
-        var currTime = 0L
-
-        val videoLengthUs = videoLengthMs * 1000L
-        videoLength = videoLengthUs
-
-        //Update UI for video splitting progress
-        withContext(Dispatchers.Main)
-        {
-            mBinding.splittingBar.visibility = VISIBLE
-            mBinding.splittingProgressValue.visibility = VISIBLE
-            mBinding.splittingProgressValue.text = " 0%"
-        }
-        var progress : Int
-        //Loop through all video and get frame bitmap at current position
-        while(currTime <= videoLengthUs)
-        {
-            val frame = retriever.getFrameAtTime(currTime, OPTION_CLOSEST)
-            if(frame != null)
-            {
-                frameList.add(frame)
-            }
-
-            //Update UI with new video splitting progress
-            progress = ((currTime.toDouble() / videoLengthUs)*100).toInt()
-            withContext(Dispatchers.Main)
-            {
-                mBinding.splittingBar.setProgress(progress)
-                mBinding.splittingProgressValue.text = (" " + progress.toString() + "%")
-            }
-            currTime += frameInterval
-        }
-    }
-    //Should never be here, but included in-case someone gets a image selected
-    else if(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE) == "image/jpeg" || retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE) == "image/png")
-    {
-        val stream = context.contentResolver.openInputStream(fileUri)
-        val frame = BitmapFactory.decodeStream(stream)
-        frameList.add(frame)
-    }
-
-    //Release resources
-    retriever.release()
 }
 
 /*
@@ -389,24 +306,94 @@ fun drawOnBitmap(bitmap: Bitmap, pose: Pose?): Bitmap
 }
 
 /*
-Name           : ProcVidEmpty
-Parameters     :
-    context    : This parameter is the interface that contains global information about
-                 the application environment.
-    uri        : This is the video Uri that we will be working on.
-    outputPath : This is the output path the new video with all the processing on should be
-                 saved to.
-    mBinding   : This is the view of the activity page. Use this for messing with XML features.
-Description    : This is the master function of the entire video processing sequence.
-                 It will call all the helper functions that are needed to run the processing
-                 and video encoding.
-Return         :
-    Uri        : This is the new video's uri that has all the drawing and pose detection
-                 displayed on it.
+Name             : getFrameBitmaps
+Parameters       :
+    context      : This parameter is the interface that contains global information about
+                   the application environment.
+    fileUri      : This parameter is the uri to the video that will be used in the function.
+    mBinding     : This is the view of the activity page. Use this for messing with XML features.
+Description      : This function takes a uri of a video and sends it through a process to get a
+                   bitmap of every frame in the video so pose tracking can be done on it.
+Return           :
+    NONE
  */
-suspend fun ProcVidEmpty(context: Context, outputPath: String, mBinding: ActivitySecondBinding): Uri?
+suspend fun getFrameBitmaps(context: Context, fileUri: Uri?, activity: AppCompatActivity)
 {
-    //Clear all angle list for new video's angles
+    if(fileUri == null)
+    {
+        return
+    }
+
+    val OPTION_CLOSEST = MediaMetadataRetriever.OPTION_CLOSEST
+    val retriever = MediaMetadataRetriever()
+    frameList = mutableListOf<Bitmap>()
+    
+    // Use file descriptor for more reliable access to content URIs
+    try {
+        val pfd = context.contentResolver.openFileDescriptor(fileUri, "r")
+        if (pfd != null) {
+            retriever.setDataSource(pfd.fileDescriptor)
+            pfd.close()
+        } else {
+            // Fallback to context-based method
+            retriever.setDataSource(context, fileUri)
+        }
+    } catch (e: Exception) {
+        Log.e("ImageProcessing", "Error opening video: ${e.message}")
+        // Try fallback method
+        retriever.setDataSource(context, fileUri)
+    }
+
+    if(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE) == "video/mp4")
+    {
+        val videoLengthMs = retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong() ?: 0L
+        val frameInterval = (1000L * 1000L) / 30
+        var currTime = 0L
+        val videoLengthUs = videoLengthMs * 1000L
+        videoLength = videoLengthUs
+
+        withContext(Dispatchers.Main)
+        {
+            activity.findViewById<View>(R.id.splittingBar).visibility = VISIBLE
+            activity.findViewById<TextView>(R.id.splittingProgressValue).visibility = VISIBLE
+            activity.findViewById<TextView>(R.id.splittingProgressValue).text = " 0%"
+        }
+        
+        var progress: Int
+        while(currTime <= videoLengthUs)
+        {
+            val frame = retriever.getFrameAtTime(currTime, OPTION_CLOSEST)
+            if(frame != null)
+            {
+                frameList.add(frame)
+            }
+
+            progress = ((currTime.toDouble() / videoLengthUs)*100).toInt()
+            withContext(Dispatchers.Main)
+            {
+                activity.findViewById<ProgressBar>(R.id.splittingBar).setProgress(progress)
+                activity.findViewById<TextView>(R.id.splittingProgressValue).text = (" " + progress.toString() + "%")
+            }
+            currTime += frameInterval
+        }
+    }
+    else if(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE) == "image/jpeg" || retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_MIMETYPE) == "image/png")
+    {
+        val stream = context.contentResolver.openInputStream(fileUri)
+        val frame = BitmapFactory.decodeStream(stream)
+        frameList.add(frame)
+    }
+
+    retriever.release()
+}
+
+/*
+Name           : ProcVidEmpty (overloaded for AnalysisActivity)
+Description    : Master function for video processing with AnalysisActivity binding
+ */
+suspend fun ProcVidEmpty(context: Context, outputPath: String, activity: AppCompatActivity): Uri?
+{
+    // Clear all angle lists
     leftAnkleAngles.clear()
     rightAnkleAngles.clear()
     leftKneeAngles.clear()
@@ -414,30 +401,29 @@ suspend fun ProcVidEmpty(context: Context, outputPath: String, mBinding: Activit
     leftHipAngles.clear()
     rightHipAngles.clear()
     torsoAngles.clear()
+    strideAngles.clear()
 
-
-    //Update all UI progress bars and text for viewing
     withContext(Dispatchers.Main)
     {
-        mBinding.SplittingText.visibility = VISIBLE
-        mBinding.CreationText.visibility = VISIBLE
-        mBinding.splittingProgressValue.visibility = GONE
-        mBinding.CreatingProgressValue.visibility = GONE
+        activity.findViewById<TextView>(R.id.SplittingText).visibility = VISIBLE
+        activity.findViewById<TextView>(R.id.CreationText).visibility = VISIBLE
+        activity.findViewById<TextView>(R.id.splittingProgressValue).visibility = GONE
+        activity.findViewById<TextView>(R.id.CreatingProgressValue).visibility = GONE
     }
 
-    getFrameBitmaps(context, galleryUri, mBinding) // Get frames from the original video
-    mBinding.splittingBar.setProgress(100)
-    mBinding.splittingProgressValue.text = (" " + 100.toString() + "%")
+    getFrameBitmaps(context, galleryUri, activity)
+    withContext(Dispatchers.Main) {
+        activity.findViewById<ProgressBar>(R.id.splittingBar).setProgress(100)
+        activity.findViewById<TextView>(R.id.splittingProgressValue).text = " 100%"
+    }
     if(frameList.isEmpty()) return galleryUri
 
     val firstFrame = frameList[0]
-    var width = firstFrame.width
-    var height = firstFrame.height
+    val width = firstFrame.width
+    val height = firstFrame.height
 
-
-    //Prep video file
     val mediaMuxer = MediaMuxer(outputPath, MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4)
-    var format = MediaFormat.createVideoFormat("video/avc", width, height)
+    val format = MediaFormat.createVideoFormat("video/avc", width, height)
     format.setInteger(MediaFormat.KEY_BIT_RATE, 1000000)
     format.setInteger(MediaFormat.KEY_FRAME_RATE, 30)
     format.setInteger(MediaFormat.KEY_COLOR_FORMAT, MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface)
@@ -448,53 +434,44 @@ suspend fun ProcVidEmpty(context: Context, outputPath: String, mBinding: Activit
 
     val retriever1 = MediaMetadataRetriever()
     retriever1.setDataSource(context, galleryUri)
-    var orientation = retriever1.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)
-    Log.d("ErrorCheck","Video Orientation: $orientation")
+    val orientation = retriever1.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_ROTATION)
+    Log.d("ErrorCheck", "Video Orientation: $orientation")
     retriever1.release()
 
-    //Setup encoder for video
-    var encoder = MediaCodec.createEncoderByType("video/avc")
+    val encoder = MediaCodec.createEncoderByType("video/avc")
     encoder.configure(format, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE)
-    var inputSurface = encoder.createInputSurface()
+    val inputSurface = encoder.createInputSurface()
     encoder.start()
 
-    val frameDurationUs = 1000000L / 30  // microseconds per frame for 30 fps
-
+    val frameDurationUs = 1000000L / 30
     var trackIndex = -1
     var muxerStarted = false
     val bufferInfo = MediaCodec.BufferInfo()
-
     val listSize = frameList.size
-    var progress : Int
-
+    var progress: Int
     var frameI = 0
 
-    //Update UI for video creation
     withContext(Dispatchers.Main)
     {
-        mBinding.VideoCreation.visibility = VISIBLE
-        mBinding.CreatingProgressValue.visibility = VISIBLE
-        mBinding.CreatingProgressValue.text = " 0%"
+        activity.findViewById<ProgressBar>(R.id.VideoCreation).visibility = VISIBLE
+        activity.findViewById<TextView>(R.id.CreatingProgressValue).visibility = VISIBLE
+        activity.findViewById<TextView>(R.id.CreatingProgressValue).text = " 0%"
     }
 
-    //Loop through frames to create new video
     for ((frameIndex, frame) in frameList.withIndex())
     {
         frameI = frameIndex
         val pose = processImageBitmap(frame)
         val modifiedBitmap = drawOnBitmap(frame, pose)
 
-        // Draw the frame onto the encoder input surface
         val canvas = inputSurface.lockCanvas(null)
         canvas.drawBitmap(modifiedBitmap, 0f, 0f, null)
         inputSurface.unlockCanvasAndPost(canvas)
 
-        // Drain encoder output buffers
         while (true) {
             val outputBufferId = encoder.dequeueOutputBuffer(bufferInfo, 10000)
             when {
                 outputBufferId == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED -> {
-                    // Add track and start the muxer once
                     if (!muxerStarted) {
                         trackIndex = mediaMuxer.addTrack(encoder.outputFormat)
                         mediaMuxer.start()
@@ -514,15 +491,13 @@ suspend fun ProcVidEmpty(context: Context, outputPath: String, mBinding: Activit
         }
         progress = (((frameI + 1).toDouble() / listSize)*100).toInt()
 
-        //Update UI with video creation progress
         withContext(Dispatchers.Main)
         {
-            mBinding.VideoCreation.setProgress(progress)
-            mBinding.CreatingProgressValue.text = (" " + progress.toString() + "%")
+            activity.findViewById<ProgressBar>(R.id.VideoCreation).setProgress(progress)
+            activity.findViewById<TextView>(R.id.CreatingProgressValue).text = (" " + progress.toString() + "%")
         }
     }
 
-    // Signal end of input stream and finalize remaining buffers
     encoder.signalEndOfInputStream()
     while (true) {
         val outputBufferId = encoder.dequeueOutputBuffer(bufferInfo, 10000)
@@ -538,8 +513,6 @@ suspend fun ProcVidEmpty(context: Context, outputPath: String, mBinding: Activit
         }
     }
 
-
-    // Stop and release encoder and muxer
     encoder.stop()
     encoder.release()
     mediaMuxer.stop()
@@ -549,19 +522,16 @@ suspend fun ProcVidEmpty(context: Context, outputPath: String, mBinding: Activit
     retriever.setDataSource(context, Uri.fromFile(File(outputPath)))
     retriever.release()
 
-    //Update UI to remove all progress updates
     withContext(Dispatchers.Main)
     {
-        mBinding.SplittingText.visibility = GONE
-        mBinding.CreationText.visibility = GONE
-        mBinding.VideoCreation.visibility = GONE
-        mBinding.splittingBar.visibility = GONE
-        mBinding.splittingProgressValue.visibility = GONE
-        mBinding.CreatingProgressValue.visibility = GONE
+        activity.findViewById<TextView>(R.id.SplittingText).visibility = GONE
+        activity.findViewById<TextView>(R.id.CreationText).visibility = GONE
+        activity.findViewById<ProgressBar>(R.id.VideoCreation).visibility = GONE
+        activity.findViewById<ProgressBar>(R.id.splittingBar).visibility = GONE
+        activity.findViewById<TextView>(R.id.splittingProgressValue).visibility = GONE
+        activity.findViewById<TextView>(R.id.CreatingProgressValue).visibility = GONE
     }
 
-
-    //Smooth all angle list
     smoothDataUsingMovingAverage(rightKneeAngles, 5)
     smoothDataUsingMovingAverage(leftKneeAngles, 5)
     smoothDataUsingMovingAverage(rightHipAngles, 5)
