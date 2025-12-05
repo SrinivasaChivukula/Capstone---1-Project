@@ -360,7 +360,7 @@ class ResultsActivity : AppCompatActivity() {
     }
 
     private fun writeToFile(fileName: String, fileData: List<Float>) {
-        val fileDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS)
+        val fileDirectory = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
         val outputFile = File(fileDirectory, fileName)
 
         FileOutputStream(outputFile).use { output ->
@@ -375,14 +375,9 @@ class ResultsActivity : AppCompatActivity() {
 
     private fun renameEditedVideo() {
         val vidName = "${participantId}_video.mp4"
-        val oldFilePath = File(
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES),
-            "edited_video.mp4"
-        )
-        val newFilePath = File(
-            Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES),
-            vidName
-        )
+        val moviesDir = getExternalFilesDir(Environment.DIRECTORY_MOVIES)
+        val oldFilePath = File(moviesDir, "edited_video.mp4")
+        val newFilePath = File(moviesDir, vidName)
 
         if (oldFilePath.exists()) {
             oldFilePath.renameTo(newFilePath)

@@ -13,3 +13,7 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Autoencoder training (experimental)
+/autoencoder/pca_training/clinical_data/
+pca_training/venv*/

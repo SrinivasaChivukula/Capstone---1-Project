@@ -150,11 +150,12 @@ class AnalysisActivity : AppCompatActivity() {
                 Log.d("AnalysisActivity", "Patient ID: ${patient.id}")
 
                 // Process the video
-                val outputFilePath = "${Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES)}/edited_video.mp4"
-                val outputFile = File(outputFilePath)
+                val outputDir = getExternalFilesDir(Environment.DIRECTORY_MOVIES)
+                val outputFile = File(outputDir, "edited_video.mp4")
                 if (outputFile.exists()) {
                     outputFile.delete()
                 }
+                val outputFilePath = outputFile.absolutePath
 
                 editedUri = withContext(Dispatchers.IO) {
                     ProcVidEmpty(this@AnalysisActivity, outputFilePath, this@AnalysisActivity)
