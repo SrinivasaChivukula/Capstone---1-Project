@@ -39,6 +39,9 @@ import GaitVision.com.rightKneeMinAngles
 import GaitVision.com.rightKneeMaxAngles
 import GaitVision.com.torsoMinAngles
 import GaitVision.com.torsoMaxAngles
+import GaitVision.com.interAnkleDistances
+import GaitVision.com.legLengths
+import GaitVision.com.detectedFps
 import GaitVision.com.participantId
 import GaitVision.com.participantHeight
 import GaitVision.com.currentPatientId
@@ -93,6 +96,11 @@ class DashboardActivity : AppCompatActivity() {
         rightKneeMaxAngles.clear()
         torsoMinAngles.clear()
         torsoMaxAngles.clear()
+        // V2 extraction lists (9-feature pipeline)
+        interAnkleDistances.clear()
+        legLengths.clear()
+        detectedFps = 30f
+        // Session state
         participantId = ""
         participantHeight = 0
         currentPatientId = null

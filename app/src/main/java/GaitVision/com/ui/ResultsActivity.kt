@@ -28,13 +28,11 @@ import GaitVision.com.data.repository.GaitScoreRepository
 import GaitVision.com.plotLineGraph
 import GaitVision.com.calcStrideLengthAvg
 import GaitVision.com.editedUri
-import GaitVision.com.leftAnkleAngles
-import GaitVision.com.rightAnkleAngles
 import GaitVision.com.leftKneeAngles
 import GaitVision.com.rightKneeAngles
 import GaitVision.com.leftHipAngles
 import GaitVision.com.rightHipAngles
-import GaitVision.com.torsoAngles
+import GaitVision.com.interAnkleDistances
 import GaitVision.com.leftKneeMinAngles
 import GaitVision.com.leftKneeMaxAngles
 import GaitVision.com.rightKneeMinAngles
@@ -45,6 +43,17 @@ import GaitVision.com.participantId
 import GaitVision.com.participantHeight
 import GaitVision.com.currentPatientId
 import GaitVision.com.currentVideoId
+import GaitVision.com.interAnkleDistances
+import GaitVision.com.legLengths
+import GaitVision.com.GaitScorer9
+import GaitVision.com.GaitResult9
+import GaitVision.com.gait.GaitFeatures9
+import GaitVision.com.gait.GaitLDJ9
+import GaitVision.com.DiagnosticExporter
+import GaitVision.com.CleaningStats
+import GaitVision.com.gait.GaitSignalProcessing9
+import GaitVision.com.gait.CleanedSignalResult9
+import GaitVision.com.detectedFps
 import java.io.File
 import java.io.FileOutputStream
 import java.io.InputStream
@@ -59,8 +68,7 @@ class ResultsActivity : AppCompatActivity() {
     private lateinit var tvScoreLabel: TextView
     private lateinit var hipChart: LineChart
     private lateinit var kneeChart: LineChart
-    private lateinit var ankleChart: LineChart
-    private lateinit var torsoChart: LineChart
+    private lateinit var interAnkleChart: LineChart  // Repurposed from ankleChart
     private lateinit var btnSelectGraph: Button
 
     private var calculatedScore: Double = 0.0
@@ -84,8 +92,8 @@ class ResultsActivity : AppCompatActivity() {
         tvScoreLabel = findViewById(R.id.tvScoreLabel)
         hipChart = findViewById(R.id.lineChartHip)
         kneeChart = findViewById(R.id.lineChartKnee)
-        ankleChart = findViewById(R.id.lineChartAnkle)
-        torsoChart = findViewById(R.id.lineChartTorso)
+        interAnkleChart = findViewById(R.id.lineChartAnkle)  // Repurposed for inter-ankle distance
+        // torsoChart removed - not used in 9-feature pipeline
         btnSelectGraph = findViewById(R.id.btnSelectGraph)
     }
 
@@ -111,66 +119,143 @@ class ResultsActivity : AppCompatActivity() {
         }
     }
 
+    // Legacy gaitResult removed - only using gaitResult9 (9-feature model)
+    
+    // Store the v3 gait result for export (new 9-feature AE_L4)
+    private var gaitResult9: GaitResult9? = null
+    
+    // Store cleaning stats for CSV export
+    private var lastCleaningStats: CleaningStats? = null
+    
     private fun calculateGaitScore() {
         try {
+            // Initialize the 9-feature scorer (AE_L4)
+            if (!GaitScorer9.isReady()) {
+                if (!GaitScorer9.initialize(this)) {
+                    Log.e("ResultsActivity", "Failed to initialize GaitScorer9")
+                    showScoringError("Failed to load gait scoring model")
+                    return
+                }
+            }
+            
             // Check if we have enough data
-            if (leftKneeMinAngles.isEmpty() || leftKneeMaxAngles.isEmpty() ||
-                rightKneeMinAngles.isEmpty() || rightKneeMaxAngles.isEmpty() ||
-                torsoMinAngles.isEmpty() || torsoMaxAngles.isEmpty()) {
-                
-                tvGaitScore.text = "--"
-                tvScoreLabel.text = "Insufficient data for score calculation"
+            if (leftKneeAngles.size < 10 || rightKneeAngles.size < 10 || 
+                leftHipAngles.size < 10 || interAnkleDistances.size < 10 || legLengths.size < 10) {
+                Log.e("ResultsActivity", "Insufficient data for scoring")
+                showScoringError("Not enough pose data detected. Please ensure the subject is visible throughout the video.")
                 return
             }
-
-            // Prepare input data for the model
-            val inputData = floatArrayOf(
-                leftKneeMinAngles.average().toFloat(),
-                leftKneeMaxAngles.average().toFloat(),
-                rightKneeMinAngles.average().toFloat(),
-                rightKneeMaxAngles.average().toFloat(),
-                torsoMinAngles.average().toFloat(),
-                torsoMaxAngles.average().toFloat(),
-                calcStrideLengthAvg(participantHeight.toFloat() * 39.37F),
-                leftKneeMaxAngles.average().toFloat() - leftKneeMinAngles.average().toFloat(),
-                rightKneeMaxAngles.average().toFloat() - rightKneeMinAngles.average().toFloat()
+            
+            // Use detected FPS (from video metadata) or default to 30
+            val fps = if (detectedFps > 0) detectedFps else 30f
+            Log.d("ResultsActivity", "Using FPS: $fps for 9-feature extraction")
+            
+            // STEP 1: Apply signal cleaning (spike rejection, interpolation, smoothing)
+            val leftKneeCleaned = GaitSignalProcessing9.cleanSignal(leftKneeAngles, fps)
+            val rightKneeCleaned = GaitSignalProcessing9.cleanSignal(rightKneeAngles, fps)
+            val leftHipCleaned = GaitSignalProcessing9.cleanSignal(leftHipAngles, fps)
+            val rightHipCleaned = GaitSignalProcessing9.cleanSignal(rightHipAngles, fps)
+            val interAnkleCleaned = GaitSignalProcessing9.cleanSignal(interAnkleDistances, fps)
+            val legLengthsCleaned = GaitSignalProcessing9.cleanSignal(legLengths, fps)
+            
+            // Track cleaning stats for export
+            val totalSpikes = leftKneeCleaned.spikesRejected + rightKneeCleaned.spikesRejected + 
+                              leftHipCleaned.spikesRejected + rightHipCleaned.spikesRejected
+            val totalGaps = leftKneeCleaned.gapsFilled + rightKneeCleaned.gapsFilled +
+                            leftHipCleaned.gapsFilled + rightHipCleaned.gapsFilled
+            val totalFrames = leftKneeAngles.size
+            
+            lastCleaningStats = CleaningStats(
+                totalSpikesRejected = totalSpikes,
+                totalGapsFilled = totalGaps,
+                spikePct = if (totalFrames > 0) totalSpikes.toFloat() / totalFrames * 100 else 0f,
+                interpolationPct = if (totalFrames > 0) totalGaps.toFloat() / totalFrames * 100 else 0f,
+                leftKneeValid = leftKneeCleaned.validFrames,
+                rightKneeValid = rightKneeCleaned.validFrames,
+                leftHipValid = leftHipCleaned.validFrames
             )
-
-            // Load TFLite model and scalers
-            val tfliteModel = FileUtil.loadMappedFile(this, "encoder_model.tflite")
-            val interpreter = Interpreter(tfliteModel)
-            val scalerMean = loadFloatBinFile(this, "scaler_mean.bin")
-            val scalerScale = loadFloatBinFile(this, "scaler_scale.bin")
-            val cleanCentroid = loadNpyFloatArray(assets.open("clean_centroid.npy"))
-            val impairedCentroid = loadNpyFloatArray(assets.open("impaired_centroid.npy"))
-
-            // Apply scaling with minimum threshold
-            val minScaleValue = 1e-15f
-            val safeScalerScale = scalerScale.map { 
-                if (it < minScaleValue) minScaleValue else it 
-            }.toFloatArray()
-
-            val scaledInput = FloatArray(inputData.size) { i ->
-                (inputData[i] - scalerMean[i]) / safeScalerScale[i]
+            
+            Log.d("ResultsActivity", "Signal cleaning: ${totalSpikes} spikes rejected, ${totalGaps} gaps filled")
+            
+            // STEP 2: Average left and right hip for hip ROM and LDJ
+            val avgHip = if (leftHipCleaned.data.size == rightHipCleaned.data.size) {
+                leftHipCleaned.data.zip(rightHipCleaned.data).map { (l, r) -> (l + r) / 2f }
+            } else {
+                leftHipCleaned.data.ifEmpty { rightHipCleaned.data }
             }
-
-            // Run inference
-            val output = Array(1) { FloatArray(2) }
-            val input = arrayOf(scaledInput)
-            interpreter.run(input, output)
-
-            // Calculate gait index
-            val distClean = euclideanDistance(output[0], cleanCentroid)
-            val distImpaired = euclideanDistance(output[0], impairedCentroid)
-            val gaitIndexUnscaled = 1 - (distClean / (distClean + distImpaired))
-            val gaitIndexScaled = gaitIndexUnscaled * 100
-
-            calculatedScore = gaitIndexScaled.roundToLong().toDouble()
-
+            
+            // STEP 3: Extract all 9 features using GaitFeatures9 pipeline
+            // Feature 1: stride_amp_norm (P95 inter-ankle / avg leg length)
+            val interAnkleArray = interAnkleCleaned.data.toFloatArray()
+            val legLeftArray = legLengthsCleaned.data.toFloatArray()  // Using same for both since we only have avg
+            val legRightArray = legLengthsCleaned.data.toFloatArray()
+            val strideAmpNorm = GaitFeatures9.computeStrideAmpNorm(interAnkleArray, legLeftArray, legRightArray)
+            
+            // Features 2-5: Knee ROMs and maxes
+            val leftKneeArray = leftKneeCleaned.data.toFloatArray()
+            val rightKneeArray = rightKneeCleaned.data.toFloatArray()
+            val kneeLeftRom = GaitLDJ9.computeRom(leftKneeArray)
+            val kneeRightRom = GaitLDJ9.computeRom(rightKneeArray)
+            val kneeLeftMax = GaitLDJ9.computeMax(leftKneeArray)
+            val kneeRightMax = GaitLDJ9.computeMax(rightKneeArray)
+            
+            // Feature 6: Hip ROM   CURRENTLY THE MOST INNACURATE FEATURE EXTRACTION ON MOBILE VERSION
+            val hipArray = avgHip.toFloatArray()
+            val hipRom = GaitLDJ9.computeRom(hipArray)
+            
+            // Features 7-9: LDJ values These are log flattened jerk values they describe the smootheness of motion
+            val ldjKneeLeft = GaitLDJ9.computeLdj(leftKneeArray, fps)
+            val ldjKneeRight = GaitLDJ9.computeLdj(rightKneeArray, fps)
+            val ldjHip = GaitLDJ9.computeLdj(hipArray, fps)
+            
+            // Build 9-feature array in canonical order
+            val rawFeatures9 = floatArrayOf(
+                strideAmpNorm,
+                kneeLeftRom,
+                kneeRightRom,
+                kneeLeftMax,
+                kneeRightMax,
+                hipRom,
+                ldjKneeLeft,
+                ldjKneeRight,
+                ldjHip
+            )
+            
+            // Store for export
+            lastFeatures9 = rawFeatures9
+            
+            // Log detailed feature extraction results
+            Log.d("ResultsActivity", "=== 9-FEATURE EXTRACTION ===")
+            Log.d("ResultsActivity", "  stride_amp_norm: $strideAmpNorm")
+            Log.d("ResultsActivity", "  knee_left_rom: $kneeLeftRom")
+            Log.d("ResultsActivity", "  knee_right_rom: $kneeRightRom")
+            Log.d("ResultsActivity", "  knee_left_max: $kneeLeftMax")
+            Log.d("ResultsActivity", "  knee_right_max: $kneeRightMax")
+            Log.d("ResultsActivity", "  hip_rom: $hipRom")
+            Log.d("ResultsActivity", "  ldj_knee_left: $ldjKneeLeft")
+            Log.d("ResultsActivity", "  ldj_knee_right: $ldjKneeRight")
+            Log.d("ResultsActivity", "  ldj_hip: $ldjHip")
+            Log.d("ResultsActivity", "  NaN count: ${rawFeatures9.count { it.isNaN() }}")
+            
+            // Check for NaN features - this causes score of 0!
+            val nanCount = rawFeatures9.count { it.isNaN() }
+            if (nanCount > 0) {
+                Log.e("ResultsActivity", "WARNING: $nanCount features are NaN! This will cause low score.")
+                Log.e("ResultsActivity", "  Signal lengths: leftKnee=${leftKneeArray.size}, rightKnee=${rightKneeArray.size}, hip=${hipArray.size}")
+                Log.e("ResultsActivity", "  Inter-ankle: ${interAnkleArray.size}, LegLength: ${legLeftArray.size}")
+            }
+            
+            // STEP 4: Run v3 scoring (9-feature AE_L4)
+            gaitResult9 = GaitScorer9.score(rawFeatures9)
+            calculatedScore = gaitResult9!!.gaitScore.toDouble()
+            
+            // Store normalized features for export
+            lastNormalizedFeatures = gaitResult9!!.normalizedFeatures
+            
             // Update UI
-            tvGaitScore.text = calculatedScore.toLong().toString()
-            tvScoreLabel.text = getScoreLabel(calculatedScore)
-
+            tvGaitScore.text = gaitResult9!!.gaitScore.toString()
+            tvScoreLabel.text = gaitResult9!!.label
+            
             // Color based on score
             val scoreColor = when {
                 calculatedScore >= 80 -> "#4CAF50" // Green
@@ -178,27 +263,45 @@ class ResultsActivity : AppCompatActivity() {
                 else -> "#F44336" // Red
             }
             tvGaitScore.setTextColor(android.graphics.Color.parseColor(scoreColor))
-
-            Log.d("ResultsActivity", "Gait Score: $calculatedScore")
-
+            
+            // Log detailed results
+            Log.d("ResultsActivity", "=== SCORING RESULTS ===")
+            Log.d("ResultsActivity", "  Gait Score: ${gaitResult9!!.gaitScore}")
+            Log.d("ResultsActivity", "  Reconstruction error: ${gaitResult9!!.reconstructionError}")
+            Log.d("ResultsActivity", "  Classification: ${if (gaitResult9!!.isImpaired) "IMPAIRED" else "NORMAL"}")
+            Log.d("ResultsActivity", "  Threshold: ${gaitResult9!!.threshold}")
+            Log.d("ResultsActivity", "  Normalized features: ${gaitResult9!!.normalizedFeatures.joinToString { "%.3f".format(it) }}")
+            Log.d("ResultsActivity", "  Reconstructed: ${gaitResult9!!.reconstructedFeatures.joinToString { "%.3f".format(it) }}")
+            
             // Save to database
             saveGaitScoreToDatabase()
-
+            
         } catch (e: Exception) {
-            Log.e("ResultsActivity", "Error calculating gait score: ${e.message}", e)
-            tvGaitScore.text = "--"
-            tvScoreLabel.text = "Error calculating score"
+            Log.e("ResultsActivity", "Error in scoring: ${e.message}", e)
+            showScoringError("Scoring failed: ${e.message}")
         }
     }
-
+    
+    /**
+     * Show error when scoring fails
+     */
+    private fun showScoringError(message: String) {
+        tvGaitScore.text = "--"
+        tvScoreLabel.text = "Error"
+        tvGaitScore.setTextColor(android.graphics.Color.parseColor("#F44336"))
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+        calculatedScore = 0.0
+    }
+    
     private fun getScoreLabel(score: Double): String {
+        // Use same thresholds as GaitScorer9
         return when {
-            score >= 90 -> "Excellent Gait"
-            score >= 80 -> "Good Gait"
-            score >= 70 -> "Fair Gait"
-            score >= 60 -> "Moderate Impairment"
-            score >= 50 -> "Notable Impairment"
-            else -> "Significant Impairment"
+            score >= 90 -> "Excellent"
+            score >= 80 -> "Good"
+            score >= 70 -> "Fair"
+            score >= 50 -> "Mild Impairment"
+            score >= 30 -> "Moderate Impairment"
+            else -> "Severe Impairment"
         }
     }
 
@@ -253,18 +356,15 @@ class ResultsActivity : AppCompatActivity() {
     }
 
     private fun setupCharts() {
-        // Plot all charts
+        // Plot charts for 9-feature pipeline signals
         if (leftKneeAngles.isNotEmpty() || rightKneeAngles.isNotEmpty()) {
             plotLineGraph(kneeChart, leftKneeAngles, rightKneeAngles, "Left Knee", "Right Knee")
-        }
-        if (leftAnkleAngles.isNotEmpty() || rightAnkleAngles.isNotEmpty()) {
-            plotLineGraph(ankleChart, leftAnkleAngles, rightAnkleAngles, "Left Ankle", "Right Ankle")
         }
         if (leftHipAngles.isNotEmpty() || rightHipAngles.isNotEmpty()) {
             plotLineGraph(hipChart, leftHipAngles, rightHipAngles, "Left Hip", "Right Hip")
         }
-        if (torsoAngles.isNotEmpty()) {
-            plotLineGraph(torsoChart, torsoAngles, torsoAngles, "Torso", "Torso")
+        if (interAnkleDistances.isNotEmpty()) {
+            plotLineGraph(interAnkleChart, interAnkleDistances, interAnkleDistances, "Inter-Ankle", "Inter-Ankle")
         }
 
         // Initially show knee chart
@@ -275,15 +375,13 @@ class ResultsActivity : AppCompatActivity() {
         val popup = PopupMenu(this, btnSelectGraph)
         popup.menu.add(0, 1, 0, "Knee Graph")
         popup.menu.add(0, 2, 1, "Hip Graph")
-        popup.menu.add(0, 3, 2, "Ankle Graph")
-        popup.menu.add(0, 4, 3, "Torso Graph")
+        popup.menu.add(0, 3, 2, "Stride Graph")
 
         popup.setOnMenuItemClickListener { item ->
             when (item.itemId) {
                 1 -> showChart("KNEE")
                 2 -> showChart("HIP")
-                3 -> showChart("ANKLE")
-                4 -> showChart("TORSO")
+                3 -> showChart("STRIDE")
             }
             btnSelectGraph.text = item.title
             true
@@ -294,62 +392,90 @@ class ResultsActivity : AppCompatActivity() {
     private fun showChart(chartType: String) {
         hipChart.visibility = View.INVISIBLE
         kneeChart.visibility = View.INVISIBLE
-        ankleChart.visibility = View.INVISIBLE
-        torsoChart.visibility = View.INVISIBLE
+        interAnkleChart.visibility = View.INVISIBLE
 
         when (chartType) {
-            "HIP" -> {
-                hipChart.visibility = View.VISIBLE
-                btnSelectGraph.text = "Hip Graph"
-            }
             "KNEE" -> {
                 kneeChart.visibility = View.VISIBLE
                 btnSelectGraph.text = "Knee Graph"
             }
-            "ANKLE" -> {
-                ankleChart.visibility = View.VISIBLE
-                btnSelectGraph.text = "Ankle Graph"
+            "HIP" -> {
+                hipChart.visibility = View.VISIBLE
+                btnSelectGraph.text = "Hip Graph"
             }
-            "TORSO" -> {
-                torsoChart.visibility = View.VISIBLE
-                btnSelectGraph.text = "Torso Graph"
+            "STRIDE" -> {
+                interAnkleChart.visibility = View.VISIBLE
+                btnSelectGraph.text = "Stride Graph"
             }
         }
     }
 
+    // Store the last extracted features for export
+    private var lastFeatures9: FloatArray? = null
+    private var lastNormalizedFeatures: FloatArray? = null
+    
     private fun exportCsvFiles() {
-        val fileData = listOf(
-            leftHipAngles,
-            rightHipAngles,
-            leftKneeAngles,
-            rightKneeAngles,
-            leftAnkleAngles,
-            rightAnkleAngles,
-            torsoAngles
-        )
-
-        val angleNames = listOf(
-            "LeftHip",
-            "RightHip",
-            "LeftKnee",
-            "RightKnee",
-            "LeftAnkle",
-            "RightAnkle",
-            "Torso"
-        )
-
         try {
-            for (i in fileData.indices) {
-                val fileName = "${participantId}_${angleNames[i]}.csv"
-                writeToFile(fileName, fileData[i])
+            val fps = if (detectedFps > 0) detectedFps else 30f
+            val exportedFiles = mutableListOf<String>()
+            
+            // EXPORT 1: Diagnostic JSON, Contains raw signals, 9 features, model I/O, scoring results
+            val diagnosticFile = DiagnosticExporter.exportDiagnostics(
+                context = this,
+                subjectId = participantId,
+                fps = fps,
+                rawLeftKnee = leftKneeAngles,
+                rawRightKnee = rightKneeAngles,
+                rawLeftHip = leftHipAngles,
+                rawRightHip = rightHipAngles,
+                rawInterAnkle = interAnkleDistances,
+                rawLegLengths = legLengths,
+                features9 = lastFeatures9,
+                normalizedFeatures = lastNormalizedFeatures,
+                reconstructedFeatures = gaitResult9?.reconstructedFeatures,
+                reconstructionError = gaitResult9?.reconstructionError,
+                gaitScore = gaitResult9?.gaitScore,
+                isImpaired = gaitResult9?.isImpaired,
+                cleaningStats = lastCleaningStats
+            )
+            if (diagnosticFile != null) {
+                exportedFiles.add("Diagnostic JSON: ${diagnosticFile.name}")
+                Log.d("ResultsActivity", "Exported diagnostic: ${diagnosticFile.absolutePath}")
+            }
+            
+            // EXPORT 2: Raw signals CSV (for spreadsheet/plotting analysis)
+            val signalsFile = DiagnosticExporter.exportSignalsCsv(
+                context = this,
+                subjectId = participantId,
+                leftKnee = leftKneeAngles,
+                rightKnee = rightKneeAngles,
+                leftHip = leftHipAngles,
+                rightHip = rightHipAngles,
+                interAnkle = interAnkleDistances,
+                legLengths = legLengths
+            )
+            if (signalsFile != null) {
+                exportedFiles.add("Signals CSV: ${signalsFile.name}")
+                Log.d("ResultsActivity", "Exported signals: ${signalsFile.absolutePath}")
             }
 
-            // Rename edited video
+            // EXPORT 3: Rename edited video
             renameEditedVideo()
+            exportedFiles.add("Video: ${participantId}_video.mp4")
 
+            // Show summary - simplified for 9-feature pipeline
+            val message = buildString {
+                append("Exported to Downloads:\n\n")
+                exportedFiles.forEach { append("• $it\n") }
+                append("\n")
+                append("For PC comparison:\n")
+                append("• Diagnostic JSON: features, scoring, model I/O\n")
+                append("• Signals CSV: raw signals for plotting")
+            }
+            
             AlertDialog.Builder(this)
                 .setTitle("Export Successful")
-                .setMessage("CSV files saved to Documents as ${participantId}_GraphName.csv\n\nVideo saved to Movies as ${participantId}_video.mp4")
+                .setMessage(message)
                 .setPositiveButton("OK") { dialog, _ -> dialog.dismiss() }
                 .show()
 
@@ -360,7 +486,11 @@ class ResultsActivity : AppCompatActivity() {
     }
 
     private fun writeToFile(fileName: String, fileData: List<Float>) {
-        val fileDirectory = getExternalFilesDir(Environment.DIRECTORY_DOCUMENTS)
+        // Use public Downloads directory for easy access
+        val fileDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+        if (!fileDirectory.exists()) {
+            fileDirectory.mkdirs()
+        }
         val outputFile = File(fileDirectory, fileName)
 
         FileOutputStream(outputFile).use { output ->

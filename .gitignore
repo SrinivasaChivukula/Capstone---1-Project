@@ -14,6 +14,48 @@
 .cxx
 local.properties
 
-# Autoencoder training (experimental)
-/autoencoder/pca_training/clinical_data/
-pca_training/venv*/
+# Python environments (anywhere in project)
+venv/
+**/venv/
+**/__pycache__/
+*.pyc
+*.pyo
+.Python
+pip-log.txt
+
+# Autoencoder training & ML artifacts (DO NOT PUSH - large files & clinical data)
+autoencoder/
+autoencoder2/
+pca_training/
+modeling/
+matched_extraction/
+
+# Clinical data (NEVER push - contains patient videos)
+**/clinical_data/
+*.MOV
+*.mov
+*.mp4
+
+# Windows artifacts
+nul
+Thumbs.db
+
+# Jupyter notebooks checkpoints
+.ipynb_checkpoints/
+
+# Model training outputs (keep tflite in assets, ignore training outputs)
+*.h5
+*.keras
+*.ckpt
+*.pb
+
+# Old/deprecated model assets (only v3 autoencoder is used)
+app/src/main/assets/archived_encoder/
+app/src/main/assets/encoder_model.tflite
+app/src/main/assets/encoder_v2.tflite
+app/src/main/assets/scaler_mean.bin
+app/src/main/assets/scaler_scale.bin
+app/src/main/assets/clean_centroid.npy
+app/src/main/assets/impaired_centroid.npy
+app/src/main/assets/centroids_v2.json
+app/src/main/assets/normalization_stats_v2.json

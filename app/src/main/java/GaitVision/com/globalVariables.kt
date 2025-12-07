@@ -18,6 +18,13 @@ var rightHipAngles : MutableList<Float> = mutableListOf()
 var torsoAngles : MutableList<Float> = mutableListOf()
 var strideAngles: MutableList<Float> = mutableListOf()
 
+// NEW: For 6/9-feature extraction (v2) needed for the stride replacement feature, dont remove
+var interAnkleDistances: MutableList<Float> = mutableListOf()
+var legLengths: MutableList<Float> = mutableListOf()
+
+// NEW: Video FPS (detected from video, default 30)
+var detectedFps: Float = 30f
+
 //User input for ID and height
 var participantId: String = ""
 var participantHeight: Int = 0

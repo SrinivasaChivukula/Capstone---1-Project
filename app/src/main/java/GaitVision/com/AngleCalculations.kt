@@ -99,3 +99,58 @@ fun FindLocalMin(AngleList: MutableList<Float>): List<Float>
     }
     return localMin
 }
+
+/**
+ * Calculate Euclidean distance between two 2D points.
+ * PC-matching version (matches pc_extraction_v2/angles.py)
+ * 
+ * @param x1 First point X coordinate
+ * @param y1 First point Y coordinate
+ * @param x2 Second point X coordinate
+ * @param y2 Second point Y coordinate
+ * @return Distance in same units as input coordinates
+ */
+fun calculateDistance(x1: Float, y1: Float, x2: Float, y2: Float): Float {
+    return sqrt((x2 - x1).pow(2) + (y2 - y1).pow(2))
+}
+
+/**
+ * Calculate angle at point B using law of cosines.
+ * Returns the FLEXION angle (180 - full angle).
+ * PC-matching version (matches pc_extraction_v2/angles.py)
+ * 
+ * @param x1 Point A X coordinate
+ * @param y1 Point A Y coordinate
+ * @param x2 Point B X coordinate (vertex of angle)
+ * @param y2 Point B Y coordinate
+ * @param x3 Point C X coordinate
+ * @param y3 Point C Y coordinate
+ * @return Flexion angle in degrees (180 - geometric angle), or NaN if invalid
+ */
+fun calculateAngleLawOfCosines(
+    x1: Float, y1: Float,  // Point A
+    x2: Float, y2: Float,  // Point B (vertex)
+    x3: Float, y3: Float   // Point C
+): Float {
+    // Calculate lengths of triangle sides
+    val lenAB = calculateDistance(x1, y1, x2, y2)  // A to B
+    val lenBC = calculateDistance(x2, y2, x3, y3)  // B to C
+    val lenAC = calculateDistance(x1, y1, x3, y3)  // A to C
+    
+    // Check for zero-length segments
+    if (lenAB * lenBC == 0f) {
+        return Float.NaN
+    }
+    
+    // Law of cosines: cos(angle_B) = (AB² + BC² - AC²) / (2 * AB * BC)
+    var cosAngle = (lenAB.pow(2) + lenBC.pow(2) - lenAC.pow(2)) / (2 * lenAB * lenBC)
+    
+    // Clamp to valid range for acos
+    cosAngle = cosAngle.coerceIn(-1f, 1f)
+    
+    // Angle at B in degrees
+    val angle = acos(cosAngle) * (180f / PI.toFloat())
+    
+    // Return flexion angle (180 - geometric angle)
+    return 180f - angle
+}

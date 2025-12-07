@@ -19,6 +19,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import GaitVision.com.R
 import GaitVision.com.galleryUri
+import GaitVision.com.editedUri
 
 class VideoPickerActivity : AppCompatActivity() {
 
@@ -76,6 +77,7 @@ class VideoPickerActivity : AppCompatActivity() {
             if (result.resultCode == Activity.RESULT_OK) {
                 videoUri?.let { uri ->
                     galleryUri = uri
+                    editedUri = null  // Clear old processed video - force re-processing
                     displayVideo(uri)
                     Toast.makeText(this, "Video recorded successfully", Toast.LENGTH_SHORT).show()
                     Log.d("VideoPickerActivity", "Recorded video URI: $uri")
@@ -106,6 +108,7 @@ class VideoPickerActivity : AppCompatActivity() {
                 
                 videoUri = it
                 galleryUri = it
+                editedUri = null  // Clear old processed video - force re-processing
                 displayVideo(it)
                 Toast.makeText(this, "Video selected", Toast.LENGTH_SHORT).show()
                 Log.d("VideoPickerActivity", "Selected video URI: $it")

@@ -1,0 +1,29 @@
+{
+  "version": "v3",
+  "model": "AE_L4",
+  "model_file": "autoencoder_v3.tflite",
+  "normalization_file": "normalization_stats_v3.json",
+  "n_features": 9,
+  "latent_dim": 4,
+  "scoring": {
+    "method": "reconstruction_error",
+    "threshold": 0.2319717800252028,
+    "min_error": 0.021713612963586947,
+    "max_error": 5.290572227118834,
+    "sensitivity": 0.9344262295081968,
+    "specificity": 0.9655172413793104
+  },
+  "performance": {
+    "auc": 0.9792255511588467,
+    "clean_error_mean": 0.10221734513473871,
+    "clean_error_std": 0.08341121948300839,
+    "impaired_error_mean": 1.5817711412806201,
+    "impaired_error_std": 2.155659591034909
+  },
+  "training": {
+    "n_clean_samples": 58,
+    "epochs": 200,
+    "batch_size": 8,
+    "final_loss": 0.15074113011360168
+  }
+}
