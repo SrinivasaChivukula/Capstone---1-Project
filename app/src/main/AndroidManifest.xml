@@ -26,7 +26,7 @@
         tools:targetApi="31" >
 
         <!-- Main Entry Point -->
-        <activity 
+        <activity
             android:name="GaitVision.com.ui.DashboardActivity"
             android:exported="true"
             android:label="@string/app_name"
@@ -35,12 +35,11 @@
             tools:ignore="DiscouragedApi,LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity 
+        <activity
             android:name="GaitVision.com.ui.VideoPickerActivity"
             android:exported="false"
             android:screenOrientation="portrait"
@@ -48,24 +47,21 @@
             android:parentActivityName="GaitVision.com.ui.DashboardActivity"
             tools:ignore="DiscouragedApi,LockedOrientationActivity" />
 
-        <activity 
+        <activity
             android:name="GaitVision.com.ui.AnalysisActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.GaitVision"
             android:parentActivityName="GaitVision.com.ui.DashboardActivity"
             tools:ignore="DiscouragedApi,LockedOrientationActivity" />
-
-        <activity 
-            android:name="GaitVision.com.ui.ResultsActivity"
+        <activity android:name="GaitVision.com.ui.ResultsActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.GaitVision"
             android:parentActivityName="GaitVision.com.ui.AnalysisActivity"
             tools:ignore="DiscouragedApi,LockedOrientationActivity" />
-
         <!-- Patient Management Activities -->
-        <activity 
+        <activity
             android:name="GaitVision.com.ui.PatientListActivity"
             android:exported="false"
             android:screenOrientation="portrait"
@@ -73,7 +69,7 @@
             android:parentActivityName="GaitVision.com.ui.DashboardActivity"
             tools:ignore="DiscouragedApi,LockedOrientationActivity" />
 
-        <activity 
+        <activity
             android:name="GaitVision.com.ui.PatientCreateActivity"
             android:exported="false"
             android:screenOrientation="portrait"
@@ -81,7 +77,7 @@
             android:parentActivityName="GaitVision.com.ui.DashboardActivity"
             tools:ignore="DiscouragedApi,LockedOrientationActivity" />
 
-        <activity 
+        <activity
             android:name="GaitVision.com.ui.PatientProfileActivity"
             android:exported="false"
             android:screenOrientation="portrait"
@@ -106,6 +102,5 @@
             <action android:name="android.media.action.VIDEO_CAPTURE" />
         </intent>
     </queries>
-
 
 </manifest>
