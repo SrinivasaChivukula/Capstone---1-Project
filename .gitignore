@@ -132,6 +132,10 @@ matched_extraction/
 *.mov
 *.mp4
 
+# EXCEPTION: Public test videos
+!test-vids/
+!test-vids/*
+
 # Jupyter notebooks checkpoints
 .ipynb_checkpoints/
 
