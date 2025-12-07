@@ -125,6 +125,7 @@ autoencoder2/
 pca_training/
 modeling/
 matched_extraction/
+estimatedH/
 
 # Clinical data (NEVER push - contains patient videos)
 **/clinical_data/
