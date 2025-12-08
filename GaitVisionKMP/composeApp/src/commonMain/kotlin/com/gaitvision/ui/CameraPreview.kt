@@ -8,5 +8,8 @@ import com.gaitvision.platform.VideoProcessor
 
 @Composable
 expect fun CameraPreview(
-
+    modifier: Modifier = Modifier,
+    poseDetector: PoseDetector,
+    videoProcessor: VideoProcessor,
+    onPoseDetected: (Pose) -> Unit
 )
