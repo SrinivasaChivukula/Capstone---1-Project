@@ -11,9 +11,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 import com.gaitvision.ui.AppNavigation
 import com.gaitvision.ui.GaitVisionTheme
 
-import com.gaitvision.data.AppDatabase
-import com.gaitvision.platform.PoseDetector
-import com.gaitvision.platform.VideoProcessor
+
 
 @Composable
 fun App(
