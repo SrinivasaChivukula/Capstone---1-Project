@@ -200,33 +200,4 @@ fun ActionCard(
 }
 
 @Composable
-fun PatientCard(name: String, date: String, score: Int) {
-    Card(
-        elevation = 2.dp,
-        shape = RoundedCornerShape(8.dp),
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        Row(
-            modifier = Modifier.padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Column {
-                Text(name, style = MaterialTheme.typography.subtitle1, fontWeight = FontWeight.Bold)
-                Text(date, style = MaterialTheme.typography.caption)
-            }
-            Surface(
-                color = if (score > 80) Color(0xFFE6F4EA) else Color(0xFFFCE8E6),
-                shape = RoundedCornerShape(16.dp)
-            ) {
-                Text(
-                    text = "Score: $score",
-                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
-                    style = MaterialTheme.typography.caption,
-                    fontWeight = FontWeight.Bold,
-                    color = if (score > 80) Color(0xFF137333) else Color(0xFFC5221F)
-                )
-            }
-        }
-    }
-}
+
