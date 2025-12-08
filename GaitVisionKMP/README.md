@@ -31,4 +31,7 @@ The following components have been migrated to `commonMain`:
     - Implement `PoseDetector` in `androidMain` using ML Kit Android.
     - Implement `VideoProcessor` in `androidMain` using `MediaCodec`.
     - Implement the same interfaces in `iosMain` using iOS native frameworks.
-
+2.  **UI Implementation**:
+    - Port the XML layouts to Jetpack Compose in `commonMain`.
+3.  **Database Setup**:
+    - Configure the Room database driver for Android and iOS.
