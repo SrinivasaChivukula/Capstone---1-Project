@@ -156,23 +156,4 @@ fun AnalysisScreen(
 }
 
 @Composable
-fun VitalCard(
-    title: String,
-    value: String,
-    unit: String,
-    color: Color = MaterialTheme.colors.primary,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        elevation = 2.dp,
-        shape = RoundedCornerShape(8.dp),
-        modifier = modifier
-    ) {
-        Column(modifier = Modifier.padding(16.dp)) {
-            Text(title, style = MaterialTheme.typography.caption, color = Color.Gray)
-            Spacer(modifier = Modifier.height(4.dp))
-            Text(value, style = MaterialTheme.typography.h4, color = color, fontWeight = FontWeight.Bold)
-            Text(unit, style = MaterialTheme.typography.body2, color = Color.Gray)
-        }
-    }
-}
+
