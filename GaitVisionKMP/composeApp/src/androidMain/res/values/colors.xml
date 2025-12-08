@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Base Colors -->
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    
+    <!-- Modern Medical Theme - Deep Ocean & Teal -->
+    <color name="primary_deep_blue">#FF1E3A8A</color>
+    <color name="primary_blue">#FF3B82F6</color>
+    <color name="primary_blue_light">#FF60A5FA</color>
+    <color name="primary_blue_pale">#FFDBEAFE</color>
+    <color name="primary_blue_dark">#FF1E40AF</color>
+
+    <!-- Secondary Medical Teal -->
+    <color name="secondary_teal">#FF0891B2</color>
+    <color name="secondary_teal_light">#FF22D3EE</color>
+    <color name="secondary_teal_pale">#FFCCFBF1</color>
+    <color name="teal_200">#FF99F6E4</color> <!-- Added Missing Color -->
+    
+    <!-- Accent Colors -->
+    <color name="accent_emerald">#FF10B981</color>
+    <color name="accent_green">#FF10B981</color>
+    <color name="accent_amber">#FFF59E0B</color>
+    <color name="accent_rose">#FFF43F5E</color>
+    <color name="accent_red">#FFF43F5E</color>
+    <color name="accent_purple">#FF8B5CF6</color>
+    
+    <!-- Background Gradients -->
+    <color name="background_gradient_start">#FFF8FAFC</color>
+    <color name="background_gradient_end">#FFE2E8F0</color>
+    <color name="background_white">#FFFFFFFF</color>
+    <color name="background_glass">#80FFFFFF</color>
+    <color name="background_light">#FFF8FAFC</color>
+    <color name="background_gray">#FFE5E7EB</color>
+
+    <!-- Text Colors -->
+    <color name="text_primary">#FF0F172A</color>
+    <color name="text_secondary">#FF475569</color>
+    <color name="text_tertiary">#FF94A3B8</color>
+    <color name="text_white">#FFFFFFFF</color>
+    
+    <!-- Button Colors -->
+    <color name="button_primary">#FF3B82F6</color>
+    <color name="button_primary_pressed">#FF1E3A8A</color>
+    <color name="button_secondary">#FF0891B2</color>
+    <color name="button_secondary_pressed">#FF0E7490</color>
+    <color name="button_success">#FF10B981</color>
+    <color name="button_danger">#FFF43F5E</color>
+    <color name="button_glass">#40FFFFFF</color>
+    
+    <!-- Card and Surface Colors -->
+    <color name="card_background">#FFFFFFFF</color>
+    <color name="card_shadow">#1A000000</color>
+    <color name="surface_light">#FFF1F5F9</color>
+    <color name="surface_glass">#80FFFFFF</color>
+    <color name="border_light">#FFE2E8F0</color>
+    <color name="border_focus">#FF3B82F6</color>
+    
+    <!-- Status Colors -->
+    <color name="status_success">#FF10B981</color>
+    <color name="status_warning">#FFF59E0B</color>
+    <color name="status_error">#FFF43F5E</color>
+    <color name="status_info">#FF3B82F6</color>
+    
+    <!-- Legacy Colors (for compatibility) -->
+    <color name="logo_blue">#FF3B82F6</color>
+    <color name="logo_Green">#FF0891B2</color>
+    <color name="button_blue">#FF3B82F6</color>
+    <color name="help_red">#FFF43F5E</color>
+    
+    <!-- Gradient Colors -->
+    <color name="gradient_start">#FF3B82F6</color>
+    <color name="gradient_middle">#FF0891B2</color>
+    <color name="gradient_end">#FF10B981</color>
+    
+    <!-- Glass Morphism -->
+    <color name="glass_white">#40FFFFFF</color>
+    <color name="glass_blue">#403B82F6</color>
+    <color name="glass_teal">#400891B2</color>
+</resources>
