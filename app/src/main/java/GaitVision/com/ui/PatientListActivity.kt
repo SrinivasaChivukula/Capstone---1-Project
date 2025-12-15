@@ -25,6 +25,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.coroutines.runBlocking
+
 
 class PatientListActivity : AppCompatActivity() {
 
@@ -84,11 +86,9 @@ class PatientListActivity : AppCompatActivity() {
                 startActivity(intent)
             },
             getVideoCount = { patientId ->
-                var count = 0
-                lifecycleScope.launch(Dispatchers.IO) {
-                    count = videoDao.getVideoCountForPatient(patientId)
+                 runBlocking(Dispatchers.IO) {
+                 videoDao.getVideoCountForPatient(patientId)
                 }
-                count
             }
         )
         rvPatients.layoutManager = LinearLayoutManager(this)
@@ -238,15 +238,18 @@ class PatientAdapter(
         private val tvPatientAge: TextView = itemView.findViewById(R.id.tvPatientAge)
         private val tvVideoCount: TextView = itemView.findViewById(R.id.tvVideoCount)
 
-        fun bind(patient: Patient) {
-            tvPatientId.text = patient.participantId ?: "GV-${String.format("%04d", patient.id)}"
-            tvPatientName.text = patient.fullName
-            tvPatientGender.text = patient.gender ?: "—"
-            tvPatientAge.text = patient.age?.toString() ?: "—"
-            tvVideoCount.text = videoCounts[patient.id]?.toString() ?: "0"
+   fun bind(patient: Patient) {
+        tvPatientId.text = patient.participantId ?: "GV-${String.format("%04d", patient.id)}"
+        tvPatientName.text = patient.fullName
+        tvPatientGender.text = patient.gender ?: "—"
+        tvPatientAge.text = patient.age?.toString() ?: "—"
 
-            itemView.setOnClickListener { onPatientClick(patient) }
-        }
+        val count = getVideoCount(patient.id)
+        tvVideoCount.text = count.toString()
+
+        itemView.setOnClickListener { onPatientClick(patient) }
+}
+
     }
 }
 

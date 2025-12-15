@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_hip"
+        android:title="HIP ANGLE"
+        tools:ignore="HardcodedText" />
+
+    <item
+        android:id="@+id/menu_knee"
+        android:title="KNEE ANGLE"
+        tools:ignore="HardcodedText" />
+
+    <item
+        android:id="@+id/menu_ankle"
+        android:title="ANKLE ANGLE"
+        tools:ignore="HardcodedText" />
+
+    <item
+        android:id="@+id/menu_torso"
+        android:title="TORSO ANGLE"
+        tools:ignore="HardcodedText" />
+
+    <item
+        android:id="@+id/menu_all_agl"
+        android:title="ALL ANGLES"
+        tools:ignore="HardcodedText" />
+
+</menu>

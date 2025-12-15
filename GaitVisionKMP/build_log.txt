@@ -1,0 +1,447 @@
+Initialized native services in: C:\Users\dattu\.gradle\native
+Initialized jansi services in: C:\Users\dattu\.gradle\native
+Found daemon DaemonInfo{pid=1936, address=[a4b3db28-3d65-4781-955f-22c9beaccf9d port:9822, addresses:[/127.0.0.1]], state=Idle, lastBusy=1764665773771, context=DefaultDaemonContext[uid=4b2bca2e-c9f5-41d8-bd6e-bd63933dddd6,javaHome=C:\Program Files\Java\jdk-22,javaVersion=22,javaVendor=Oracle Corporation,daemonRegistryDir=C:\Users\dattu\.gradle\daemon,pid=1936,idleTimeout=10800000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=-Xmx1536m,-Dfile.encoding=UTF-8,-Duser.country=US,-Duser.language=en,-Duser.variant]} however its context does not match the desired criteria.
+At least one daemon option is different.
+Wanted: DaemonRequestContext{jvmCriteria=C:\Program Files\Java\jdk-22 (no JDK specified, using current Java home), daemonOpts=[-Xmx2048m, -Dfile.encoding=UTF-8, -Duser.country=US, -Duser.language=en, -Duser.variant], applyInstrumentationAgent=true, nativeServicesMode=ENABLED, priority=NORMAL}
+Actual: DefaultDaemonContext[uid=4b2bca2e-c9f5-41d8-bd6e-bd63933dddd6,javaHome=C:\Program Files\Java\jdk-22,javaVersion=22,javaVendor=Oracle Corporation,daemonRegistryDir=C:\Users\dattu\.gradle\daemon,pid=1936,idleTimeout=10800000,priority=NORMAL,applyInstrumentationAgent=true,nativeServicesMode=ENABLED,daemonOpts=-Xmx1536m,-Dfile.encoding=UTF-8,-Duser.country=US,-Duser.language=en,-Duser.variant]
+
+  Looking for a different daemon...
+The client will now receive all logging from the daemon (pid: 27088). The daemon log file: C:\Users\dattu\.gradle\daemon\8.13\daemon-27088.out.log
+Starting 11th build in daemon [uptime: 15 mins 25.089 secs, performance: 100%, GC rate: 0.00/s, heap usage: 0% of 2 GiB]
+Using 8 worker leases.
+Now considering [D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP] as hierarchies to watch
+Watching the file system is configured to be enabled if available
+File system watching is active
+Starting Build
+Settings evaluated using settings file 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\settings.gradle.kts'.
+Type-safe project accessors is an incubating feature.
+Projects loaded. Root project using build file 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\build.gradle.kts'.
+Included projects: [root project 'GaitVisionKMP', project ':composeApp']
+
+> Configure project :
+Evaluating root project 'GaitVisionKMP' using build file 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\build.gradle.kts'.
+Resolved plugin [id: 'com.android.application', version: '8.13.1', apply: false]
+Resolved plugin [id: 'com.android.library', version: '8.13.1', apply: false]
+Resolved plugin [id: 'org.jetbrains.compose', version: '1.6.10', apply: false]
+Resolved plugin [id: 'org.jetbrains.kotlin.plugin.compose', version: '2.0.0', apply: false]
+Resolved plugin [id: 'org.jetbrains.kotlin.multiplatform', version: '2.0.0', apply: false]
+Resolved plugin [id: 'com.google.devtools.ksp', version: '2.0.0-1.0.21', apply: false]
+
+> Configure project :composeApp
+Evaluating project ':composeApp' using build file 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build.gradle.kts'.
+Resolved plugin [id: 'org.jetbrains.kotlin.multiplatform', version: '2.0.0']
+Resolved plugin [id: 'com.android.application', version: '8.13.1']
+Resolved plugin [id: 'org.jetbrains.compose', version: '1.6.10']
+Resolved plugin [id: 'org.jetbrains.kotlin.plugin.compose', version: '2.0.0']
+Resolved plugin [id: 'com.google.devtools.ksp', version: '2.0.0-1.0.21']
+Using Kotlin Gradle Plugin gradle85 variant
+Using default execution profile
+Configure KMP resources
+Configure compose resources generation
+Configure Res class generation for commonMain
+Configure resource accessors generation for commonMain
+Configure resource accessors generation for commonTest
+Configure resource accessors generation for androidInstrumentedTest
+Configure resource accessors generation for androidMain
+Configure resource accessors generation for androidUnitTest
+Configure resources publication for 'android' target
+Configure fonts relocation for 'android' target
+Configure resource accessors generation for iosX64Main
+Configure resource accessors generation for iosX64Test
+Configure resources publication for 'iosX64' target
+Add all resolved resources to 'iosX64' target 'main' compilation
+Configure resource accessors generation for iosArm64Main
+Configure resource accessors generation for iosArm64Test
+Configure resources publication for 'iosArm64' target
+Add all resolved resources to 'iosArm64' target 'main' compilation
+Configure resource accessors generation for iosSimulatorArm64Main
+Configure resource accessors generation for iosSimulatorArm64Test
+Configure resources publication for 'iosSimulatorArm64' target
+Add all resolved resources to 'iosSimulatorArm64' target 'main' compilation
+The 'ksp' configuration is deprecated in Kotlin Multiplatform projects. Please use target-specific configurations like 'kspJvm' instead.
+Configure resource accessors generation for androidInstrumentedTestDebug
+Configure resource accessors generation for androidUnitTestDebug
+Configure resource accessors generation for androidDebug
+Configure resource accessors generation for androidUnitTestRelease
+Configure resource accessors generation for androidRelease
+Detected Android Gradle Plugin compose compiler configuration
+Detected Android Gradle Plugin compose compiler configuration
+Detected Android Gradle Plugin compose compiler configuration
+Detected Android Gradle Plugin compose compiler configuration
+Detected Android Gradle Plugin compose compiler configuration
+Detected Android Gradle Plugin compose compiler configuration
+Detected Android Gradle Plugin compose compiler configuration
+Check that new 'org.jetbrains.kotlin.plugin.compose' was applied
+Detected Android Gradle Plugin compose compiler configuration
+Detected Android Gradle Plugin compose compiler configuration
+Detected Android Gradle Plugin compose compiler configuration
+Detected Android Gradle Plugin compose compiler configuration
+Detected Android Gradle Plugin compose compiler configuration
+Configure resource accessors generation for nativeMain
+Configure resource accessors generation for appleMain
+Configure resource accessors generation for iosMain
+Configure resource accessors generation for nativeTest
+Configure resource accessors generation for appleTest
+Configure resource accessors generation for iosTest
+Detected Android Gradle Plugin compose compiler configuration
+Detected Android Gradle Plugin compose compiler configuration
+Detected Android Gradle Plugin compose compiler configuration
+Detected Android Gradle Plugin compose compiler configuration
+w: Kotlin Multiplatform <-> Android Gradle Plugin compatibility issue:
+The applied Android Gradle Plugin version (8.13.1) is higher 
+than the maximum known to the Kotlin Gradle Plugin.
+Tooling stability in such configuration isn't tested, please report encountered issues to https://kotl.in/issue
+
+Minimum supported Android Gradle Plugin version: 7.1
+Maximum tested Android Gradle Plugin version: 8.3
+
+To suppress this message add 'kotlin.mpp.androidGradlePluginCompatibility.nowarn=true' to your gradle.properties
+
+w: The following Kotlin/Native targets cannot be built on this machine and are disabled:
+iosArm64, iosSimulatorArm64, iosX64
+To hide this message, add 'kotlin.native.ignoreDisabledTargets=true' to the Gradle properties.
+
+All projects evaluated.
+Task path ':composeApp:compileDebugKotlinAndroid' matched project ':composeApp'
+Task name matched 'compileDebugKotlinAndroid'
+Selected primary task 'compileDebugKotlinAndroid' from project :composeApp
+SDK initialized in 5498 ms
+[=========                              ] 25%                                   Tasks to be executed: [task ':composeApp:checkKotlinGradlePluginConfigurationErrors', task ':composeApp:generateComposeResClass', task ':composeApp:convertXmlValueResourcesForAndroidDebug', task ':composeApp:copyNonXmlValueResourcesForAndroidDebug', task ':composeApp:prepareComposeResourcesTaskForAndroidDebug', task ':composeApp:generateResourceAccessorsForAndroidDebug', task ':composeApp:convertXmlValueResourcesForAndroidMain', task ':composeApp:copyNonXmlValueResourcesForAndroidMain', task ':composeApp:prepareComposeResourcesTaskForAndroidMain', task ':composeApp:generateResourceAccessorsForAndroidMain', task ':composeApp:convertXmlValueResourcesForCommonMain', task ':composeApp:copyNonXmlValueResourcesForCommonMain', task ':composeApp:prepareComposeResourcesTaskForCommonMain', task ':composeApp:generateResourceAccessorsForCommonMain', task ':composeApp:preBuild', task ':composeApp:preDebugBuild', task ':composeApp:checkDebugAarMetadata', task ':composeApp:processDebugNavigationResources', task ':composeApp:compileDebugNavigationResources', task ':composeApp:generateDebugResValues', task ':composeApp:mapDebugSourceSetPaths', task ':composeApp:generateDebugResources', task ':composeApp:mergeDebugResources', task ':composeApp:packageDebugResources', task ':composeApp:parseDebugLocalResources', task ':composeApp:createDebugCompatibleScreenManifests', task ':composeApp:extractDeepLinksDebug', task ':composeApp:processDebugMainManifest', task ':composeApp:processDebugManifest', task ':composeApp:processDebugManifestForPackage', task ':composeApp:processDebugResources', task ':composeApp:kspDebugKotlinAndroid', task ':composeApp:compileDebugKotlinAndroid']
+Tasks that were excluded: []
+Resolve mutations for :composeApp:checkKotlinGradlePluginConfigurationErrors (Thread[#1005,Execution worker Thread 2,5,main]) started.
+:composeApp:checkKotlinGradlePluginConfigurationErrors (Thread[#1005,Execution worker Thread 2,5,main]) started.
+
+> Task :composeApp:checkKotlinGradlePluginConfigurationErrors SKIPPED
+Skipping task ':composeApp:checkKotlinGradlePluginConfigurationErrors' as task onlyIf 'errorDiagnostics are present' is false.
+Resolve mutations for :composeApp:generateComposeResClass (Thread[#1005,Execution worker Thread 2,5,main]) started.
+:composeApp:generateComposeResClass (Thread[#1005,Execution worker Thread 2,5,main]) started.
+
+> Task :composeApp:generateComposeResClass UP-TO-DATE
+Caching disabled for task ':composeApp:generateComposeResClass' because:
+  Build cache is disabled
+  Caching has not been enabled for the task
+Skipping task ':composeApp:generateComposeResClass' as it is up-to-date.
+Resolve mutations for :composeApp:convertXmlValueResourcesForAndroidDebug (Thread[#1005,Execution worker Thread 2,5,main]) started.
+:composeApp:convertXmlValueResourcesForAndroidDebug (Thread[#1005,Execution worker Thread 2,5,main]) started.
+
+> Task :composeApp:convertXmlValueResourcesForAndroidDebug NO-SOURCE
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\preparedResources\androidDebug\composeResources', not found
+Skipping task ':composeApp:convertXmlValueResourcesForAndroidDebug' as it has no source files and no previous output files.
+Resolve mutations for :composeApp:copyNonXmlValueResourcesForAndroidDebug (Thread[#1005,Execution worker Thread 2,5,main]) started.
+:composeApp:copyNonXmlValueResourcesForAndroidDebug (Thread[#1005,Execution worker Thread 2,5,main]) started.
+
+> Task :composeApp:copyNonXmlValueResourcesForAndroidDebug NO-SOURCE
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\preparedResources\androidDebug\composeResources', not found
+Skipping task ':composeApp:copyNonXmlValueResourcesForAndroidDebug' as it has no source files and no previous output files.
+Resolve mutations for :composeApp:prepareComposeResourcesTaskForAndroidDebug (Thread[#1005,Execution worker Thread 2,5,main]) started.
+:composeApp:prepareComposeResourcesTaskForAndroidDebug (Thread[#1005,Execution worker Thread 2,5,main]) started.
+
+> Task :composeApp:prepareComposeResourcesTaskForAndroidDebug NO-SOURCE
+Skipping task ':composeApp:prepareComposeResourcesTaskForAndroidDebug' as it has no source files and no previous output files.
+Resolve mutations for :composeApp:generateResourceAccessorsForAndroidDebug (Thread[#1005,Execution worker Thread 2,5,main]) started.
+:composeApp:generateResourceAccessorsForAndroidDebug (Thread[#1005,Execution worker Thread 2,5,main]) started.
+
+> Task :composeApp:generateResourceAccessorsForAndroidDebug NO-SOURCE
+Skipping task ':composeApp:generateResourceAccessorsForAndroidDebug' as it has no source files and no previous output files.
+Resolve mutations for :composeApp:convertXmlValueResourcesForAndroidMain (Thread[#1005,Execution worker Thread 2,5,main]) started.
+:composeApp:convertXmlValueResourcesForAndroidMain (Thread[#1005,Execution worker Thread 2,5,main]) started.
+
+> Task :composeApp:convertXmlValueResourcesForAndroidMain NO-SOURCE
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\preparedResources\androidMain\composeResources', not found
+Skipping task ':composeApp:convertXmlValueResourcesForAndroidMain' as it has no source files and no previous output files.
+Resolve mutations for :composeApp:copyNonXmlValueResourcesForAndroidMain (Thread[#1007,Execution worker Thread 4,5,main]) started.
+:composeApp:copyNonXmlValueResourcesForAndroidMain (Thread[#1007,Execution worker Thread 4,5,main]) started.
+
+> Task :composeApp:copyNonXmlValueResourcesForAndroidMain NO-SOURCE
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\preparedResources\androidMain\composeResources', not found
+Skipping task ':composeApp:copyNonXmlValueResourcesForAndroidMain' as it has no source files and no previous output files.
+Resolve mutations for :composeApp:prepareComposeResourcesTaskForAndroidMain (Thread[#1007,Execution worker Thread 4,5,main]) started.
+:composeApp:prepareComposeResourcesTaskForAndroidMain (Thread[#1007,Execution worker Thread 4,5,main]) started.
+
+> Task :composeApp:prepareComposeResourcesTaskForAndroidMain NO-SOURCE
+Skipping task ':composeApp:prepareComposeResourcesTaskForAndroidMain' as it has no source files and no previous output files.
+Resolve mutations for :composeApp:generateResourceAccessorsForAndroidMain (Thread[#1007,Execution worker Thread 4,5,main]) started.
+:composeApp:generateResourceAccessorsForAndroidMain (Thread[#1005,Execution worker Thread 2,5,main]) started.
+
+> Task :composeApp:generateResourceAccessorsForAndroidMain NO-SOURCE
+Skipping task ':composeApp:generateResourceAccessorsForAndroidMain' as it has no source files and no previous output files.
+Resolve mutations for :composeApp:convertXmlValueResourcesForCommonMain (Thread[#1005,Execution worker Thread 2,5,main]) started.
+:composeApp:convertXmlValueResourcesForCommonMain (Thread[#1005,Execution worker Thread 2,5,main]) started.
+
+> Task :composeApp:convertXmlValueResourcesForCommonMain NO-SOURCE
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\preparedResources\commonMain\composeResources', not found
+Skipping task ':composeApp:convertXmlValueResourcesForCommonMain' as it has no source files and no previous output files.
+Resolve mutations for :composeApp:copyNonXmlValueResourcesForCommonMain (Thread[#1005,Execution worker Thread 2,5,main]) started.
+:composeApp:copyNonXmlValueResourcesForCommonMain (Thread[#1005,Execution worker Thread 2,5,main]) started.
+
+> Task :composeApp:copyNonXmlValueResourcesForCommonMain NO-SOURCE
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\preparedResources\commonMain\composeResources', not found
+Skipping task ':composeApp:copyNonXmlValueResourcesForCommonMain' as it has no source files and no previous output files.
+Resolve mutations for :composeApp:prepareComposeResourcesTaskForCommonMain (Thread[#1005,Execution worker Thread 2,5,main]) started.
+:composeApp:prepareComposeResourcesTaskForCommonMain (Thread[#1005,Execution worker Thread 2,5,main]) started.
+
+> Task :composeApp:prepareComposeResourcesTaskForCommonMain NO-SOURCE
+Skipping task ':composeApp:prepareComposeResourcesTaskForCommonMain' as it has no source files and no previous output files.
+Resolve mutations for :composeApp:generateResourceAccessorsForCommonMain (Thread[#1005,Execution worker Thread 2,5,main]) started.
+:composeApp:generateResourceAccessorsForCommonMain (Thread[#1005,Execution worker Thread 2,5,main]) started.
+
+> Task :composeApp:generateResourceAccessorsForCommonMain NO-SOURCE
+Skipping task ':composeApp:generateResourceAccessorsForCommonMain' as it has no source files and no previous output files.
+Resolve mutations for :composeApp:preBuild (Thread[#1005,Execution worker Thread 2,5,main]) started.
+:composeApp:preBuild (Thread[#1010,Execution worker Thread 7,5,main]) started.
+
+> Task :composeApp:preBuild UP-TO-DATE
+Skipping task ':composeApp:preBuild' as it has no actions.
+Resolve mutations for :composeApp:preDebugBuild (Thread[#1010,Execution worker Thread 7,5,main]) started.
+:composeApp:preDebugBuild (Thread[#1010,Execution worker Thread 7,5,main]) started.
+
+> Task :composeApp:preDebugBuild UP-TO-DATE
+Skipping task ':composeApp:preDebugBuild' as it has no actions.
+Resolve mutations for :composeApp:checkDebugAarMetadata (Thread[#1010,Execution worker Thread 7,5,main]) started.
+:composeApp:checkDebugAarMetadata (Thread[#1004,Execution worker,5,main]) started.
+
+> Task :composeApp:checkDebugAarMetadata UP-TO-DATE
+Caching disabled for task ':composeApp:checkDebugAarMetadata' because:
+  Build cache is disabled
+  Caching has been disabled for the task
+Skipping task ':composeApp:checkDebugAarMetadata' as it is up-to-date.
+Resolve mutations for :composeApp:processDebugNavigationResources (Thread[#1004,Execution worker,5,main]) started.
+:composeApp:processDebugNavigationResources (Thread[#1004,Execution worker,5,main]) started.
+
+> Task :composeApp:processDebugNavigationResources UP-TO-DATE
+Caching disabled for task ':composeApp:processDebugNavigationResources' because:
+  Build cache is disabled
+Skipping task ':composeApp:processDebugNavigationResources' as it is up-to-date.
+Resolve mutations for :composeApp:compileDebugNavigationResources (Thread[#1004,Execution worker,5,main]) started.
+:composeApp:compileDebugNavigationResources (Thread[#1004,Execution worker,5,main]) started.
+
+> Task :composeApp:compileDebugNavigationResources UP-TO-DATE
+Caching disabled for task ':composeApp:compileDebugNavigationResources' because:
+  Build cache is disabled
+Skipping task ':composeApp:compileDebugNavigationResources' as it is up-to-date.
+Resolve mutations for :composeApp:generateDebugResValues (Thread[#1004,Execution worker,5,main]) started.
+:composeApp:generateDebugResValues (Thread[#1004,Execution worker,5,main]) started.
+
+> Task :composeApp:generateDebugResValues UP-TO-DATE
+Caching disabled for task ':composeApp:generateDebugResValues' because:
+  Build cache is disabled
+Skipping task ':composeApp:generateDebugResValues' as it is up-to-date.
+Resolve mutations for :composeApp:mapDebugSourceSetPaths (Thread[#1004,Execution worker,5,main]) started.
+:composeApp:mapDebugSourceSetPaths (Thread[#1004,Execution worker,5,main]) started.
+
+> Task :composeApp:mapDebugSourceSetPaths UP-TO-DATE
+Caching disabled for task ':composeApp:mapDebugSourceSetPaths' because:
+  Build cache is disabled
+  Caching has been disabled for the task
+Skipping task ':composeApp:mapDebugSourceSetPaths' as it is up-to-date.
+Resolve mutations for :composeApp:generateDebugResources (Thread[#1004,Execution worker,5,main]) started.
+:composeApp:generateDebugResources (Thread[#1004,Execution worker,5,main]) started.
+
+> Task :composeApp:generateDebugResources UP-TO-DATE
+Caching disabled for task ':composeApp:generateDebugResources' because:
+  Build cache is disabled
+Skipping task ':composeApp:generateDebugResources' as it is up-to-date.
+Resolve mutations for :composeApp:mergeDebugResources (Thread[#1004,Execution worker,5,main]) started.
+:composeApp:mergeDebugResources (Thread[#1004,Execution worker,5,main]) started.
+
+> Task :composeApp:mergeDebugResources UP-TO-DATE
+Caching disabled for task ':composeApp:mergeDebugResources' because:
+  Build cache is disabled
+Skipping task ':composeApp:mergeDebugResources' as it is up-to-date.
+Resolve mutations for :composeApp:packageDebugResources (Thread[#1004,Execution worker,5,main]) started.
+:composeApp:packageDebugResources (Thread[#1004,Execution worker,5,main]) started.
+
+> Task :composeApp:packageDebugResources UP-TO-DATE
+Caching disabled for task ':composeApp:packageDebugResources' because:
+  Build cache is disabled
+Skipping task ':composeApp:packageDebugResources' as it is up-to-date.
+Resolve mutations for :composeApp:parseDebugLocalResources (Thread[#1004,Execution worker,5,main]) started.
+:composeApp:parseDebugLocalResources (Thread[#1004,Execution worker,5,main]) started.
+
+> Task :composeApp:parseDebugLocalResources UP-TO-DATE
+Caching disabled for task ':composeApp:parseDebugLocalResources' because:
+  Build cache is disabled
+Skipping task ':composeApp:parseDebugLocalResources' as it is up-to-date.
+Resolve mutations for :composeApp:createDebugCompatibleScreenManifests (Thread[#1004,Execution worker,5,main]) started.
+:composeApp:createDebugCompatibleScreenManifests (Thread[#1004,Execution worker,5,main]) started.
+
+> Task :composeApp:createDebugCompatibleScreenManifests UP-TO-DATE
+Caching disabled for task ':composeApp:createDebugCompatibleScreenManifests' because:
+  Build cache is disabled
+  Caching has been disabled for the task
+Skipping task ':composeApp:createDebugCompatibleScreenManifests' as it is up-to-date.
+Resolve mutations for :composeApp:extractDeepLinksDebug (Thread[#1004,Execution worker,5,main]) started.
+:composeApp:extractDeepLinksDebug (Thread[#1004,Execution worker,5,main]) started.
+
+> Task :composeApp:extractDeepLinksDebug UP-TO-DATE
+Caching disabled for task ':composeApp:extractDeepLinksDebug' because:
+  Build cache is disabled
+Skipping task ':composeApp:extractDeepLinksDebug' as it is up-to-date.
+Resolve mutations for :composeApp:processDebugMainManifest (Thread[#1004,Execution worker,5,main]) started.
+:composeApp:processDebugMainManifest (Thread[#1004,Execution worker,5,main]) started.
+
+> Task :composeApp:processDebugMainManifest UP-TO-DATE
+Caching disabled for task ':composeApp:processDebugMainManifest' because:
+  Build cache is disabled
+Skipping task ':composeApp:processDebugMainManifest' as it is up-to-date.
+Resolve mutations for :composeApp:processDebugManifest (Thread[#1004,Execution worker,5,main]) started.
+:composeApp:processDebugManifest (Thread[#1004,Execution worker,5,main]) started.
+
+> Task :composeApp:processDebugManifest UP-TO-DATE
+Caching disabled for task ':composeApp:processDebugManifest' because:
+  Build cache is disabled
+Skipping task ':composeApp:processDebugManifest' as it is up-to-date.
+Resolve mutations for :composeApp:processDebugManifestForPackage (Thread[#1004,Execution worker,5,main]) started.
+:composeApp:processDebugManifestForPackage (Thread[#1004,Execution worker,5,main]) started.
+
+> Task :composeApp:processDebugManifestForPackage UP-TO-DATE
+Custom actions are attached to task ':composeApp:processDebugManifestForPackage'.
+Caching disabled for task ':composeApp:processDebugManifestForPackage' because:
+  Build cache is disabled
+Skipping task ':composeApp:processDebugManifestForPackage' as it is up-to-date.
+Resolve mutations for :composeApp:processDebugResources (Thread[#1004,Execution worker,5,main]) started.
+:composeApp:processDebugResources (Thread[#1004,Execution worker,5,main]) started.
+
+> Task :composeApp:processDebugResources UP-TO-DATE
+Caching disabled for task ':composeApp:processDebugResources' because:
+  Build cache is disabled
+Skipping task ':composeApp:processDebugResources' as it is up-to-date.
+Resolve mutations for :composeApp:kspDebugKotlinAndroid (Thread[#1004,Execution worker,5,main]) started.
+:composeApp:kspDebugKotlinAndroid (Thread[#1004,Execution worker,5,main]) started.
+
+> Task :composeApp:kspDebugKotlinAndroid UP-TO-DATE
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\androidDebug\kotlin', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\kotlin\androidDebugResourceAccessors', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\debug\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\debug\kotlin', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\kotlin\androidMainResourceAccessors', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\main\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\main\kotlin', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\kotlin\commonMainResourceAccessors', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\main\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\debug\java', not found
+GradleBuildProject.Builder should not be accessed through AnalyticsConfiguratorService after AnalyticsService is created. Analytics information of this build might be incomplete.
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\androidDebug\kotlin', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\kotlin\androidDebugResourceAccessors', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\debug\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\debug\kotlin', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\kotlin\androidMainResourceAccessors', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\main\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\main\kotlin', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\kotlin\commonMainResourceAccessors', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\main\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\debug\java', not found
+Caching disabled for task ':composeApp:kspDebugKotlinAndroid' because:
+  Build cache is disabled
+Skipping task ':composeApp:kspDebugKotlinAndroid' as it is up-to-date.
+Resolve mutations for :composeApp:compileDebugKotlinAndroid (Thread[#1004,Execution worker,5,main]) started.
+:composeApp:compileDebugKotlinAndroid (Thread[#1004,Execution worker,5,main]) started.
+
+> Task :composeApp:compileDebugKotlinAndroid
+Caching disabled for task ':composeApp:compileDebugKotlinAndroid' because:
+  Build cache is disabled
+Task ':composeApp:compileDebugKotlinAndroid' is not up-to-date because:
+  Task has failed previously.
+The input changes require a full rebuild for incremental task ':composeApp:compileDebugKotlinAndroid'.
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\androidDebug\kotlin', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\kotlin\androidDebugResourceAccessors', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\debug\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\debug\kotlin', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\ksp\android\androidDebug\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\kotlin\androidMainResourceAccessors', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\main\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\main\kotlin', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\main\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\debug\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\ksp\android\androidDebug\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\kotlin\commonMainResourceAccessors', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\androidDebug\kotlin', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\kotlin\androidDebugResourceAccessors', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\debug\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\debug\kotlin', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\androidDebug\kotlin', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\kotlin\androidDebugResourceAccessors', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\debug\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\debug\kotlin', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\ksp\android\androidDebug\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\kotlin\androidMainResourceAccessors', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\main\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\main\kotlin', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\main\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\debug\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\ksp\android\androidDebug\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\kotlin\commonMainResourceAccessors', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\androidDebug\kotlin', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\kotlin\androidDebugResourceAccessors', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\debug\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\debug\kotlin', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\ksp\android\androidDebug\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\kotlin\androidMainResourceAccessors', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\main\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\main\kotlin', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\main\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\debug\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\ksp\android\androidDebug\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\kotlin\commonMainResourceAccessors', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\androidDebug\kotlin', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\kotlin\androidDebugResourceAccessors', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\debug\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\debug\kotlin', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\ksp\android\androidDebug\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\kotlin\androidMainResourceAccessors', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\main\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\main\kotlin', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\main\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\debug\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\ksp\android\androidDebug\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\kotlin\commonMainResourceAccessors', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\androidDebug\kotlin', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\kotlin\androidDebugResourceAccessors', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\debug\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\debug\kotlin', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\ksp\android\androidDebug\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\kotlin\androidMainResourceAccessors', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\main\java', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\main\kotlin', not found
+file or directory 'D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\kotlin\commonMainResourceAccessors', not found
+Kotlin source files: D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\ksp\android\androidDebug\kotlin\com\gaitvision\data\AppDatabase_Impl.kt, D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\ksp\android\androidDebug\kotlin\com\gaitvision\data\AppDatabase_InstantiateImpl.kt, D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\androidMain\kotlin\com\gaitvision\MainActivity.kt, D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\androidMain\kotlin\com\gaitvision\platform\AndroidPoseDetector.kt, D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\androidMain\kotlin\com\gaitvision\platform\AndroidVideoProcessor.kt, D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\commonMain\kotlin\com\gaitvision\App.kt, D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\commonMain\kotlin\com\gaitvision\data\AppDatabase.kt, D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\commonMain\kotlin\com\gaitvision\data\Models.kt, D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\commonMain\kotlin\com\gaitvision\logic\AngleCalculations.kt, D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\commonMain\kotlin\com\gaitvision\logic\ParameterFunctions.kt, D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\commonMain\kotlin\com\gaitvision\platform\PoseDetector.kt, D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\commonMain\kotlin\com\gaitvision\platform\VideoProcessor.kt, D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\commonMain\kotlin\com\gaitvision\ui\AnalysisScreen.kt, D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\commonMain\kotlin\com\gaitvision\ui\CameraScreen.kt, D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\commonMain\kotlin\com\gaitvision\ui\DashboardScreen.kt, D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\commonMain\kotlin\com\gaitvision\ui\Navigation.kt, D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\src\commonMain\kotlin\com\gaitvision\ui\Theme.kt, D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\generated\compose\resourceGenerator\kotlin\commonResClass\gaitvisionkmp\composeapp\generated\resources\Res.kt
+Java source files: 
+Script source files: 
+Script file extensions: 
+Using Kotlin/JVM incremental compilation
+[KOTLIN] Kotlin compilation 'jdkHome' argument: C:\Program Files\Java\jdk-22
+Options for KOTLIN DAEMON: IncrementalCompilationOptions(super=CompilationOptions(compilerMode=INCREMENTAL_COMPILER, targetPlatform=JVM, reportCategories=[0, 3], reportSeverity=2, requestedCompilationResults=[0], kotlinScriptExtensions=[]), areFileChangesKnown=false, modifiedFiles=null, deletedFiles=null, classpathChanges=NotAvailableForNonIncrementalRun, workingDir=D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\kotlin\compileDebugKotlinAndroid\cacheable, multiModuleICSettings=MultiModuleICSettings(buildHistoryFile=D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\kotlin\compileDebugKotlinAndroid\local-state\build-history.bin, useModuleDetection=true), usePreciseJavaTracking=true, icFeatures=IncrementalCompilationFeatures(withAbiSnapshot=false, preciseCompilationResultsBackup=true, keepIncrementalCompilationCachesInMemory=true, enableUnsafeIncrementalCompilationForMultiplatform=false), outputFiles=[D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\tmp\kotlin-classes\debug, D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\kotlin\compileDebugKotlinAndroid\cacheable, D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP\composeApp\build\kotlin\compileDebugKotlinAndroid\local-state])
+e: file:///D:/Datta/UNT/CSCE%204901/Capstone---1-Project/GaitVisionKMP/composeApp/src/commonMain/kotlin/com/gaitvision/ui/AnalysisScreen.kt:18:9 Unresolved reference 'Column'.
+e: file:///D:/Datta/UNT/CSCE%204901/Capstone---1-Project/GaitVisionKMP/composeApp/src/commonMain/kotlin/com/gaitvision/ui/AnalysisScreen.kt:19:13 @Composable invocations can only happen from the context of a @Composable function
+e: file:///D:/Datta/UNT/CSCE%204901/Capstone---1-Project/GaitVisionKMP/composeApp/src/commonMain/kotlin/com/gaitvision/ui/AnalysisScreen.kt:20:13 @Composable invocations can only happen from the context of a @Composable function
+e: file:///D:/Datta/UNT/CSCE%204901/Capstone---1-Project/GaitVisionKMP/composeApp/src/commonMain/kotlin/com/gaitvision/ui/CameraScreen.kt:20:9 Unresolved reference 'Column'.
+e: file:///D:/Datta/UNT/CSCE%204901/Capstone---1-Project/GaitVisionKMP/composeApp/src/commonMain/kotlin/com/gaitvision/ui/CameraScreen.kt:21:13 @Composable invocations can only happen from the context of a @Composable function
+e: file:///D:/Datta/UNT/CSCE%204901/Capstone---1-Project/GaitVisionKMP/composeApp/src/commonMain/kotlin/com/gaitvision/ui/CameraScreen.kt:22:13 @Composable invocations can only happen from the context of a @Composable function
+Finished executing kotlin compiler using DAEMON strategy
+
+> Task :composeApp:compileDebugKotlinAndroid FAILED
+
+[Incubating] Problems report is available at: file:///D:/Datta/UNT/CSCE%204901/Capstone---1-Project/GaitVisionKMP/build/reports/problems/problems-report.html
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':composeApp:compileDebugKotlinAndroid'.
+> A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+   > Compilation error. See log for more details
+
+* Try:
+> Run with --stacktrace option to get the stack trace.
+> Run with --debug option to get more log output.
+> Run with --scan to get full insights.
+> Get more help at https://help.gradle.org.
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.13/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUILD FAILED in 14s
+18 actionable tasks: 1 executed, 17 up-to-date
+Watched directory hierarchies: [D:\Datta\UNT\CSCE 4901\Capstone---1-Project\GaitVisionKMP]
